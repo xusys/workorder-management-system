@@ -25,6 +25,7 @@ public class ProcessController {
         List<ProcessDefinition> list=activitiService.getDefine();
         Map<String,Object>map =new HashMap<>();
         map.put("processDefineList",(Util.activitiResult(list)));
+
         return R.success(map);
     }
 //    @GetMapping("/getProcess")
