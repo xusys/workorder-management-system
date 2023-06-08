@@ -40,7 +40,7 @@ class DemoApplicationTests {
     public void testDeployment() {
         // 读取 activiti.cfg.xml 配置文件，创建 ProcessEngine 的同时会创建表
 
-        Deployment deployment=repositoryService.createDeployment().addClasspathResource("processes/Third.bpmn20.xml").addClasspathResource("processes/diagram3.png").name("流程3").deploy();
+        Deployment deployment=repositoryService.createDeployment().addClasspathResource("processes/process1.bpmn20.xml").addClasspathResource("processes/diagram.png").name("流程").deploy();
         System.out.println(deployment.getId());
     }
     @Test
@@ -48,7 +48,7 @@ class DemoApplicationTests {
         // 读取 activiti.cfg.xml 配置文件，创建 ProcessEngine 的同时会创建表
 
 
-        List<Task> list=taskService.createTaskQuery().processDefinitionKey("Third").list();
+        List<Task> list=taskService.createTaskQuery().processDefinitionKey("process1").list();
         for(Task task:list)
         {
 
@@ -62,15 +62,18 @@ class DemoApplicationTests {
     public void testStartProcess() {
         // 读取 activiti.cfg.xml 配置文件，创建 ProcessEngine 的同时会创建表
 
-        Map<String,Object> map=new HashMap<>();
-        map.put("num",4);
-        map.put("assignee0","小李2");
-        map.put("assignee1","小王2");
-        map.put("assignee2","小张2");
+//        Map<String,Object> map=new HashMap<>();
+//        map.put("num",4);
+//        map.put("assignee0","小李2");
+//        map.put("assignee1","小王2");
+//        map.put("assignee2","小张2");
         // runtimeService.setVariable(executionId, "evection", evection);
-        ProcessInstance processInstance=runtimeService.startProcessInstanceByKey("Second","104",map);
+        for (int i=0;i<10;i++) {
+            ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("process1");
 
-        System.out.println(processInstance.getId());
+            System.out.println(processInstance.getId());
+        }
+
     }
     @Test
     public void testCompleteTask() {
@@ -98,12 +101,14 @@ class DemoApplicationTests {
             System.out.println("流程定义key "+processDefinition.getKey());
             System.out.println("流程定义version "+processDefinition.getVersion());
             System.out.println("流程定义部署ID "+processDefinition.getDeploymentId());
+            System.out.println("流程描述 "+ processDefinition.getDescription());
+            System.out.println("\n");
         }
     }
     @Test
     public void testProcessInstance() {
 
-        List<ProcessInstance>list=runtimeService.createProcessInstanceQuery().processDefinitionKey("Second").list();
+        List<ProcessInstance>list=runtimeService.createProcessInstanceQuery().processDefinitionKey("process1").list();
         for (ProcessInstance processInstance:list)
         {
             System.out.println("流程实例ID "+processInstance.getProcessInstanceId());

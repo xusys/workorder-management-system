@@ -4,6 +4,8 @@ import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
+import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.runtime.ProcessInstanceQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +28,10 @@ public class ActivitiService {
         List<ProcessDefinition> definitionList=processDefinitionQuery.list();
         return definitionList;
     }
-    public void getProcess(){
-
+    public List<ProcessInstance> getInstance(int currentpage, int pagesize){
+        ProcessInstanceQuery processInstanceQuery=runtimeService.createProcessInstanceQuery();
+        List<ProcessInstance> processInstanceList=processInstanceQuery.listPage(currentpage,pagesize);
+        return  processInstanceList;
     }
 
 

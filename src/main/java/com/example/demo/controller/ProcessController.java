@@ -5,6 +5,7 @@ import com.example.demo.service.ActivitiService;
 import com.example.demo.utils.Util;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.runtime.ProcessInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,12 +26,16 @@ public class ProcessController {
         List<ProcessDefinition> list=activitiService.getDefine();
         Map<String,Object>map =new HashMap<>();
         map.put("processDefineList",(Util.activitiResult(list)));
-
         return R.success(map);
     }
-//    @GetMapping("/getProcess")
-//    public void  getProcess(){
-//        activitiService.
-//    }
+
+
+    @GetMapping("/getProcess")
+    public R  getInstance(int currentpage, int pagesize){
+        List<ProcessInstance> list=activitiService.getInstance(currentpage,pagesize);
+        Map<String,Object>map =new HashMap<>();
+        map.put("processInstanceList",(Util.activitiResult(list)));
+        return R.success(map);
+    }
 
 }
