@@ -4,9 +4,11 @@ import com.example.demo.common.R;
 import com.example.demo.service.ActivitiService;
 import com.example.demo.utils.Util;
 import lombok.extern.slf4j.Slf4j;
+import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,6 +35,25 @@ public class ProcessController {
     @GetMapping("/getProcess")
     public R  getInstance(int currentpage, int pagesize){
         List<ProcessInstance> list=activitiService.getInstance(currentpage,pagesize);
+        Map<String,Object>map =new HashMap<>();
+        map.put("processInstanceList",(Util.activitiResult(list)));
+        return R.success(map);
+    }
+    @GetMapping("/suspendDefine")
+    public R suspendDefine(String id){
+        boolean flag=activitiService.suspendDefine(id);
+        return R.success(flag);
+    }
+
+    @GetMapping("/activateDefine")
+    public R activateDefine(String id){
+        boolean flag=activitiService.activateDefine(id);
+        return R.success(flag);
+    }
+
+    @GetMapping("/getHistory")
+    public  R history(int currentpage,int pagesize){
+       List<HistoricActivityInstance>list=activitiService.getHistory(currentpage,pagesize);
         Map<String,Object>map =new HashMap<>();
         map.put("processInstanceList",(Util.activitiResult(list)));
         return R.success(map);

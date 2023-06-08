@@ -96,6 +96,7 @@ class DemoApplicationTests {
         List<ProcessDefinition>definitionList=processDefinitionQuery.orderByProcessDefinitionVersion().desc().list();
         for (ProcessDefinition processDefinition:definitionList)
         {
+
             System.out.println("流程定义ID "+processDefinition.getId());
             System.out.println("流程定义name "+processDefinition.getName());
             System.out.println("流程定义key "+processDefinition.getKey());
@@ -154,6 +155,7 @@ class DemoApplicationTests {
         if(suspend)
         {
             repositoryService.activateProcessDefinitionById(definitionId,true,null);
+
             System.out.println("流程定义已激活 "+definitionId);
         }
         else
