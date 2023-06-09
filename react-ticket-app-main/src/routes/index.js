@@ -126,10 +126,6 @@ const routes = [
     path: "status",
     element: <Status />,
   },
-  {
-    path: "*",
-    element: <Navigate to="/about" />,
-  },
 ];
 
 export default routes;
