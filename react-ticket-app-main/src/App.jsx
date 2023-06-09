@@ -10,10 +10,8 @@ export default function App() {
 
   return (
     <div className="App" style={{minHeight: '100vh'}}>
-    <h1>推送</h1>
     {/* 注册路由 */}
     {element}
     </div>
-    // haohaohao
   );
 }
