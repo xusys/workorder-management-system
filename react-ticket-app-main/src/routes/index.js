@@ -1,6 +1,7 @@
 import {Login, Status} from '../user/login'
 import Bind from '../user/bind'
 import AdminBind from '../user/adminBind'
+import PersonalCenter from '../user/PersonalCenter'
 import {
   BasicDivider, 
   DashbordBase,
@@ -31,6 +32,10 @@ const routes = [
       {
         path: "/",
         element: <DashbordBase />,
+      },
+      {
+        path: "personalCenter",
+        element: <PersonalCenter />,
       },
       {
         path: "dashbord/base",

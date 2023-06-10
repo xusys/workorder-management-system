@@ -7,6 +7,7 @@ import {cos} from '../../cos'
 const { FormItem } = Form;
 const Bucket = window.sessionStorage.getItem('Bucket')
 const Region = window.sessionStorage.getItem('Region')
+
 export default function CreateTicket() {
     const formRef = useRef();
     const [ctgListValue, setCtgListValue] = useState([]);
