@@ -279,6 +279,7 @@ export function CreatedByMe() {
 // 渲染所有工单列表
 export function AllTickets() {
   const user_id = window.sessionStorage.getItem("user_id");
+  
   return (
     <Fragment>
       <TicketList
@@ -289,6 +290,7 @@ export function AllTickets() {
     </Fragment>
   );
 }
+
 // 渲染待分发工单列表或显示重新登录警告
 export function Distribute() {
   const user_id = window.sessionStorage.getItem("user_id");

@@ -42,12 +42,15 @@ export default function PersonalCenter() {
                         <div className="ti-form-basic-item">
                             <div className="ti-form-basic-container-title">个人详情</div>
                             {isEditing ? (
-                                <input
-                                    type="text"
-                                    placeholder="请输入内容"
-                                    value={username}
-                                    onChange={handleUsernameChange}
-                                />
+                                <div>
+                                    <p style={{marginBottom: '10px'}}>用户名: </p>
+                                    <input
+                                        type="text"
+                                        placeholder="请输入内容"
+                                        value={username}
+                                        onChange={handleUsernameChange}
+                                    />
+                                </div>
                             ) : (
                                 <p>用户名: {username}</p>
                             )}

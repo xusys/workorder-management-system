@@ -3,14 +3,14 @@ import { useState,useEffect } from 'react';
 import { useParams } from "react-router-dom";
 import {TicketContent,TicketBase,TicketHandle,TicketHistory,TicketTask} from '../ticketDetailBase/ticketDetailBase'
 
-
-
+// 渲染工单详情页面的内容
 export default function TicketDetail() {
     const { ticketId } = useParams();
     const  [data,setData] = useState({})
     const [deptData, setDeptData] = useState([]);
     const [employeeData, setEmployeeData] = useState([]);
-    // 请求内容
+
+    // 从服务器获取工单详情数据
     async function fetchData(queryParams) {
         try {
             let {data} = await api.get('/admin/v1/ticket/details',queryParams)
@@ -20,6 +20,8 @@ export default function TicketDetail() {
             setData({});
         }
     }
+
+    // 从服务器获取部门列表数据
     async function fetchDeptList() {
         try {  
             let {data} = await api.get('/admin/v1/system/property/dept/list')
@@ -28,6 +30,8 @@ export default function TicketDetail() {
             setDeptData([]); 
         }
     }
+
+    // 从服务器获取员工列表数据
     async function fetchEmployeeList() {
         try {  
             let {data} = await api.post('/admin/v1/system/property/employee/list',{type:2})
@@ -36,6 +40,7 @@ export default function TicketDetail() {
             setEmployeeData([]); 
         }
     }
+
     useEffect(()=>{
         fetchData({ticket_id:ticketId});
     },[])
@@ -45,6 +50,7 @@ export default function TicketDetail() {
     useEffect(()=>{
         fetchEmployeeList();
     },[])
+
     return (
         <>
             <TicketTask data={data} />

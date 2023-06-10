@@ -64,11 +64,12 @@ function getMenuValue(location) {
     }
     let reflashValue = getMenuValue(pathname);
     
+    // 侧边栏工具开启
     const [active, setActive] = useState('0-1');
-    const [collapsed, setCollapsed] = useState(false);
+    const [collapsed, setCollapsed] = useState(true);
     const [expands, setExpands] = useState(['0','1']);
-    const [showAdmin, setShowAdmin] = useState(false);
-    const [showDistribute, setShowDistribute] = useState(false);
+    const [showAdmin, setShowAdmin] = useState(true);
+    const [showDistribute, setShowDistribute] = useState(true);
     const [logoContent, setLogoContent] = useState('工单系统');
   
     // 在组件渲染时，获取显示管理菜单和分发工单菜单的状态
@@ -116,8 +117,8 @@ function getMenuValue(location) {
           onChange={(v) => setActive(v)}
           operations={<ViewListIcon className="t-menu__operations-icon" onClick={clickOper} />}
         >
-          <SubMenu value="0" title={<span>仪表盘</span>} icon={<DashboardIcon />}>
-            <MenuItem value="0-1" onClick={() => {navigate("/dashbord/base");}}>概览仪表盘</MenuItem>
+          <SubMenu value="0" title={<span>统计报表</span>} icon={<DashboardIcon />}>
+            <MenuItem value="0-1" onClick={() => {navigate("/dashbord/base");}}>工单统计</MenuItem>
             {/* <MenuItem value="0-2" onClick={() => {navigate("/dashbord/details");}}>统计报表</MenuItem> */}
           </SubMenu>
           <SubMenu value="1" title={<span>工单系统</span>} icon={<ViewModuleIcon />}>
@@ -164,9 +165,6 @@ function getMenuValue(location) {
               </MenuItem> */}
             </SubMenu> : ''
           }
-          {/* <MenuItem value="3" icon={<UserIcon />} onClick={() => {navigate("/personal");}}>
-            <span>个人中心</span>
-          </MenuItem> */}
         </Menu>
       </Fragment>
     );
