@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Form, Input, Textarea, Upload, Button, Radio } from 'tdesign-react'
-import '../layout/layout.css'
+import '../ticket/createTicket/createTicket.css'
+
 const { FormItem } = Form
 
 export default function PersonalCenter() {
@@ -55,12 +56,12 @@ export default function PersonalCenter() {
                     {isEditing ? (
                         <div className="ti-form-submit-container">
                             <div className="ti-form-submit-sub">
-                                <button type="submit" onClick={handleSubmit}>提交</button>
-                                <button type="button" onClick={handleCancelClick} className="reset">取消</button>
+                                <Button type="submit" onClick={handleSubmit}>提交</Button>
+                                <Button type="reset" theme="default" onClick={handleCancelClick} className="reset">取消</Button>
                             </div>
                         </div>
                     ) : (
-                        <button type="button" onClick={handleEditClick}>修改</button>
+                        <Button type="button" onClick={handleEditClick}>修改</Button>
                     )}
                 </form>
             </section>

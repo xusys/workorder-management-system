@@ -6,7 +6,8 @@ import {
   useLocation
 } from "react-router-dom";
 import api from '../../api'
-  
+
+// 展示工单信息的表格组件，并提供了相关操作和分页功能
 export default function TicketTable(props) {
   // const user_id = window.sessionStorage.getItem('user_id')
   const {queryParams} = props
@@ -21,6 +22,7 @@ export default function TicketTable(props) {
   const location = useLocation();
   const ticketPath = location.pathname
   
+  // 用于配置工单表格的列信息
   const columns = [
     {
       align: 'center',
@@ -62,6 +64,7 @@ export default function TicketTable(props) {
       ellipsis: true,
       colKey: 'operation',
       title: '操作',
+      // 自定义列的单元格内容，处理、删除或查看工单的链接
       cell: ({ col, row }) => {
         if(queryParams.current_handler) {
           return (
@@ -76,7 +79,7 @@ export default function TicketTable(props) {
               <>
                 <span onClick={()=>deleteTicket(row['id'])} style={{fontSize: '13px',marginRight: '2px'}}>
                   <Edit1Icon></Edit1Icon>
-                  <a>删除</a>
+                    <a>删除</a>
                 </span>
                 <span style={{fontSize: '13px'}}>
                   <Edit1Icon></Edit1Icon>
@@ -96,6 +99,8 @@ export default function TicketTable(props) {
       width: '15%',
     }
   ];
+
+  // 用于删除工单，弹出确认对话框
   const deleteTicket = (id)=>{
     api.dialog.confirm({
       msg: '是否删除该工单',
@@ -121,7 +126,8 @@ export default function TicketTable(props) {
     setPageSize(pageSize);
     await fetchData(queryParams,pageInfo);
   }
-  // 请求内容
+
+  // 根据查询参数和分页信息发送请求获取工单数据
   async function fetchData(queryParams,pageInfo) {
     setIsloading(true);
     try {
@@ -133,7 +139,7 @@ export default function TicketTable(props) {
           tableData.push({
             id: item.id,
             title: item.title,
-            status: item.status == 0 ? '创建' : item.status == 1 ? '进行中' : '完成',
+            status: item.status === 0 ? '创建' : item.status === 1 ? '进行中' : '完成',
             current_handler: item.current_handler_name,
             dept: item.dept_name,
             create_time: item.create_time
@@ -147,15 +153,20 @@ export default function TicketTable(props) {
       setIsloading(false);
     }
   }
+
+  // 更新当前页码和每页显示数量，初始化时调用一次
   async function update(){
     setCurrent(cur)
     setPageSize(pgs)
     await fetchData(queryParams,{current: cur,pageSize:pgs});
     
   }
+
+  // 组件渲染完成后监听 queryParams 的变化
   useEffect(()=>{
     update()
   },[queryParams])
+
   return (
     <Fragment>
       <Table 

@@ -22,6 +22,7 @@ const { BreadcrumbItem } = Breadcrumb;
 
 const { Header, Content, Footer, Aside } = Layout;
 
+// 根据用户登录状态和权限，渲染工作台页面的基本布局，包括侧边栏、头部导航栏、内容区域和页脚
 export function BasicDivider() {
   const user_id = window.sessionStorage.getItem("user_id");
   const token = window.localStorage.getItem("token");
@@ -53,7 +54,10 @@ export function BasicDivider() {
     );
   }
 }
+
+// 根据当前页面的路径，生成面包屑导航的内容
 const breadcrumbNameMap = {
+  "/personalCenter":"个人中心",
   "/ticket/create": "工单申请",
   "/ticket/distribute": "分发工单",
   "/ticket/distribute/detail": "工单详情",
@@ -100,6 +104,7 @@ function BreadcrumbTicket() {
   return <Breadcrumb>{breadcrumbItems}</Breadcrumb>;
 }
 
+// 渲染一个下拉菜单组件，根据传入的用户信息展示个人中心和退出登录选项
 function BasicDropdown(props) {
   const navigate = useNavigate();
   const options = [
@@ -149,6 +154,7 @@ function BasicDropdown(props) {
   );
 }
 
+// 渲染工作台页面的基本布局，包括三个区域
 export function DashbordBase() {
   const user_id = window.sessionStorage.getItem("user_id");
   return (
@@ -163,10 +169,13 @@ export function DashbordBase() {
   );
 }
 
+// 渲染工作台详情页面
 export function DashbordDetails() {
   const user_id = window.sessionStorage.getItem("user_id");
   return <Fragment>DashbordDetails</Fragment>;
 }
+
+// 渲染一个警告提示框组件，根据传入的参数展示提示内容，并提供关闭和确认操作
 function WarningAlert(props) {
   const navigate = useNavigate();
   const { show, content } = props;
@@ -186,6 +195,8 @@ function WarningAlert(props) {
     ></Dialog>
   );
 }
+
+// 渲染我的待办工单列表或显示重新登录警告，根据用户登录状态和权限
 export function MyTodo() {
   const user_id = window.sessionStorage.getItem("user_id");
   let content;
@@ -205,6 +216,8 @@ export function MyTodo() {
   }
   return content;
 }
+
+// 渲染我的提醒工单列表或显示重新登录警告
 export function MyAlert() {
   const user_id = window.sessionStorage.getItem("user_id");
   let content;
@@ -224,6 +237,8 @@ export function MyAlert() {
   }
   return content;
 }
+
+// 渲染与我相关的工单列表或显示重新登录警告
 export function RelatedToMe() {
   const user_id = window.sessionStorage.getItem("user_id");
   let content;
@@ -241,6 +256,8 @@ export function RelatedToMe() {
   }
   return content;
 }
+
+// 渲染我创建的工单列表或显示重新登录警告
 export function CreatedByMe() {
   const user_id = window.sessionStorage.getItem("user_id");
   let content;
@@ -258,6 +275,8 @@ export function CreatedByMe() {
   }
   return content;
 }
+
+// 渲染所有工单列表
 export function AllTickets() {
   const user_id = window.sessionStorage.getItem("user_id");
   return (
@@ -270,6 +289,7 @@ export function AllTickets() {
     </Fragment>
   );
 }
+// 渲染待分发工单列表或显示重新登录警告
 export function Distribute() {
   const user_id = window.sessionStorage.getItem("user_id");
   let content;
@@ -289,6 +309,7 @@ export function Distribute() {
   return content;
 }
 
+// 渲染员工审核页面或显示重新登录警告
 export function EmployeeApprove() {
   const user_id = window.sessionStorage.getItem("user_id");
   let content;
@@ -299,18 +320,26 @@ export function EmployeeApprove() {
   }
   return content;
 }
+
+// 渲染角色管理页面
 export function RoleAdmin() {
   const user_id = window.sessionStorage.getItem("user_id");
   return <Fragment>RoleAdmin</Fragment>;
 }
+
+// 渲染职位管理页面
 export function PositionAdmin() {
   const user_id = window.sessionStorage.getItem("user_id");
   return <Fragment>PositionAdmin</Fragment>;
 }
+
+// 渲染部门管理页面
 export function DepartmentAdmin() {
   const user_id = window.sessionStorage.getItem("user_id");
   return <Fragment>DepartmentAdmin</Fragment>;
 }
+
+// 渲染个人中心页面
 export function Personal() {
   const user_id = window.sessionStorage.getItem("user_id");
   return <Fragment>Personal</Fragment>;

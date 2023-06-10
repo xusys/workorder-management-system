@@ -20,6 +20,7 @@ const alertDialog = (data) => {
     },
   });
 };
+
 const confirmDialog = (data) =>{
   const mydialog = DialogPlugin({
     header: data.title || '系统消息',
@@ -44,7 +45,7 @@ const confirmDialog = (data) =>{
 }
 
 
-// 参数过滤函数
+// 参数过滤函数，过滤空值和空格，并递归过滤嵌套的对象和数组
 function filterNull (o) {
   for (var key in o) {
     if (o[key] === null || o[key] === undefined || o[key] === '') {
@@ -61,6 +62,8 @@ function filterNull (o) {
   return o
 }
 
+// 发起 API 请求的函数
+// 接受请求方法 method、请求 URL url 和请求参数 params
 function apiAxios (method, url, params) {
     const token = window.localStorage.getItem("token");
     // const navigate = useNavigate();
@@ -103,7 +106,8 @@ function apiAxios (method, url, params) {
     })
 }
 
-export default {
+// 封装不同类型的 API 请求和对话框/消息提示功能
+const api = {
   get: function (url, params) {
     return apiAxios('GET', url, params)
   },
@@ -138,4 +142,6 @@ export default {
       return MessagePlugin.error(message,duration)
     }
   }
-}
+};
+
+export default api;

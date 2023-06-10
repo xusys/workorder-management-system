@@ -8,15 +8,18 @@ const { FormItem } = Form;
 const Bucket = window.sessionStorage.getItem('Bucket')
 const Region = window.sessionStorage.getItem('Region')
 
+// 创建工单的表单
 export default function CreateTicket() {
     const formRef = useRef();
     const [ctgListValue, setCtgListValue] = useState([]);
     const user_id = window.sessionStorage.getItem('user_id')
-    // 重置
+    // 用于处理表单的重置操作
+
     const onReset = (e) => {
         console.log(e);
     }
-    // 提交表单
+
+    // 用于处理表单的提交操作
     const onSubmit = (e) => {
         if (e.validateResult === true) {
             let parma = formRef.current.getFieldsValue(true)
@@ -57,12 +60,13 @@ export default function CreateTicket() {
         attachment: [],
         category: [{ required: true, message: '必填', type: 'error' }]
     };
+
     // 分类
     const categoryGroup = ctgListValue.map((i)=>{
         return <Radio value={i.category_id} key={i.id}>{i.name}</Radio>
     })
     
-        
+    // 异步函数，用于获取分类列表数据并储存
     async function fetchCtgList() {
         try {  
             let {data} = await api.get('/admin/v1/ticket/category')
@@ -72,6 +76,8 @@ export default function CreateTicket() {
             setCtgListValue([]); 
         }
     } 
+
+    // 用于处理文件上传操作
     const uploadObj = useCallback((file) =>{
         return new Promise((resolve,reject)=>{
             let reader = new FileReader();
@@ -108,6 +114,8 @@ export default function CreateTicket() {
                 
         })
     })
+
+    // 用于将数据URL转换为 Blob 对象
     function dataURLtoBlob(dataurl) {
         var arr = dataurl.split(',');
         var mime = arr[0].match(/:(.*?);/)[1];
@@ -166,4 +174,3 @@ export default function CreateTicket() {
         </section>
     )
 }
-
