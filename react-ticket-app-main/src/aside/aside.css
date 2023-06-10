@@ -13,3 +13,11 @@
     justify-content: center;
     padding-left: 0;
 }
+
+.ti-aside-nav .t-badge {
+    z-index: 2; /* 设置一个较高的 z-index 值 */
+  }
+  
+.span-margin{
+    margin-right: 65px;
+}

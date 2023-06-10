@@ -205,6 +205,25 @@ export function MyTodo() {
   }
   return content;
 }
+export function MyAlert() {
+  const user_id = window.sessionStorage.getItem("user_id");
+  let content;
+  if (!user_id) {
+    content = <WarningAlert show={true} content={"请重新登录"} />;
+  } else {
+    content = (
+      <TicketList
+        pageParmas={{
+          type: 2,
+          status: 1,
+          current_handler: user_id,
+        }}
+        page="todo"
+      />
+    );
+  }
+  return content;
+}
 export function RelatedToMe() {
   const user_id = window.sessionStorage.getItem("user_id");
   let content;

@@ -24,7 +24,7 @@ export default function PersonalCenter() {
         window.sessionStorage.setItem(
             "user_info",
             JSON.stringify({ username: username })
-        );
+        )
 
         setIsEditing(false)
     }

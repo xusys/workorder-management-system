@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { Menu } from 'tdesign-react';
+import { Menu,Badge } from 'tdesign-react';
 import { AppIcon, ViewModuleIcon, DashboardIcon, SettingIcon, ViewListIcon } from 'tdesign-icons-react';
 import { useNavigate, useLocation } from "react-router-dom";
 import './aside.css' 
@@ -116,6 +116,11 @@ function MultiSide(props) {
                 </MenuItem>
                 <MenuItem value="1-5" onClick={()=>{navigate("/ticket/all");}}>
                     <span>所有工单</span>
+                </MenuItem>
+                <MenuItem value="1-7" onClick={()=>{navigate("/ticket/alert");}}>
+                    <span className='span-margin'>我的预警</span>
+                    <Badge count={3} color="red">
+                    </Badge>
                 </MenuItem>
                 {
                     showDistribute ?

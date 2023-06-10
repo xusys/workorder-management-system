@@ -15,7 +15,8 @@ import {
   RoleAdmin, 
   PositionAdmin,
   DepartmentAdmin,
-  Personal
+  Personal,
+  MyAlert
 } from '../layout/layout';
 import TicketDetail from '../ticket/ticketDetail/ticketDetail';
 import CreateTicket from '../ticket/createTicket/createTicket'
@@ -52,6 +53,10 @@ const routes = [
       {
         path: "ticket/todo",
         element: <MyTodo />,
+      },
+      {
+        path: "ticket/alert",
+        element: <MyAlert />,
       },
       {
         path: "ticket/created-by-me",
