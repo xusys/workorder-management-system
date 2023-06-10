@@ -58,5 +58,4 @@ public class ProcessController {
         map.put("processInstanceList",(Util.activitiResult(list)));
         return R.success(map);
     }
-
 }
