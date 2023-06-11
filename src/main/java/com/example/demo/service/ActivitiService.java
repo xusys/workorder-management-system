@@ -1,16 +1,20 @@
 package com.example.demo.service;
 
+import entity.Order;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
+import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricActivityInstanceQuery;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.runtime.ProcessInstanceQuery;
+import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +28,10 @@ public class ActivitiService {
     RuntimeService runtimeService;
     @Autowired
     HistoryService historyService;
+    @Autowired
+    OrderService orderService;
+    @Autowired
+    TaskService taskService;
     public void test(){
         System.out.println(repositoryService);
     }
@@ -63,7 +71,19 @@ public class ActivitiService {
         return historicActivityInstanceList;
 
     }
+    @Transactional
+    public void saveProcess(String processDefinitionId,Order order)  {
 
+           ProcessInstance processInstance=runtimeService.startProcessInstanceById(processDefinitionId);
+           order.setProDefId(processDefinitionId);
+           //oderservice.save(order);
+    }
+    @Transactional
+    public  void completeTask(String assignee,String processInstanceId){
+        Task task=taskService.createTaskQuery().taskAssignee(assignee).processInstanceId(processInstanceId).singleResult();
+        taskService.complete(task.getId());
+        //oderservice.updateStatus(task.getName());
+    }
 
 
 }
