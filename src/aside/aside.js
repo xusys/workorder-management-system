@@ -132,7 +132,7 @@ function getMenuValue(location) {
               <span>我创建的</span>
             </MenuItem>
             <MenuItem value="1-4" onClick={() => {navigate("/ticket/related-to-me");}}>
-              <span>我相关的</span>
+              <span>我历史的</span>
             </MenuItem>
             <MenuItem value="1-5" onClick={() => {navigate("/ticket/all");}}>
               <span>所有工单</span>

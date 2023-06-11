@@ -1,10 +1,12 @@
 import { Form, Input, Button } from "tdesign-react";
 import { DesktopIcon, LockOnIcon, CheckCircleIcon } from "tdesign-icons-react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import Register from "../user/register";
 import React, { useRef, useState, forwardRef } from "react";
 import "./user.css";
 import api from "../api";
+import "../mock/index";
 const { FormItem } = Form;
 
 export const Login = function () {
@@ -70,41 +72,47 @@ function LoginContent() {
   const onSubmit = (e) => {
     if (e.validateResult === true) {
       let params = formRef.current.getFieldsValue(true);
-      api
-        .post("/user/login", params)
-        .then((data) => {
-          api.message.success("登录成功");
-          if (data.data.user_info && data.data.user_info.job_num) {
+      // api
+      //   .post("/user/login", params)
+      //   .then((data) => {
+      //     api.message.success("登录成功");
+      //     if (data.data.user_info && data.data.user_info.job_num) {
 
-            window.localStorage.setItem("token", `bearer ${data.data.token}`);
-            window.sessionStorage.setItem(
-              "user_id",
-              `${data.data.user_info.user_id}`
-            );
-            window.sessionStorage.setItem(
-              "user_info",
-              `${JSON.stringify(data.data.user_info)}`
-            );
-            navigate("/");
-          } else {
-            if (data.data.user_id) {
-              window.localStorage.setItem("token", `bearer ${data.data.token}`);
-              window.sessionStorage.setItem("user_id", `${data.data.user_id}`);
-              navigate("/bind");
-            } else {
-              console.log("审核中");
-              navigate("/status");
-            }
-          }
-        })
-        .catch((err) => {
-          if (err.code === 1001) {
-            api.message.error("账号或密码错误");
-          } else if (err.code === 1002) {
-            api.message.error("对不起，您没有管理站权限");
-          } else {
-            api.message.error("登录失败");
-          }
+      //       window.localStorage.setItem("token", `bearer ${data.data.token}`);
+      //       window.sessionStorage.setItem(
+      //         "user_id",
+      //         `${data.data.user_info.user_id}`
+      //       );
+      //       window.sessionStorage.setItem(
+      //         "user_info",
+      //         `${JSON.stringify(data.data.user_info)}`
+      //       );
+      //       navigate("/");
+      //     } else {
+      //       if (data.data.user_id) {
+      //         window.localStorage.setItem("token", `bearer ${data.data.token}`);
+      //         window.sessionStorage.setItem("user_id", `${data.data.user_id}`);
+      //         navigate("/bind");
+      //       } else {
+      //         console.log("审核中");
+      //         navigate("/status");
+      //       }
+      //     }
+      //   })
+      //   .catch((err) => {
+      //     if (err.code === 1001) {
+      //       api.message.error("账号或密码错误");
+      //     } else if (err.code === 1002) {
+      //       api.message.error("对不起，您没有管理站权限");
+      //     } else {
+      //       api.message.error("登录失败");
+      //     }
+      //   });
+      axios
+        .get("/api/v1/dataSource") //接口地址与拦截地址要一致
+        .then((res) => {
+          // console.log('res', res)
+          navigate("/");
         });
     }
   };

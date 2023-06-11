@@ -11,13 +11,13 @@ export default function DashbordSectionTwo() {
       data: ['工单数']
     },
     xAxis: {
-      data: ['周一', '周二', '周三', '周四', '周五', '周六']
+      data: ['周一', '周二', '周三', '周四', '周五', '周六','周日']
     },
     yAxis: {},
     series: [{
       name: '工单数',
       type: 'bar',
-      data: [5, 20, 36, 10, 10, 20],
+      data: [5, 20, 36, 10, 10, 20,77],
       itemStyle: {
         color: '#0052d9'
       },

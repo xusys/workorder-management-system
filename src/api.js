@@ -78,7 +78,7 @@ function apiAxios (method, url, params) {
         data: method === 'POST' || method === 'PUT' ? params : null,
         params: method === 'GET' || method === 'DELETE' ? params : null,
         baseURL: `${root}`,
-        headers: {'Authorization':token},
+        headers: {'token':token},
         withCredentials: false
     };
     options = filterNull(options)

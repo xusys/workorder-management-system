@@ -5,7 +5,9 @@ import {
   Link,
   useLocation
 } from "react-router-dom";
+import axios from 'axios';
 import api from '../../api'
+import '../../mock/workorderlistall'
 
 // 展示工单信息的表格组件，并提供了相关操作和分页功能
 export default function TicketTable(props) {
@@ -116,7 +118,6 @@ export default function TicketTable(props) {
         })
       }]
     })
-    
   }
   
   // 分页数据变化
@@ -134,17 +135,32 @@ export default function TicketTable(props) {
         queryParams.pageIndex = pageInfo.current
         queryParams.pageSize = pageInfo.pageSize
         let tableData = []
-        let {data} = await api.post('/admin/v1/ticket/list',queryParams)
-        data.list.map((item)=>{
-          tableData.push({
-            id: item.id,
-            title: item.title,
-            status: item.status === 0 ? '创建' : item.status === 1 ? '进行中' : '完成',
-            current_handler: item.current_handler_name,
-            dept: item.dept_name,
-            create_time: item.create_time
+        // let {data} = await api.post('/admin/v1/ticket/list',queryParams)
+        axios.get('/api/v1/dataSource0')//接口地址与拦截地址要一致
+        .then((res)=>{
+          console.log('res', res.data.result.list)
+          res.data.result.list.map((item)=>{
+            tableData.push({
+              id: item.id,
+              title: item.title,
+              status: item.status === 0 ? '创建' : item.status === 1 ? '进行中' : '完成',
+              current_handler: item.current_handler_name,
+              dept: item.dept_name,
+              create_time: item.create_time
+            })
           })
-        })
+          })
+
+        // data.list.map((item)=>{
+        //   tableData.push({
+        //     id: item.id,
+        //     title: item.title,
+        //     status: item.status === 0 ? '创建' : item.status === 1 ? '进行中' : '完成',
+        //     current_handler: item.current_handler_name,
+        //     dept: item.dept_name,
+        //     create_time: item.create_time
+        //   })
+        // })
         setData(tableData)
         setTotle(data.totle)
         setIsloading(false);
