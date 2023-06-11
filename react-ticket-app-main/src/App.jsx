@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 
-import { NavLink, useRoutes } from 'react-router-dom'
+import { useRoutes } from 'react-router-dom'
 import routes from './routes'
 
 export default function App() {

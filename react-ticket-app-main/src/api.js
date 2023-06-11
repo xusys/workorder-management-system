@@ -6,6 +6,7 @@ import { MessagePlugin,DialogPlugin } from 'tdesign-react';
 // 配置API接口地址
 import {root} from './config'
 
+// 可配置参数的警告对话框
 const alertDialog = (data) => {
   const alertDia = DialogPlugin.alert({
     header: data.title || '系统错误',
@@ -21,6 +22,7 @@ const alertDialog = (data) => {
   });
 };
 
+// 可配置参数的消息对话框
 const confirmDialog = (data) =>{
   const mydialog = DialogPlugin({
     header: data.title || '系统消息',

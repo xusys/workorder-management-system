@@ -27,10 +27,12 @@ export function BasicDivider() {
   const user_id = window.sessionStorage.getItem("user_id");
   const token = window.localStorage.getItem("token");
   const user_info = window.sessionStorage.getItem("user_info");
+
   if (!user_id || !token || !user_info) {
     return <Navigate to="/login" />;
   } else {
     const name = JSON.parse(user_info).name;
+
     return (
       <Layout>
         <Aside width="auto" style={{ fontSize: 0 }}>
@@ -154,7 +156,7 @@ function BasicDropdown(props) {
   );
 }
 
-// 渲染工作台页面的基本布局，包括三个区域
+// 渲染工作台页面的基本布局，包括三种区域
 export function DashbordBase() {
   const user_id = window.sessionStorage.getItem("user_id");
   return (

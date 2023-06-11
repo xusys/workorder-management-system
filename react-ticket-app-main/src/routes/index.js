@@ -23,8 +23,8 @@ import CreateTicket from '../ticket/createTicket/createTicket'
 import DistributeTicket from '../ticket/ticketDetail/distributeTicket/distributeTicket'
 import HandleTicket from '../ticket/ticketDetail/handleTicket/handleTicket'
 import EmployeeDetail from "../system/employeeDetail";
-import { Navigate } from 'react-router-dom';
 
+// 路由表
 const routes = [
   {
     path: "/",

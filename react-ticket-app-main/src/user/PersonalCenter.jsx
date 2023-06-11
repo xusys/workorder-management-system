@@ -2,8 +2,7 @@ import React, { useState } from 'react'
 import { Form, Input, Textarea, Upload, Button, Radio } from 'tdesign-react'
 import '../ticket/createTicket/createTicket.css'
 
-const { FormItem } = Form
-
+// 个人中心的界面，根据用户的编辑状态显示不同的界面元素
 export default function PersonalCenter() {
     const userInfo = JSON.parse(window.sessionStorage.getItem("user_info"))
     const [isEditing, setIsEditing] = useState(false)
@@ -18,9 +17,9 @@ export default function PersonalCenter() {
         setUsername(userInfo.username)
     }
 
+    // 阻止默认的表单提交行为，处理提交逻辑
     const handleSubmit = (e) => {
         e.preventDefault()
-        // 处理提交逻辑
         console.log("提交")
         window.sessionStorage.setItem(
             "user_info",

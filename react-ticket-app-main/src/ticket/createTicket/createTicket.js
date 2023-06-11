@@ -23,8 +23,9 @@ export default function CreateTicket() {
     const onSubmit = (e) => {
         if (e.validateResult === true) {
             let parma = formRef.current.getFieldsValue(true)
-            let attachmentList = parma.attachment ? parma.attachment.map((item)=>`${user_id}_${item.uid}_${item.name}`): []
-            parma.attachment = attachmentList.join(',')
+            // console.log(parma)
+            // let attachmentList = parma.attachment ? parma.attachment.map((item)=>`${user_id}_${item.uid}_${item.name}`): []
+            // parma.attachment = attachmentList.join(',')
             api.post('/admin/v1/ticket/create',parma).then((data)=>{               
                     api.dialog.alert({
                         title: '系统消息',
@@ -57,11 +58,11 @@ export default function CreateTicket() {
     const rules = {
         title: [{ required: true, message: '必填', type: 'error' },{ min: 2, message: '至少需要两个字', type: 'error' },],
         content: [{ required: true, message: '必填', type: 'error' },{ min: 10, message: '至少需要十个字', type: 'error' },],
-        attachment: [],
+        // attachment: [],
         category: [{ required: true, message: '必填', type: 'error' }]
     };
 
-    // 分类
+    // 分类多个单选框创建
     const categoryGroup = ctgListValue.map((i)=>{
         return <Radio value={i.category_id} key={i.id}>{i.name}</Radio>
     })
@@ -73,7 +74,8 @@ export default function CreateTicket() {
             setCtgListValue(data)
         } catch (err) {
             console.log('err',err)
-            setCtgListValue([]); 
+            // setCtgListValue([]); 
+            setCtgListValue([{ category_id: '1', name: 'Category 1' }, { category_id: '2', name: 'Category 2' }]);
         }
     } 
 
@@ -147,7 +149,7 @@ export default function CreateTicket() {
                                 maxlength={200}
                             />
                         </FormItem>
-                        <FormItem label="附件" name="attachment" >
+                        {/* <FormItem label="附件" name="attachment" >
                             <Upload
                                 requestMethod={uploadObj}
                                 theme="image"
@@ -156,7 +158,7 @@ export default function CreateTicket() {
                                 multiple
                                 max={3}
                             />
-                        </FormItem>
+                        </FormItem> */}
                         <FormItem label="分类" name="category">
                             <Radio.Group>
                                 {categoryGroup}

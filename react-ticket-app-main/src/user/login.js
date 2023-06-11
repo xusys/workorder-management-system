@@ -57,7 +57,7 @@ function LoginContent() {
   ];
   // form规则
   const rules = {
-    user_name: [
+    username: [
       { required: true, message: "必填", type: "error" },
       { min: 4, message: "用户名不少于4个字符", type: "error" },
     ],
@@ -66,14 +66,16 @@ function LoginContent() {
       { min: 6, message: "密码不少于6个字符", type: "error" },
     ],
   };
+
   const onSubmit = (e) => {
     if (e.validateResult === true) {
       let params = formRef.current.getFieldsValue(true);
       api
-        .post("/admin/v1/user/login", params)
+        .post("/user/login", params)
         .then((data) => {
           api.message.success("登录成功");
           if (data.data.user_info && data.data.user_info.job_num) {
+
             window.localStorage.setItem("token", `bearer ${data.data.token}`);
             window.sessionStorage.setItem(
               "user_id",
@@ -106,6 +108,7 @@ function LoginContent() {
         });
     }
   };
+
   let content;
   const login = (
     <Form
@@ -116,7 +119,7 @@ function LoginContent() {
       colon={true}
       labelWidth={0}
     >
-      <FormItem name="user_name" className="ti-login-input-wrapper">
+      <FormItem name="username" className="ti-login-input-wrapper">
         <Input
           className="ti-login-input"
           size="large"
@@ -142,6 +145,7 @@ function LoginContent() {
       </FormItem>
     </Form>
   );
+
   const register = (
     <Register
       changeTab={(select) => {
@@ -149,14 +153,17 @@ function LoginContent() {
       }}
     />
   );
+
   if (select === 0) {
     content = login;
   } else if (select === 1) {
     content = register;
   }
+
   function changeTab(e) {
     setSelect(e);
   }
+
   return (
     <div className="ti-login-content">
       <Tab
@@ -177,6 +184,7 @@ function LoginContent() {
     </div>
   );
 }
+
 const Tab = (props) => {
   const tabGroup = props.options.map((i, index) => {
     let classList = "ti-tab-login";

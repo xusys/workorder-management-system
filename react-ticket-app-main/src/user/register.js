@@ -32,6 +32,7 @@ export default function Register(props) {
             });
         });
     }
+
     return (
         <Form ref={formRef} layout="vertical" onSubmit={onSubmit} labelWidth={0} colon={true} scrollToFirstError='smooth'>
             <FormItem             
@@ -71,5 +72,3 @@ export default function Register(props) {
         </Form>      
     );
 }
-
-
