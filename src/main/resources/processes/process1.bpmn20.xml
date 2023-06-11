@@ -3,7 +3,7 @@
   <process id="process1" name="process1" isExecutable="true">
     <documentation>流程开始 部门审批 流程结束</documentation>
     <startEvent id="sid-bdc7d356-7217-442c-9fa0-fdebf2e6e548" name="start"/>
-    <userTask id="sid-9172e8ff-cbce-42a6-bf37-b872183ab3e6" name="部门审批" activiti:assignee="jack"/>
+    <userTask id="sid-9172e8ff-cbce-42a6-bf37-b872183ab3e6" name="部门审批" activiti:assignee="jack"></userTask>
     <endEvent id="sid-fbeffdbe-d694-41a2-9ab6-2627de55a0da" name="end"/>
     <sequenceFlow id="sid-973962da-02c8-43d0-9e98-abe3fd630c03" sourceRef="sid-bdc7d356-7217-442c-9fa0-fdebf2e6e548" targetRef="sid-9172e8ff-cbce-42a6-bf37-b872183ab3e6"/>
     <sequenceFlow id="sid-0f7a5f1b-8aba-413f-ac70-e2693315eb77" sourceRef="sid-9172e8ff-cbce-42a6-bf37-b872183ab3e6" targetRef="sid-fbeffdbe-d694-41a2-9ab6-2627de55a0da"/>

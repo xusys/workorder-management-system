@@ -39,16 +39,17 @@ class DemoApplicationTests {
     @Test
     public void testDeployment() {
         // 读取 activiti.cfg.xml 配置文件，创建 ProcessEngine 的同时会创建表
+        Deployment deployment=repositoryService.createDeployment().addClasspathResource("processes/timerBoundary.bpmn20.xml").name("流程9").deploy();
 
-        Deployment deployment=repositoryService.createDeployment().addClasspathResource("processes/process1.bpmn20.xml").addClasspathResource("processes/diagram.png").name("流程").deploy();
+        // Deployment deployment=repositoryService.createDeployment().addClasspathResource("processes/process1.bpmn20.xml").addClasspathResource("processes/diagram.png").name("流程").deploy();
         System.out.println(deployment.getId());
     }
     @Test
-    public void testPersonalTaskList() {
+    public void testPersonalTaskList() throws InterruptedException {
         // 读取 activiti.cfg.xml 配置文件，创建 ProcessEngine 的同时会创建表
 
 
-        List<Task> list=taskService.createTaskQuery().processDefinitionKey("process1").list();
+        List<Task> list=taskService.createTaskQuery().processDefinitionKey("timerBoundary").list();
         for(Task task:list)
         {
 
@@ -57,9 +58,10 @@ class DemoApplicationTests {
             System.out.println("审批人 "+task.getAssignee());
 
         }
+
     }
     @Test
-    public void testStartProcess() {
+    public void testStartProcess() throws InterruptedException {
         // 读取 activiti.cfg.xml 配置文件，创建 ProcessEngine 的同时会创建表
 
 //        Map<String,Object> map=new HashMap<>();
@@ -68,8 +70,8 @@ class DemoApplicationTests {
 //        map.put("assignee1","小王2");
 //        map.put("assignee2","小张2");
         // runtimeService.setVariable(executionId, "evection", evection);
-        for (int i=0;i<10;i++) {
-            ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("process1");
+        for (int i=0;i<2;i++) {
+            ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("timerBoundary");
 
             System.out.println(processInstance.getId());
         }
@@ -80,7 +82,7 @@ class DemoApplicationTests {
         // 读取 activiti.cfg.xml 配置文件，创建 ProcessEngine 的同时会创建表
 
 
-        List<Task> list=taskService.createTaskQuery().processDefinitionKey("Third").taskAssignee("李").list();
+        List<Task> list=taskService.createTaskQuery().processDefinitionKey("timerBoundary").list();
         //taskService.setVariable(taskId, "evection", evection);
         for(Task task:list)
         {//taskService.complete(task.getId(),map);
@@ -93,6 +95,7 @@ class DemoApplicationTests {
     public void testProcessDefinition() {
 
         ProcessDefinitionQuery processDefinitionQuery=repositoryService.createProcessDefinitionQuery();
+
         List<ProcessDefinition>definitionList=processDefinitionQuery.orderByProcessDefinitionVersion().desc().list();
         for (ProcessDefinition processDefinition:definitionList)
         {
@@ -109,9 +112,10 @@ class DemoApplicationTests {
     @Test
     public void testProcessInstance() {
 
-        List<ProcessInstance>list=runtimeService.createProcessInstanceQuery().processDefinitionKey("process1").list();
+        List<ProcessInstance>list=runtimeService.createProcessInstanceQuery().processDefinitionKey("timerBoundary").list();
+
         for (ProcessInstance processInstance:list)
-        {
+         {
             System.out.println("流程实例ID "+processInstance.getProcessInstanceId());
             System.out.println("流程定义ID "+processInstance.getProcessDefinitionId());
             System.out.println("流程是否执行完成 "+processInstance.isEnded());
@@ -123,7 +127,17 @@ class DemoApplicationTests {
     }
     @Test
     public  void testDeleteDeployment(){
-        repositoryService.activateProcessDefinitionByKey("Second");
+        ProcessDefinitionQuery processDefinitionQuery=repositoryService.createProcessDefinitionQuery();
+
+        List<ProcessDefinition>definitionList=processDefinitionQuery.orderByProcessDefinitionVersion().desc().list();
+        for (ProcessDefinition processDefinition:definitionList){
+            try{
+            repositoryService.deleteDeployment(processDefinition.getDeploymentId(),true);
+        }catch (Exception e)
+            {
+
+            }
+        }
 
     }
     @Test
@@ -209,8 +223,6 @@ class DemoApplicationTests {
     @Test
     public void testStartProcess2() {
         // 读取 activiti.cfg.xml 配置文件，创建 ProcessEngine 的同时会创建表
-
-
 
         ProcessInstance processInstance=runtimeService.startProcessInstanceByKey("Third","105");
 
