@@ -15,6 +15,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    // 用户注册
     @PostMapping("/register")
     public R register(@RequestBody User user){
         if(userService.register(user)){
@@ -23,6 +24,7 @@ public class UserController {
         else return R.error("用户名已存在");
     }
 
+    // 用户登录
     @PostMapping("/login")
     public R login(@RequestBody User user){
         if(userService.login(user)){
@@ -30,4 +32,6 @@ public class UserController {
         }
         else return R.error("用户名或密码错误");
     }
+
+    // 展示用户信息
 }
