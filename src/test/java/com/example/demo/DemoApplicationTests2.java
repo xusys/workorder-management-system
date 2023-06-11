@@ -4,6 +4,8 @@ import com.example.demo.mapper.OrderMapper;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.entity.Order;
 import com.example.demo.entity.User;
+import com.example.demo.service.AreaService;
+import com.example.demo.service.impl.AreaServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -42,5 +44,13 @@ public class DemoApplicationTests2 {
     public void testGetAllOrder() {
         List<Order> orderList = orderMapper.selectList(null);
         System.out.println(orderList);
+    }
+
+    @Test
+    public void testSave(){
+        Order order=new Order();
+        order.setOrderName("test");
+        orderMapper.insert(order);
+        System.out.println(order.getId());
     }
 }
