@@ -13,4 +13,6 @@ public class User {
     private String password;
     private Integer positionId;
     private String areaId;
+    @TableField(exist = false)
+    private String positionName;
 }
