@@ -52,7 +52,7 @@ class DemoApplicationTests {
         // 读取 activiti.cfg.xml 配置文件，创建 ProcessEngine 的同时会创建表
 
 
-        List<Task> list=taskService.createTaskQuery().processDefinitionKey("timerBoundary").list();
+        List<Task> list=taskService.createTaskQuery().processDefinitionKey("timerBoundary").processVariableValueLike("areaId","02%%").list();
         for(Task task:list)
         {
 
@@ -73,9 +73,9 @@ class DemoApplicationTests {
 //        map.put("assignee1","小王2");
 //        map.put("assignee2","小张2");
         // runtimeService.setVariable(executionId, "evection", evection);
-        for (int i=0;i<2;i++) {
+        for (int i=0;i<1;i++) {
             ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("timerBoundary");
-
+            runtimeService.setVariableLocal(processInstance.getId(),"areaId","0204");
             System.out.println(processInstance.getId());
         }
 
@@ -89,6 +89,8 @@ class DemoApplicationTests {
         //taskService.setVariable(taskId, "evection", evection);
         for(Task task:list)
         {//taskService.complete(task.getId(),map);
+            //taskService.setVariableLocal(task.getId(),"var",false);
+            System.out.println(taskService.getVariableLocal(task.getId(),"var"));
             taskService.complete(task.getId());
             System.out.println("complete");
         }

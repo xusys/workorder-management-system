@@ -56,6 +56,7 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
         // 排除登录、注册页面的拦截
         excludePath.add("/user/login");
         excludePath.add("/user/register");
+        excludePath.add("/**");
         registry.addInterceptor(jwtInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns(excludePath);

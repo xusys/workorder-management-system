@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Order;
+import com.example.demo.entity.User;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
@@ -31,6 +32,8 @@ public class ActivitiService {
     OrderService orderService;
     @Autowired
     TaskService taskService;
+    @Autowired
+    UserService userService;
     public void test(){
         System.out.println(repositoryService);
     }
@@ -75,6 +78,7 @@ public class ActivitiService {
 
            ProcessInstance processInstance=runtimeService.startProcessInstanceById(order.getProDefId());
            orderService.save(order);
+
           runtimeService.updateBusinessKey(processInstance.getId(),order.getId().toString());
         Task task=taskService.createTaskQuery().processInstanceBusinessKey(processInstance.getBusinessKey()).singleResult();
         orderService.updateStatus(order.getId(),task.getName());
@@ -83,14 +87,18 @@ public class ActivitiService {
     @Transactional
     public  void completeTask(String assignee,Long orderId,Boolean flag){
         Task task=taskService.createTaskQuery().processInstanceBusinessKey(orderId.toString()).taskAssignee(assignee).singleResult();
-        taskService.setVariable(task.getId(),"var",flag);
+        taskService.setVariableLocal(task.getId(),"var",flag);
         taskService.complete(task.getId());
 
     }
     public List<Task> myCommission(String username){
         List<Task>list=taskService.createTaskQuery().taskAssignee(username).list();
+        for ( Task task :list){
+
+        }
        return list;
     }
+    @Transactional
     public List<Order> myOrder(String username){
         List<Order>list=orderService.getByCreateUser(username);
         for(Order order:list){
@@ -100,8 +108,14 @@ public class ActivitiService {
             order.setStatus(historicActivityInstanceList.get(historicActivityInstanceList.size()-1).getActivityName());
         }
         return list;
-
-
+    }
+    @public Boolean setAssignee(String username,String taskId){
+        User user=userService.getByUsername(username);
+        if(user!=null&&user.getPositionId()==0){
+            taskService.setAssignee(taskId,username);
+            return true;
+        }
+        else return false;
     }
 
 }
