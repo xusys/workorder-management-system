@@ -12,7 +12,7 @@ spring:
     database-schema-update: true
     db-history-used: true
     history-level: full
-    check-process-definitions: true
+    check-process-definitions: false
     async-executor-activate: true
 
 mybatis-plus:

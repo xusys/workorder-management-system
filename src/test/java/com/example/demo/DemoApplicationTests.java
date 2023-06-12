@@ -7,6 +7,8 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricActivityInstanceQuery;
+import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
@@ -30,6 +32,7 @@ class DemoApplicationTests {
     HistoryService historyService;
     @Autowired
     RuntimeService runtimeService;
+
     @Test
     public void test1(){
         String fileName = "ererewe.jpg";
@@ -157,8 +160,11 @@ class DemoApplicationTests {
             System.out.println(historicActivityInstance.getActivityName());
             System.out.println(historicActivityInstance.getProcessDefinitionId());
             System.out.println(historicActivityInstance.getProcessInstanceId());
+
             System.out.println('\n');
         }
+
+
     }
     @Test
     public void testSuspendAllProcess(){
@@ -287,5 +293,23 @@ class DemoApplicationTests {
             taskService.setAssignee(taskId, candidateuser);
         }
     }
+    /**
+     * 历史任务查询
+     */
+    @Test
+    public void historyTaskList(){
+        List<HistoricTaskInstance> list=historyService // 历史任务Service
+                .createHistoricTaskInstanceQuery() // 创建历史任务实例查询
+                 // 指定办理人
 
+                .list();
+        for(HistoricTaskInstance hti:list){
+            System.out.println("任务ID:"+hti.getId());
+            System.out.println("流程实例ID:"+hti.getProcessInstanceId());
+            System.out.println("班里人："+hti.getAssignee());
+            System.out.println("创建时间："+hti.getCreateTime());
+            System.out.println("结束时间："+hti.getEndTime());
+            System.out.println("===========================");
+        }
+    }
 }

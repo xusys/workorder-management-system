@@ -7,6 +7,7 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricActivityInstanceQuery;
+import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -70,18 +71,38 @@ public class ActivitiService {
 
     }
     @Transactional
-    public void saveProcess(String processDefinitionId,Order order)  {
+    public void saveProcess(Order order)  {
 
-           ProcessInstance processInstance=runtimeService.startProcessInstanceById(processDefinitionId);
-           order.setProDefId(processDefinitionId);
-           //oderservice.save(order);
+           ProcessInstance processInstance=runtimeService.startProcessInstanceById(order.getProDefId());
+           orderService.save(order);
+          runtimeService.updateBusinessKey(processInstance.getId(),order.getId().toString());
+        Task task=taskService.createTaskQuery().processInstanceBusinessKey(processInstance.getBusinessKey()).singleResult();
+        orderService.updateStatus(order.getId(),task.getName());
+
     }
     @Transactional
-    public  void completeTask(String assignee,String processInstanceId){
-        Task task=taskService.createTaskQuery().taskAssignee(assignee).processInstanceId(processInstanceId).singleResult();
+    public  void completeTask(String assignee,Long orderId,Boolean flag){
+        Task task=taskService.createTaskQuery().processInstanceBusinessKey(orderId.toString()).taskAssignee(assignee).singleResult();
+        taskService.setVariable(task.getId(),"var",flag);
         taskService.complete(task.getId());
-        //oderservice.updateStatus(task.getName());
+
+    }
+    public List<Task> myCommission(String username){
+        List<Task>list=taskService.createTaskQuery().taskAssignee(username).list();
+       return list;
+    }
+    public List<Order> myOrder(String username){
+        List<Order>list=orderService.getByCreateUser(username);
+        for(Order order:list){
+            HistoricActivityInstanceQuery historicActivityInstanceQuery= historyService.createHistoricActivityInstanceQuery();
+            HistoricProcessInstance historicProcessInstance=historyService.createHistoricProcessInstanceQuery().processInstanceBusinessKey(order.getId().toString()).singleResult();
+            List<HistoricActivityInstance> historicActivityInstanceList=historicActivityInstanceQuery.processInstanceId(historicProcessInstance.getId()).list();
+            order.setStatus(historicActivityInstanceList.get(historicActivityInstanceList.size()-1).getActivityName());
+        }
+        return list;
+
+
     }
 
-
 }
+

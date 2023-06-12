@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,8 +59,23 @@ public class ProcessController {
         return R.success(map);
     }
     @PostMapping("/save")
-    public R save(HttpServletRequest request, @RequestBody Order order,@RequestBody String processDefinitionId){
-        activitiService.saveProcess(processDefinitionId,order);
+    public R save(HttpServletRequest request, @RequestBody Order order){
+        activitiService.saveProcess(order);
         return R.success(0);
+    }
+    @GetMapping("/myOrder")
+    public R myOrder(String username){
+        List<Order>list=activitiService.myOrder(username);
+        return  R.success(Util.activitiResult(list));
+    }
+    @GetMapping("/myCommision")
+    public R myCommission(String username){
+        List<Task>list=activitiService.myCommission(username);
+        return  R.success(Util.activitiResult(list));
+    }
+    @GetMapping("/completeTask")
+    public  R completeTask(Boolean flag,String assignee, Long orderId){
+        activitiService.completeTask(assignee,orderId,flag);
+        return R.success(flag);
     }
 }
