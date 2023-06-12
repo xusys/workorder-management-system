@@ -48,7 +48,7 @@ class DemoApplicationTests {
         // 读取 activiti.cfg.xml 配置文件，创建 ProcessEngine 的同时会创建表
 
 
-        List<Task> list=taskService.createTaskQuery().processDefinitionKey("timerBoundary").processVariableValueLike("areaId","02%%").list();
+        List<Task> list=taskService.createTaskQuery().processDefinitionKey("timerBoundary").list();
         for(Task task:list)
         {
 

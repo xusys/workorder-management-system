@@ -98,12 +98,12 @@ public class ProcessController {
         return R.success(Util.activitiResult(list));
     }
     @GetMapping("/completeTask")
-    public  R completeTask(Boolean flag,@RequestHeader String token, Long orderId){
+    public  R completeTask(Boolean flag,@RequestHeader String token, String taskId){
         DecodedJWT decode = JwtUtil.verifyToken(token);
         String positionName=decode.getClaim("positionName").asString();
         String username=decode.getClaim("username").asString();
         try {
-            activitiService.completeTask(username,positionName,orderId,flag);
+            activitiService.completeTask(username,positionName,taskId,flag);
             return R.success(flag);
         }catch (Exception e)
         {

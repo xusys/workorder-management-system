@@ -93,12 +93,13 @@ public class ActivitiService {
 
     }
     @Transactional
-    public  void completeTask(String username,String positionId,Long orderId,Boolean flag){
-        Task task=taskService.createTaskQuery().processInstanceBusinessKey(orderId.toString()).taskAssignee(positionId).singleResult();
+    public  void completeTask(String username,String positionName,String taskId,Boolean flag){
+        System.out.println(taskId);
+        Task task=taskService.createTaskQuery().taskId(taskId).singleResult();
         taskService.setVariableLocal(task.getId(),"var",flag);
         taskService.complete(task.getId());
         OperationLog operationLog=new OperationLog();
-        operationLog.setPosition(positionId);
+        operationLog.setPosition(positionName);
         operationLog.setTaskId(task.getId());
         operationLog.setTaskStatus(flag.toString());
         operationLog.setOperator(username);
