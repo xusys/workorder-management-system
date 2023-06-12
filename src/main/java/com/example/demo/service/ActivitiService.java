@@ -87,7 +87,7 @@ public class ActivitiService {
            ProcessInstance processInstance=runtimeService.startProcessInstanceById(order.getProDefId());
            orderService.save(order);
 
-          runtimeService.updateBusinessKey(processInstance.getId(),order.getId().toString());
+          runtimeService.updateBusinessKey(processInstance.getId(),order.getId());
         Task task=taskService.createTaskQuery().processInstanceBusinessKey(processInstance.getBusinessKey()).singleResult();
         orderService.updateStatus(order.getId(),task.getName());
 
