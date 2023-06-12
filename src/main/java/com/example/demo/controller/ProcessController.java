@@ -59,7 +59,7 @@ public class ProcessController {
     }
 
     @GetMapping("/getHistory")
-    public  R history(int currentpage,int pagesize){
+    public R history(int currentpage,int pagesize){
        List<HistoricActivityInstance>list=activitiService.getHistory(currentpage,pagesize);
         Map<String,Object>map =new HashMap<>();
         map.put("processInstanceList",(Util.activitiResult(list)));
@@ -71,14 +71,16 @@ public class ProcessController {
         // 从token中获取职位名和地区id
         String createUser=decode.getClaim("username").asString();
         String areaId=decode.getClaim("areaId").asString();
-        System.out.println(areaId);
         order.setCreateUser(createUser);
         order.setAreaId(areaId);
         activitiService.saveProcess(order);
         return R.success(0);
     }
     @GetMapping("/myOrder")
-    public R myOrder(String username){
+    public R myOrder(@RequestHeader String token){
+        DecodedJWT decode = JwtUtil.verifyToken(token);
+        // 从token中获取职位名
+        String username=decode.getClaim("username").asString();
         List<Order>list=activitiService.myOrder(username);
         return  R.success(Util.activitiResult(list));
     }
@@ -96,13 +98,12 @@ public class ProcessController {
         // 从token中获取职位名和地区id
         String positionName=decode.getClaim("positionName").asString();
         String areaId=decode.getClaim("areaId").asString();
-        System.out.println(areaId);
         // 调用service
         List<Task>list=activitiService.myCommission(positionName,areaId);
         return R.success(Util.activitiResult(list));
     }
     @GetMapping("/completeTask")
-    public  R completeTask(Boolean flag,@RequestHeader String token, String taskId){
+    public  R completeTask(Boolean flag, String taskId, @RequestHeader String token){
         DecodedJWT decode = JwtUtil.verifyToken(token);
         String positionName=decode.getClaim("positionName").asString();
         String username=decode.getClaim("username").asString();
@@ -113,7 +114,6 @@ public class ProcessController {
         {
             return R.error("error");
         }
-
     }
 
     /**
@@ -122,24 +122,27 @@ public class ProcessController {
      * @return
      */
     @GetMapping ("/operationLog")
-    public  R operationLog(String token){
+    public R operationLog(@RequestHeader String token){
         DecodedJWT decode = JwtUtil.verifyToken(token);
         String username=decode.getClaim("username").asString();
         List<OperationLog>list=operationLogService.getByOperator(username);
         return R.success(Util.activitiResult(list));
     }
     @PostMapping("/setAssignee")
-    public  R setAssignee(String username,@RequestBody String taskId){
-       activitiService.setAssignee(username,taskId);
-       return R.success("");
+    public R setAssignee(@RequestHeader String token, @RequestBody String taskId){
+        DecodedJWT decode = JwtUtil.verifyToken(token);
+        String username=decode.getClaim("username").asString();
+        activitiService.setAssignee(username,taskId);
+        return R.success("");
     }
+
     /**
      * 获取预警工单
      * @param token
      * @return
      */
     @GetMapping("/myWarningTask")
-    public R myWarningTask(String token){
+    public R myWarningTask(@RequestHeader String token){
         // 获取token
         DecodedJWT decode = JwtUtil.verifyToken(token);
         // 从token中获取职位名和地区id
