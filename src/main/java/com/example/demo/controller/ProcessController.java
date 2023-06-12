@@ -4,6 +4,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.demo.common.R;
 import com.example.demo.entity.OperationLog;
 import com.example.demo.service.ActivitiService;
+import com.example.demo.service.OperationLogService;
 import com.example.demo.utils.JwtUtil;
 import com.example.demo.utils.Util;
 import com.example.demo.entity.Order;
@@ -15,7 +16,6 @@ import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +26,10 @@ import java.util.Map;
 public class ProcessController {
     @Autowired
     ActivitiService activitiService;
+
+    @Autowired
+    OperationLogService operationLogService;
+
     @GetMapping("/getDefine")
     public R getDefine(){
         List<ProcessDefinition> list=activitiService.getDefine();
@@ -111,11 +115,17 @@ public class ProcessController {
         }
 
     }
+
+    /**
+     * 查询当前用户操作记录
+     * @param token
+     * @return
+     */
     @GetMapping ("/operationLog")
     public  R operationLog(String token){
         DecodedJWT decode = JwtUtil.verifyToken(token);
         String username=decode.getClaim("username").asString();
-        List<OperationLog>list=activitiService.showOperationLog(username);
+        List<OperationLog>list=operationLogService.getByOperator(username);
         return R.success(Util.activitiResult(list));
     }
     @PostMapping("/setAssignee")

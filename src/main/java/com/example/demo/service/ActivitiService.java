@@ -104,7 +104,6 @@ public class ActivitiService {
         operationLog.setTaskStatus(flag.toString());
         operationLog.setOperator(username);
         operationLogService.save(operationLog);
-
     }
     public List<Task> myCommission(String positionId,String areaId){
 
@@ -119,7 +118,7 @@ public class ActivitiService {
         List<Order>list=orderService.getByCreateUser(username);
         for(Order order:list){
             HistoricActivityInstanceQuery historicActivityInstanceQuery= historyService.createHistoricActivityInstanceQuery();
-            HistoricProcessInstance historicProcessInstance=historyService.createHistoricProcessInstanceQuery().processInstanceBusinessKey(order.getId().toString()).singleResult();
+            HistoricProcessInstance historicProcessInstance=historyService.createHistoricProcessInstanceQuery().processInstanceBusinessKey(order.getId()).singleResult();
             List<HistoricActivityInstance> historicActivityInstanceList=historicActivityInstanceQuery.processInstanceId(historicProcessInstance.getId()).list();
             order.setStatus(historicActivityInstanceList.get(historicActivityInstanceList.size()-1).getActivityName());
         }
@@ -133,10 +132,7 @@ public class ActivitiService {
         }
         else return false;
     }
-    public List<OperationLog> showOperationLog(String username){
-       List<OperationLog>list=operationLogService.getByOperator(username);
-        return list;
-    }
+
     public List<Order> timeoutOrder(){
         List<Order>orderList=new ArrayList<>();
         List<HistoricTaskInstance>list=historyService.createHistoricTaskInstanceQuery().taskDeleteReasonLike("%%").list();
