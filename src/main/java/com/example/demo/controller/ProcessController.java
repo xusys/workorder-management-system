@@ -93,4 +93,20 @@ public class ProcessController {
         return R.success(flag);
     }
 
+    /**
+     * 获取预警工单
+     * @param token
+     * @return
+     */
+    @GetMapping("/myWarningTask")
+    public R myWarningTask(String token){
+        // 获取token
+        DecodedJWT decode = JwtUtil.verifyToken(token);
+        // 从token中获取职位名和地区id
+        String positionName=decode.getClaim("positionName").asString();
+        String areaId=decode.getClaim("areaId").asString();
+        // 调用service
+        List<Task>list=activitiService.getWarningTask(positionName,areaId);
+        return R.success(list);
+    }
 }

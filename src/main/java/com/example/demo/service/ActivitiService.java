@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -120,5 +121,22 @@ public class ActivitiService {
         else return false;
     }
 
+    /**
+     * 查询预警任务
+     * @param positionName
+     * @param areaId
+     * @return
+     */
+    public List<Task> getWarningTask(String positionName, String areaId){
+        long duration=1000*24*60*60; // 1天的毫秒数
+        Date nowDate=new Date();
+        List<Task>list=taskService.createTaskQuery()
+                .taskAssignee(positionName)
+                .processVariableValueLike("areaId",AreaUtil.addWildcards(areaId))
+                .list();
+        // 提取出距离创建时间已经超过 2天 的任务
+        list.removeIf(task -> (nowDate.getTime() - task.getCreateTime().getTime()) / duration > 2);
+        return list;
+    }
 }
 
