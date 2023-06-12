@@ -16,12 +16,14 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
     @Override
-    public boolean login(User user) {
+    public User login(User user) {
         LambdaQueryWrapper<User> lambdaQueryWrapper=new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.select(User::getPassword).eq(User::getUsername, user.getUsername());
-        String passwordEncode=userMapper.selectOne(lambdaQueryWrapper).getPassword();
-        System.out.println(passwordEncode);
-        return passwordEncode != null && passwordEncoder.matches(user.getPassword(), passwordEncode);
+        lambdaQueryWrapper.eq(User::getUsername, user.getUsername());
+        User userInfo=userMapper.selectOne(lambdaQueryWrapper);
+        if(userInfo != null && passwordEncoder.matches(user.getPassword(), userInfo.getPassword())){
+            return userInfo;
+        }
+        else return null;
     }
 
     @Override
@@ -34,5 +36,12 @@ public class UserServiceImpl implements UserService {
             return true;
         }
         else return false;
+    }
+
+    @Override
+    public User selectUserByUsername(String username) {
+        LambdaQueryWrapper<User> lambdaQueryWrapper=new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(User::getUsername,username);
+        return userMapper.selectOne(lambdaQueryWrapper);
     }
 }
