@@ -116,7 +116,7 @@ export function TicketContent(props) {
                     <span className="ti-info-item-title">内容：</span>
                     <span className="ti-info-item-content">{props.data.content}</span>
                 </div>
-                <div className="ti-info-item">
+                {/* <div className="ti-info-item">
                     <span className="ti-info-item-title">附件：</span>
                     <div className="ti-info-item-content">
                         {
@@ -125,7 +125,7 @@ export function TicketContent(props) {
                              : ''
                         }
                     </div>
-                </div>
+                </div> */}
             </div>
         </TiCardLarge>
     )     
@@ -346,7 +346,7 @@ export function TicketTask(props) {
                     <span className="ti-info-item-title">内容：</span>
                     <span className="ti-info-item-content">{task.desc}</span>
                 </div>
-                <div className="ti-info-item">
+                {/* <div className="ti-info-item">
                     <span className="ti-info-item-title">附件：</span>
                     <div className="ti-info-item-content">
                         {
@@ -355,7 +355,7 @@ export function TicketTask(props) {
                              : ''
                         }
                     </div>
-                </div>
+                </div> */}
             </div>
         </TiCardLarge>
     )
@@ -481,7 +481,7 @@ export function TicketHandle(props) {
                         maxlength={200}
                     />
                 </FormItem>
-                <FormItem label="附件" name="attachment">
+                {/* <FormItem label="附件" name="attachment">
                     <Upload
                         requestMethod={uploadObj}
                         theme="image"
@@ -490,7 +490,7 @@ export function TicketHandle(props) {
                         multiple
                         max={3}
                     />
-                </FormItem>
+                </FormItem> */}
                 <FormItem label="指派给" name="handler">
                     <Select style={{ width: '40%' }} clearable>
                         {options}

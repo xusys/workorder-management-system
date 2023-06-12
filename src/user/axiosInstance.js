@@ -26,7 +26,7 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (response) => {
     // 处理响应数据
-    let token = sessionStorage.getItem("token");
+    const token = response.data.token;
     return response;
   },
   (error) => {

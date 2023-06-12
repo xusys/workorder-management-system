@@ -1,12 +1,22 @@
 import React, { useState } from 'react'
 import { Form, Input, Textarea, Upload, Button, Radio } from 'tdesign-react'
 import '../ticket/createTicket/createTicket.css'
+import axios from "../user/axiosInstance"
+// import axios from 'axios'
+import "../mock/usernamechange"
+import './PersonalCenter.css'
+
+const { FormItem } = Form
+
 
 // 个人中心的界面，根据用户的编辑状态显示不同的界面元素
 export default function PersonalCenter() {
     const userInfo = JSON.parse(window.sessionStorage.getItem("user_info"))
+    console.log('userInfo',userInfo)
     const [isEditing, setIsEditing] = useState(false)
-    const [username, setUsername] = useState(userInfo.username)
+    const [username, setUsername] = useState(userInfo.user_name)
+    // console.log('username',username)
+    const [userid, setUserid] = useState(userInfo.user_id)
 
     const handleEditClick = () => {
         setIsEditing(true)
@@ -14,23 +24,38 @@ export default function PersonalCenter() {
 
     const handleCancelClick = () => {
         setIsEditing(false)
-        setUsername(userInfo.username)
+        setUsername(userInfo.user_name)
     }
 
     // 阻止默认的表单提交行为，处理提交逻辑
     const handleSubmit = (e) => {
-        e.preventDefault()
-        console.log("提交")
-        window.sessionStorage.setItem(
-            "user_info",
-            JSON.stringify({ username: username })
-        )
-
-        setIsEditing(false)
-    }
+        e.preventDefault() // 阻止表单的默认提交行为
+      
+        if (isEditing) {
+          // 发送更新用户信息的请求
+        //   console.log('username',username)
+          axios.post("/api/v1/updateUser", username)
+            .then((res) => {
+              if (res.data.code === 0) {
+                // 更新成功，更新页面上的用户信息
+                const updatedUserInfo = { ...userInfo, user_name: username }
+                window.sessionStorage.setItem("user_info", JSON.stringify(updatedUserInfo))
+                setIsEditing(false)
+              } else {
+                // 更新失败，处理错误情况
+                console.log("更新失败")
+              }
+            })
+            .catch((error) => {
+              // 处理请求错误
+              console.log("请求错误", error)
+            })
+        }
+      }      
+      
 
     const handleUsernameChange = (e) => {
-        setUsername(e.target.value)
+        setUsername(e)
     }
 
     return (
@@ -41,17 +66,29 @@ export default function PersonalCenter() {
                         <div className="ti-form-basic-item">
                             <div className="ti-form-basic-container-title">个人详情</div>
                             {isEditing ? (
-                                <div>
-                                    <p style={{marginBottom: '10px'}}>用户名: </p>
-                                    <input
-                                        type="text"
-                                        placeholder="请输入内容"
-                                        value={username}
-                                        onChange={handleUsernameChange}
-                                    />
+                                <div className="ti-form-basic-item">
+                                    <FormItem label="用户名" name="title">
+                                        <Input
+                                            placeholder="请输入内容"
+                                            value={toString(username)}
+                                            onChange={(e) => {
+                                                handleUsernameChange(e)
+                                            }}
+                                        />
+                                    </FormItem>
+                                    <FormItem label="职位" name="title">
+                                        <p>{userid}</p>
+                                    </FormItem>
                                 </div>
                             ) : (
-                                <p>用户名: {username}</p>
+                                <div className="ti-form-basic-item">
+                                    <FormItem label="用户名" name="title">
+                                        <p>{username}</p>
+                                    </FormItem>
+                                    <FormItem label="职位" name="title">
+                                        <p>{userid}</p>
+                                    </FormItem>
+                                </div>
                             )}
                         </div>
                     </div>
@@ -67,6 +104,6 @@ export default function PersonalCenter() {
                     )}
                 </form>
             </section>
-        </div>
+        </div >
     )
 }

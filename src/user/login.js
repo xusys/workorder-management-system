@@ -1,12 +1,13 @@
 import { Form, Input, Button } from "tdesign-react";
 import { DesktopIcon, LockOnIcon, CheckCircleIcon } from "tdesign-icons-react";
 import { useNavigate } from "react-router-dom";
+// import axios from "../user/axiosInstance";
+import "../mock/index";
 import axios from "axios";
 import Register from "../user/register";
 import React, { useRef, useState, forwardRef } from "react";
 import "./user.css";
 import api from "../api";
-import "../mock/index";
 const { FormItem } = Form;
 
 export const Login = function () {
@@ -14,12 +15,12 @@ export const Login = function () {
   window.sessionStorage.removeItem("user_id");
   window.sessionStorage.removeItem("user_info");
 
-  window.localStorage.setItem("token", "mock-token");
-  window.sessionStorage.setItem("user_id", "mock-user-id");
-  window.sessionStorage.setItem(
-    "user_info",
-    JSON.stringify({ username: "mock-username" })
-  );
+  // window.localStorage.setItem("token", "mock-token");
+  // window.sessionStorage.setItem("user_id", "mock-user-id");
+  // window.sessionStorage.setItem(
+  //   "user_info",
+  //   JSON.stringify({ username: "mock-username" })
+  // );
 
   return (
     <div className="ti-login-wrapper">
@@ -108,12 +109,39 @@ function LoginContent() {
       //       api.message.error("登录失败");
       //     }
       //   });
-      axios
-        .get("/api/v1/dataSource") //接口地址与拦截地址要一致
-        .then((res) => {
-          // console.log('res', res)
-          navigate("/");
-        });
+
+      // axios.get("/api/v1/dataSource")
+      // .then((res) => {
+      //   // console.log(res);
+      //   const data = res.data.result.list; // 获取Mock数据中的第一个用户数据
+      //   // console.log(data);
+      //   // // 设置本地存储的token和用户信息
+      //   window.localStorage.setItem("token", data.token);
+      //   window.sessionStorage.setItem("user_id", data.user_id);
+      //   window.sessionStorage.setItem("user_info", JSON.stringify(data));
+
+      //   navigate("/"); // 重定向到指定路径
+      // });
+      axios.post("/api/v1/login", params) // 发送POST请求到登录接口
+      .then((res) => {
+        // console.log(res);
+        const data = res.data.result; // 获取响应数据
+        if (res.data.code === 0) {
+          // 登录成功，设置本地存储的token和用户信息
+          window.localStorage.setItem("token", data.token);
+          window.sessionStorage.setItem("user_id", data.user_id);
+          window.sessionStorage.setItem("user_info", JSON.stringify(data));
+
+          navigate("/"); // 重定向到指定路径
+        } else {
+          // 登录失败，根据返回的错误信息进行相应处理
+          // ...
+        }
+      })
+      .catch((error) => {
+        // 处理请求错误
+        // ...
+      });
     }
   };
 

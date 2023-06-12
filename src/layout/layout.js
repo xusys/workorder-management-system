@@ -163,10 +163,10 @@ export function DashbordBase() {
     <Fragment>
       <DashbordSectionOne />
       <DashbordSectionTwo />
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
+      {/* <div style={{ display: "flex", justifyContent: "space-between" }}>
         <DashbordSectionThree />
         <DashbordSectionThree />
-      </div>
+      </div> */}
     </Fragment>
   );
 }

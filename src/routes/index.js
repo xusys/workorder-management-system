@@ -79,6 +79,10 @@ const routes = [
         element: <HandleTicket />,
       },
       {
+        path: "ticket/alert/detail/:ticketId",
+        element: <HandleTicket />,
+      },
+      {
         path: "ticket/created-by-me/detail/:ticketId",
         element: <TicketDetail />,
       },
