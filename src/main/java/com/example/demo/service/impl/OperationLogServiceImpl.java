@@ -2,6 +2,7 @@ package com.example.demo.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.demo.entity.OperationLog;
+import com.example.demo.entity.Order;
 import com.example.demo.mapper.OperatorLogMapper;
 import com.example.demo.service.OperationLogService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,5 +21,8 @@ public class OperationLogServiceImpl implements OperationLogService {
         LambdaQueryWrapper<OperationLog> lambdaQueryWrapper=new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(OperationLog::getOperator,operator);
         return operatorLogMapper.selectList(lambdaQueryWrapper);
+    }
+    public void save(OperationLog operationLog) {
+        operatorLogMapper.insert(operationLog);
     }
 }

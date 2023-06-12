@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.demo.common.R;
+import com.example.demo.entity.OperationLog;
 import com.example.demo.service.ActivitiService;
 import com.example.demo.utils.JwtUtil;
 import com.example.demo.utils.Util;
@@ -88,9 +89,31 @@ public class ProcessController {
         return R.success(Util.activitiResult(list));
     }
     @GetMapping("/completeTask")
-    public  R completeTask(Boolean flag,String assignee, Long orderId){
-        activitiService.completeTask(assignee,orderId,flag);
-        return R.success(flag);
+    public  R completeTask(Boolean flag,String token, Long orderId){
+        DecodedJWT decode = JwtUtil.verifyToken(token);
+        String positionName=decode.getClaim("positionName").asString();
+        String username=decode.getClaim("username").asString();
+        try {
+            activitiService.completeTask(username,positionName,orderId,flag);
+            return R.success(flag);
+        }catch (Exception e)
+        {
+            return R.error("error");
+        }
+
     }
+    @GetMapping ("/operationLog")
+    public  R operationLog(String token){
+        DecodedJWT decode = JwtUtil.verifyToken(token);
+        String username=decode.getClaim("username").asString();
+        List<OperationLog>list=activitiService.showOperationLog(username);
+        return R.success(Util.activitiResult(list));
+    }
+    @PostMapping("/setAssignee")
+    public  R setAssignee(String username,@RequestBody String taskId){
+       activitiService.setAssignee(username,taskId);
+       return R.success("");
+    }
+
 
 }

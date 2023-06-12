@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.OperationLog;
 import com.example.demo.entity.Order;
 import com.example.demo.entity.User;
 import com.example.demo.utils.AreaUtil;
@@ -10,6 +11,7 @@ import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricActivityInstanceQuery;
 import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -19,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -35,6 +38,9 @@ public class ActivitiService {
     TaskService taskService;
     @Autowired
     UserService userService;
+    @Autowired
+    OperationLogService operationLogService;
+
     public void test(){
         System.out.println(repositoryService);
     }
@@ -86,18 +92,23 @@ public class ActivitiService {
 
     }
     @Transactional
-    public  void completeTask(String assignee,Long orderId,Boolean flag){
-        Task task=taskService.createTaskQuery().processInstanceBusinessKey(orderId.toString()).taskAssignee(assignee).singleResult();
+    public  void completeTask(String username,String positionId,Long orderId,Boolean flag){
+        Task task=taskService.createTaskQuery().processInstanceBusinessKey(orderId.toString()).taskAssignee(positionId).singleResult();
         taskService.setVariableLocal(task.getId(),"var",flag);
         taskService.complete(task.getId());
+        OperationLog operationLog=new OperationLog();
+        operationLog.setPosition(positionId);
+        operationLog.setTaskId(task.getId());
+        operationLog.setTaskStatus(flag.toString());
+        operationLog.setOperator(username);
+        operationLogService.save(operationLog);
 
     }
+    public List<Task> myCommission(String positionId,String areaId){
+        List<Task>list=taskService.createTaskQuery().taskAssignee(positionId).processVariableValueLike("area", AreaUtil.addWildcards(areaId)).list();
+        for ( Task task :list){
 
-    public List<Task> myCommission(String positionName, String areaId){
-        List<Task>list=taskService.createTaskQuery()
-                .taskAssignee(positionName)
-                .processVariableValueLike("areaId",AreaUtil.addWildcards(areaId))
-                .list();
+        }
        return list;
     }
     @Transactional
@@ -119,6 +130,11 @@ public class ActivitiService {
         }
         else return false;
     }
+    public List<OperationLog> showOperationLog(String username){
+       List<OperationLog>list=operationLogService.getByOperator(username);
+        return list;
+    }
+
 
 }
 

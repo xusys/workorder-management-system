@@ -5,10 +5,7 @@ import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
-import org.activiti.engine.history.HistoricActivityInstance;
-import org.activiti.engine.history.HistoricActivityInstanceQuery;
-import org.activiti.engine.history.HistoricProcessInstance;
-import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.history.*;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
@@ -42,8 +39,7 @@ class DemoApplicationTests {
     @Test
     public void testDeployment() {
         // 读取 activiti.cfg.xml 配置文件，创建 ProcessEngine 的同时会创建表
-        Deployment deployment=repositoryService.createDeployment().addClasspathResource("processes/timerBoundary.bpmn20.xml").name("流程9").deploy();
-
+        Deployment deployment=repositoryService.createDeployment().addClasspathResource("processes/new.bpmn20.xml").name("流程9").deploy();
         // Deployment deployment=repositoryService.createDeployment().addClasspathResource("processes/process1.bpmn20.xml").addClasspathResource("processes/diagram.png").name("流程").deploy();
         System.out.println(deployment.getId());
     }
@@ -89,8 +85,12 @@ class DemoApplicationTests {
         //taskService.setVariable(taskId, "evection", evection);
         for(Task task:list)
         {//taskService.complete(task.getId(),map);
-            //taskService.setVariableLocal(task.getId(),"var",false);
-            System.out.println(taskService.getVariableLocal(task.getId(),"var"));
+            Map <String,Boolean>map=new HashMap<>();
+            map.put("var",false);
+            //map.put("name",true);
+            taskService.setVariablesLocal(task.getId(),map);
+            System.out.println(taskService.getVariables(task.getId()));
+            System.out.println(task.getId());
             taskService.complete(task.getId());
             System.out.println("complete");
         }
@@ -168,6 +168,18 @@ class DemoApplicationTests {
 
 
     }
+    @Test
+    public  void taskHistory(){
+        HistoricTaskInstanceQuery historicTaskInstanceQuery=historyService.createHistoricTaskInstanceQuery().processDefinitionKey("new");
+        List<HistoricTaskInstance>list=historicTaskInstanceQuery.list();
+        for (HistoricTaskInstance historicTaskInstance:list){
+            System.out.println(historicTaskInstance.getName());
+            System.out.println(historicTaskInstance.getDeleteReason());
+            System.out.println(historicTaskInstance.getTaskLocalVariables());
+            System.out.println("\n");
+        }
+    }
+
     @Test
     public void testSuspendAllProcess(){
 
@@ -303,7 +315,7 @@ class DemoApplicationTests {
         List<HistoricTaskInstance> list=historyService // 历史任务Service
                 .createHistoricTaskInstanceQuery() // 创建历史任务实例查询
                  // 指定办理人
-
+                .processDefinitionKey("new")
                 .list();
         for(HistoricTaskInstance hti:list){
             System.out.println("任务ID:"+hti.getId());
