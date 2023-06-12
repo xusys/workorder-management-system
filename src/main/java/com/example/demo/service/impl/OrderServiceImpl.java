@@ -32,9 +32,7 @@ public class OrderServiceImpl implements OrderService {
         lambdaQueryWrapper.eq(Order::getCreateUser, createUser);
         return orderMapper.selectList(lambdaQueryWrapper);
     }
-    public List<Order> getById(String id) {
-        LambdaQueryWrapper<Order> lambdaQueryWrapper=new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(Order::getId,id);
-        return orderMapper.selectList(lambdaQueryWrapper);
+    public Order getById(String id) {
+        return orderMapper.selectById(id);
     }
 }

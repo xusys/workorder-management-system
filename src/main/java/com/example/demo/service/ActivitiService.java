@@ -138,7 +138,7 @@ public class ActivitiService {
         List<HistoricTaskInstance>list=historyService.createHistoricTaskInstanceQuery().taskDeleteReasonLike("%%").list();
         for(HistoricTaskInstance historicTaskInstance:list){
             HistoricProcessInstance historicProcessInstance=historyService.createHistoricProcessInstanceQuery().processInstanceId(historicTaskInstance.getProcessInstanceId()).singleResult();
-            Order order=orderService.getById(historicProcessInstance.getBusinessKey()).get(0);
+            Order order=orderService.getById(historicProcessInstance.getBusinessKey());
             orderList.add(order);
         }
         return orderList;

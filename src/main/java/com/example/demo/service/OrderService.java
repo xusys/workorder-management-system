@@ -10,5 +10,5 @@ public interface OrderService {
     public void save(Order order);
     public void updateStatus(String id,String status);
     public List<Order> getByCreateUser(String createUser);
-    public List<Order> getById(String id) ;
+    public Order getById(String id) ;
 }

@@ -22,6 +22,7 @@ public class OperationLogServiceImpl implements OperationLogService {
         lambdaQueryWrapper.eq(OperationLog::getOperator,operator);
         return operatorLogMapper.selectList(lambdaQueryWrapper);
     }
+    @Override
     public void save(OperationLog operationLog) {
         operatorLogMapper.insert(operationLog);
     }
