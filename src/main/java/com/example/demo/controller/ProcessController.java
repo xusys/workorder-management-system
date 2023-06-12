@@ -85,11 +85,12 @@ public class ProcessController {
         String areaId=decode.getClaim("areaId").asString();
         // 调用service
         List<Task>list=activitiService.myCommission(positionName,areaId);
-        return  R.success(Util.activitiResult(list));
+        return R.success(Util.activitiResult(list));
     }
     @GetMapping("/completeTask")
     public  R completeTask(Boolean flag,String assignee, Long orderId){
         activitiService.completeTask(assignee,orderId,flag);
         return R.success(flag);
     }
+
 }

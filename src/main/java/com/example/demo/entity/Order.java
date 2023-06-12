@@ -22,4 +22,5 @@ public class Order {
     private String content;   // 工单具体内容
     private String proDefId; // 流程定义id
     private String status; // 流程当前状态
+    private String areaId; // 地区id
 }
