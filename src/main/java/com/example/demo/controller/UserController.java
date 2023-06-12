@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.demo.common.R;
+import com.example.demo.entity.Area;
 import com.example.demo.service.AreaService;
 import com.example.demo.service.PositionService;
 import com.example.demo.service.UserService;
@@ -42,10 +43,18 @@ public class UserController {
             // 获取职位名
             String positionName=positionService.getById(userInfo.getPositionId()).getPositionName();
             userInfo.setPositionName(positionName);
-            // 创建并返回token
+            // 获取所属地区
+            Area area=areaService.getById(userInfo.getAreaId());
+            String areaName=area.getCity()+area.getDistrict();
+            // 创建token
             String token= JwtUtil.createToken(userInfo);
+            // 返回token和用户信息
             Map<String,Object> map=new HashMap<>();
-            return R.success(map.put("token",token));
+            map.put("token",token);
+            map.put("username",userInfo.getUsername());
+            map.put("position",positionName);
+            map.put("area",areaName);
+            return R.success(map);
         }
         else return R.error("用户名或密码错误");
     }
