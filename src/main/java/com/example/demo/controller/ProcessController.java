@@ -62,7 +62,14 @@ public class ProcessController {
         return R.success(map);
     }
     @PostMapping("/save")
-    public R save(HttpServletRequest request, @RequestBody Order order){
+    public R save(@RequestHeader String token, @RequestBody Order order){
+        DecodedJWT decode = JwtUtil.verifyToken(token);
+        // 从token中获取职位名和地区id
+        String createUser=decode.getClaim("username").asString();
+        String areaId=decode.getClaim("areaId").asString();
+        System.out.println(areaId);
+        order.setCreateUser(createUser);
+        order.setAreaId(areaId);
         activitiService.saveProcess(order);
         return R.success(0);
     }
@@ -78,18 +85,20 @@ public class ProcessController {
      * @return
      */
     @GetMapping("/myCommision")
-    public R myCommission(String token){
+    public R myCommission(@RequestHeader String token){
         // 获取token
+
         DecodedJWT decode = JwtUtil.verifyToken(token);
         // 从token中获取职位名和地区id
         String positionName=decode.getClaim("positionName").asString();
         String areaId=decode.getClaim("areaId").asString();
+        System.out.println(areaId);
         // 调用service
         List<Task>list=activitiService.myCommission(positionName,areaId);
         return R.success(Util.activitiResult(list));
     }
     @GetMapping("/completeTask")
-    public  R completeTask(Boolean flag,String token, Long orderId){
+    public  R completeTask(Boolean flag,@RequestHeader String token, Long orderId){
         DecodedJWT decode = JwtUtil.verifyToken(token);
         String positionName=decode.getClaim("positionName").asString();
         String username=decode.getClaim("username").asString();

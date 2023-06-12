@@ -39,7 +39,7 @@ class DemoApplicationTests {
     @Test
     public void testDeployment() {
         // 读取 activiti.cfg.xml 配置文件，创建 ProcessEngine 的同时会创建表
-        Deployment deployment=repositoryService.createDeployment().addClasspathResource("processes/new.bpmn20.xml").name("流程9").deploy();
+        Deployment deployment=repositoryService.createDeployment().addClasspathResource("processes/timerBoundary.bpmn20.xml").name("流程9").deploy();
         // Deployment deployment=repositoryService.createDeployment().addClasspathResource("processes/process1.bpmn20.xml").addClasspathResource("processes/diagram.png").name("流程").deploy();
         System.out.println(deployment.getId());
     }

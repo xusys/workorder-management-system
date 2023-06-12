@@ -86,10 +86,10 @@ public class ActivitiService {
 
            ProcessInstance processInstance=runtimeService.startProcessInstanceById(order.getProDefId());
            orderService.save(order);
-
           runtimeService.updateBusinessKey(processInstance.getId(),order.getId());
-        Task task=taskService.createTaskQuery().processInstanceBusinessKey(processInstance.getBusinessKey()).singleResult();
-        orderService.updateStatus(order.getId(),task.getName());
+          runtimeService.setVariableLocal(processInstance.getId(),"area",order.getAreaId());
+//        Task task=taskService.createTaskQuery().processInstanceBusinessKey(processInstance.getBusinessKey()).singleResult();
+//        orderService.updateStatus(order.getId(),task.getName());
 
     }
     @Transactional
@@ -106,9 +106,10 @@ public class ActivitiService {
 
     }
     public List<Task> myCommission(String positionId,String areaId){
+
         List<Task>list=taskService.createTaskQuery().taskAssignee(positionId).processVariableValueLike("area", AreaUtil.addWildcards(areaId)).list();
         for ( Task task :list){
-
+//            System.out.println(runtimeService.getVariable(task.getProcessInstanceId(),"area"));
         }
        return list;
     }
