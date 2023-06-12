@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.entity.Order;
 import com.example.demo.entity.User;
+import com.example.demo.utils.AreaUtil;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
@@ -91,11 +92,12 @@ public class ActivitiService {
         taskService.complete(task.getId());
 
     }
-    public List<Task> myCommission(String username){
-        List<Task>list=taskService.createTaskQuery().taskAssignee(username).list();
-        for ( Task task :list){
 
-        }
+    public List<Task> myCommission(String positionName, String areaId){
+        List<Task>list=taskService.createTaskQuery()
+                .taskAssignee(positionName)
+                .processVariableValueLike("areaId",AreaUtil.addWildcards(areaId))
+                .list();
        return list;
     }
     @Transactional
@@ -109,7 +111,7 @@ public class ActivitiService {
         }
         return list;
     }
-    @public Boolean setAssignee(String username,String taskId){
+    public Boolean setAssignee(String username,String taskId){
         User user=userService.getByUsername(username);
         if(user!=null&&user.getPositionId()==0){
             taskService.setAssignee(taskId,username);

@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.demo.common.R;
 import com.example.demo.service.ActivitiService;
+import com.example.demo.utils.JwtUtil;
 import com.example.demo.utils.Util;
 import com.example.demo.entity.Order;
 import lombok.extern.slf4j.Slf4j;
@@ -68,9 +70,21 @@ public class ProcessController {
         List<Order>list=activitiService.myOrder(username);
         return  R.success(Util.activitiResult(list));
     }
+
+    /**
+     * 查询用户待办任务
+     * @param token
+     * @return
+     */
     @GetMapping("/myCommision")
-    public R myCommission(String username){
-        List<Task>list=activitiService.myCommission(username);
+    public R myCommission(String token){
+        // 获取token
+        DecodedJWT decode = JwtUtil.verifyToken(token);
+        // 从token中获取职位名和地区id
+        String positionName=decode.getClaim("positionName").asString();
+        String areaId=decode.getClaim("areaId").asString();
+        // 调用service
+        List<Task>list=activitiService.myCommission(positionName,areaId);
         return  R.success(Util.activitiResult(list));
     }
     @GetMapping("/completeTask")
