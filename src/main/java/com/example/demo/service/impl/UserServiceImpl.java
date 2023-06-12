@@ -15,6 +15,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+
+    /**
+     * 用户登录
+     * @param user
+     * @return userInfo
+     */
     @Override
     public User login(User user) {
         LambdaQueryWrapper<User> lambdaQueryWrapper=new LambdaQueryWrapper<>();
@@ -26,6 +32,11 @@ public class UserServiceImpl implements UserService {
         else return null;
     }
 
+    /**
+     * 用户注册
+     * @param user
+     * @return
+     */
     @Override
     public boolean register(User user) {
         LambdaQueryWrapper<User> lambdaQueryWrapper=new LambdaQueryWrapper<>();
@@ -38,8 +49,13 @@ public class UserServiceImpl implements UserService {
         else return false;
     }
 
+    /**
+     * 通过用户名查找用户
+     * @param username
+     * @return
+     */
     @Override
-    public User selectUserByUsername(String username) {
+    public User getByUsername(String username) {
         LambdaQueryWrapper<User> lambdaQueryWrapper=new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(User::getUsername,username);
         return userMapper.selectOne(lambdaQueryWrapper);

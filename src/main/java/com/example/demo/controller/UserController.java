@@ -2,6 +2,8 @@ package com.example.demo.controller;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.demo.common.R;
+import com.example.demo.service.AreaService;
+import com.example.demo.service.PositionService;
 import com.example.demo.service.UserService;
 import com.example.demo.entity.User;
 import com.example.demo.utils.JwtUtil;
@@ -17,8 +19,11 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-//    @Autowired
-//    private Posi
+    @Autowired
+    private PositionService positionService;
+
+    @Autowired
+    private AreaService areaService;
 
     // 用户注册
     @PostMapping("/register")
@@ -34,6 +39,10 @@ public class UserController {
     public R login(@RequestBody User user){
         User userInfo=userService.login(user);
         if(userInfo!=null){
+            // 获取职位名
+            String positionName=positionService.getById(userInfo.getPositionId()).getPositionName();
+            userInfo.setPositionName(positionName);
+            // 创建并返回token
             String token= JwtUtil.createToken(userInfo);
             Map<String,Object> map=new HashMap<>();
             return R.success(map.put("token",token));
@@ -41,10 +50,4 @@ public class UserController {
         else return R.error("用户名或密码错误");
     }
 
-    // 展示用户信息
-//    @GetMapping("/user_info")
-//    public R getUserInfo(@RequestHeader String token){
-//        DecodedJWT verify=JwtUtil.verifyToken(token);
-//        String positionName=
-//    }
 }

@@ -15,7 +15,7 @@ public class JwtUtil {
     private static final String SECRET = "scut_work_order"; // 密钥盐
 
     /**
-     * 参加token
+     * 创建token
      * @param user
      * @return
      */
@@ -30,7 +30,7 @@ public class JwtUtil {
                 .withHeader(map)       //设置头部信息Header
                 .withIssuer("SERVICE") // 声明 签名由谁生成，例如：服务器
                 .withClaim("username",user.getUsername()) // 自定义，用户名
-                .withClaim("positionId",user.getPositionId()) // 自定义，职位id
+                .withClaim("position",user.getPositionName()) // 自定义，职位名
                 .withClaim("areaId",user.getAreaId()) // 自定义，地区id
                 .withExpiresAt(expiresAt)  // 设置过期时间
                 .sign(Algorithm.HMAC256(SECRET));  // 设置签名解码算法

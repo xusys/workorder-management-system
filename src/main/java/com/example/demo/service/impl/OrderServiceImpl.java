@@ -19,7 +19,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void updateStatus(Long id, String status) {
+    public void updateStatus(String id, String status) {
         Order order=new Order();
         order.setId(id);
         order.setStatus(status);

@@ -1,6 +1,6 @@
 create table orders
 (
-    id          bigint                                 not null comment '工单号'
+    id          varchar(255)                                 not null comment '工单号'
         primary key,
     create_user varchar(30)                            null comment '发起人',
     create_time datetime     default CURRENT_TIMESTAMP not null comment '创建时间',
