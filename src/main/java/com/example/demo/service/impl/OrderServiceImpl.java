@@ -27,17 +27,32 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> getByCreateUser(String createUser) {
+    public List<Order> getExcludeByCreateUser(String createUser) {
         LambdaQueryWrapper<Order> lambdaQueryWrapper=new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(Order::getCreateUser, createUser);
+        lambdaQueryWrapper.select(Order.class,order->!order.getColumn().equals("content")) // 排除工单内容字段
+                .eq(Order::getCreateUser, createUser);
         return orderMapper.selectList(lambdaQueryWrapper);
     }
+
     public Order getById(String id) {
         return orderMapper.selectById(id);
     }
+
+    /**
+     * 获取排除工单内容外的所有工单数据
+     * @param
+     * @return
+     */
     @Override
-    public List<Order>getAll(){
+    public List<Order> getAllExcludeContent() {
         LambdaQueryWrapper<Order> lambdaQueryWrapper=new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.select(Order.class,order->!order.getColumn().equals("content")); // 排除工单内容字段
         return orderMapper.selectList(lambdaQueryWrapper);
+    }
+
+    public Order getExcludeContentById(String id){
+        LambdaQueryWrapper<Order> lambdaQueryWrapper=new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.select(Order.class,order->!order.getColumn().equals("content")).eq(Order::getId, id);
+        return orderMapper.selectOne(lambdaQueryWrapper);
     }
 }

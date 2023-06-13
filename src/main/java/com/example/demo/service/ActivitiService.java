@@ -118,7 +118,7 @@ public class ActivitiService {
     }
     @Transactional
     public List<Order> myOrder(String username){
-        List<Order>list=orderService.getByCreateUser(username);
+        List<Order>list=orderService.getExcludeByCreateUser(username);
         for(Order order:list){
             HistoricActivityInstanceQuery historicActivityInstanceQuery= historyService.createHistoricActivityInstanceQuery();
             HistoricProcessInstance historicProcessInstance=historyService.createHistoricProcessInstanceQuery().processInstanceBusinessKey(order.getId()).singleResult();
@@ -145,7 +145,7 @@ public class ActivitiService {
                 .list();
         for(HistoricTaskInstance historicTaskInstance:list){
             HistoricProcessInstance historicProcessInstance=historyService.createHistoricProcessInstanceQuery().processInstanceId(historicTaskInstance.getProcessInstanceId()).singleResult();
-            Order order=orderService.getById(historicProcessInstance.getBusinessKey());
+            Order order=orderService.getExcludeContentById(historicProcessInstance.getBusinessKey());
             orderList.add(order);
         }
         //System.out.println(orderList.size());
@@ -170,8 +170,9 @@ public class ActivitiService {
         list.removeIf(task -> (nowDate.getTime() - task.getCreateTime().getTime()) / duration < 10);
         return list;
     }
+
     public List<Order> getAllOrders(){
-        List<Order>list=orderService.getAll();
+        List<Order>list=orderService.getAllExcludeContent();
         for(Order order:list){
             HistoricActivityInstanceQuery historicActivityInstanceQuery= historyService.createHistoricActivityInstanceQuery();
             try {

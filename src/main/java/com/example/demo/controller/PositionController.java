@@ -3,7 +3,6 @@ package com.example.demo.controller;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.demo.common.R;
 import com.example.demo.entity.Position;
-import com.example.demo.entity.User;
 import com.example.demo.service.PositionService;
 import com.example.demo.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;

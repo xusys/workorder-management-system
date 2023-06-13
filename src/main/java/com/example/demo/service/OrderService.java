@@ -9,7 +9,8 @@ import java.util.List;
 public interface OrderService {
     public void save(Order order);
     public void updateStatus(String id,String status);
-    public List<Order> getByCreateUser(String createUser);
+    public List<Order> getExcludeByCreateUser(String createUser);
     public Order getById(String id) ;
-    public List<Order> getAll();
+    public List<Order> getAllExcludeContent();
+    public Order getExcludeContentById(String id);
 }

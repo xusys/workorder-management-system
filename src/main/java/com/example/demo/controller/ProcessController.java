@@ -2,14 +2,17 @@ package com.example.demo.controller;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.demo.common.R;
+import com.example.demo.entity.Area;
 import com.example.demo.entity.OperationLog;
 import com.example.demo.service.ActivitiService;
+import com.example.demo.service.AreaService;
 import com.example.demo.service.OperationLogService;
 import com.example.demo.service.OrderService;
 import com.example.demo.utils.JwtUtil;
 import com.example.demo.utils.Util;
 import com.example.demo.entity.Order;
 import lombok.extern.slf4j.Slf4j;
+import org.activiti.engine.RuntimeService;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -17,9 +20,8 @@ import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -30,8 +32,16 @@ public class ProcessController {
 
     @Autowired
     OperationLogService operationLogService;
+
     @Autowired
     OrderService orderService;
+
+    @Autowired
+    RuntimeService runtimeService;
+
+    @Autowired
+    AreaService areaService;
+
     @GetMapping("/getDefine")
     public R getDefine(){
         List<ProcessDefinition> list=activitiService.getDefine();
@@ -56,23 +66,51 @@ public class ProcessController {
         return R.success(flag);
     }
 
+    /**
+     * 获取当前用户的历史处理工单
+     * @param currentpage
+     * @param pagesize
+     * @return
+     */
     @GetMapping("/getHistory")
     public R history(int currentpage,int pagesize){
-       List<HistoricActivityInstance>list=activitiService.getHistory(currentpage,pagesize);
-
-        return R.success(Util.activitiResult(list));
+       List<HistoricActivityInstance> historyList=activitiService.getHistory(currentpage,pagesize);
+       // 封装为Order实体类
+        List<Order> orderList=new ArrayList<>();
+        for(HistoricActivityInstance historicActivityInstance:historyList){
+            String processInstanceId = historicActivityInstance.getProcessInstanceId();
+            ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
+            orderList.add(orderService.getExcludeContentById(processInstance.getBusinessKey()));
+        }
+//        return R.success(Util.activitiResult(list));
+        return R.success(orderList);
     }
+
+    /**
+     * 保存新创建的工单
+     * @param token
+     * @param order
+     * @return
+     */
     @PostMapping("/save")
     public R save(@RequestHeader String token, @RequestBody Order order){
         DecodedJWT decode = JwtUtil.verifyToken(token);
         // 从token中获取职位名和地区id
         String createUser=decode.getClaim("username").asString();
         String areaId=decode.getClaim("areaId").asString();
+        Area area=areaService.getById(areaId);
         order.setCreateUser(createUser);
         order.setAreaId(areaId);
+        order.setAreaName(area.getCity()+area.getDistrict());
         activitiService.saveProcess(order);
         return R.success(0);
     }
+
+    /**
+     * 获取当前用户创建的工单
+     * @param token
+     * @return
+     */
     @GetMapping("/myOrder")
     public R myOrder(@RequestHeader String token){
         DecodedJWT decode = JwtUtil.verifyToken(token);
@@ -96,9 +134,25 @@ public class ProcessController {
         String positionName=decode.getClaim("positionName").asString();
         String areaId=decode.getClaim("areaId").asString();
         // 调用service
-        List<Task>list=activitiService.myCommission(positionName,areaId);
-        return R.success(Util.activitiResult(list));
+        List<Task>taskList=activitiService.myCommission(positionName,areaId);
+        // 封装为Order实体类
+        List<Order> orderList=new ArrayList<>();
+        for(Task task:taskList){
+            String processInstanceId = task.getProcessInstanceId();
+            ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
+            orderList.add(orderService.getExcludeContentById(processInstance.getBusinessKey()));
+        }
+//        return R.success(Util.activitiResult(list));
+        return R.success(orderList);
     }
+
+    /**
+     * 处理代办任务
+     * @param flag
+     * @param taskId
+     * @param token
+     * @return
+     */
     @GetMapping("/completeTask")
     public R completeTask(Boolean flag, String taskId, @RequestHeader String token){
         DecodedJWT decode = JwtUtil.verifyToken(token);
@@ -122,9 +176,22 @@ public class ProcessController {
     public R operationLog(@RequestHeader String token){
         DecodedJWT decode = JwtUtil.verifyToken(token);
         String username=decode.getClaim("username").asString();
-        List<OperationLog>list=operationLogService.getByOperator(username);
-        return R.success(Util.activitiResult(list));
+        List<OperationLog> operationLogList=operationLogService.getByOperator(username);
+        // 封装为Order实体类
+        List<Order> orderList=new ArrayList<>();
+        for(OperationLog operationLog:operationLogList){
+            orderList.add(orderService.getExcludeContentById(operationLog.getOrderId()));
+        }
+//        return R.success(Util.activitiResult(orderList));
+        return R.success(orderList);
     }
+
+    /**
+     * 将工单转发给其他操作单位
+     * @param username
+     * @param taskId
+     * @return
+     */
     @PostMapping("/setAssignee")
     public R setAssignee(String username, @RequestBody String taskId){
         activitiService.setAssignee(username,taskId);
@@ -144,18 +211,45 @@ public class ProcessController {
         String positionName=decode.getClaim("positionName").asString();
         String areaId=decode.getClaim("areaId").asString();
         // 调用service
-        List<Task>list=activitiService.getWarningTask(positionName,areaId);
-        return R.success(Util.activitiResult(list));
+        List<Task>taskList=activitiService.getWarningTask(positionName,areaId);
+        // 封装为Order实体类
+        List<Order> orderList=new ArrayList<>();
+        for(Task task:taskList){
+            String processInstanceId = task.getProcessInstanceId();
+            ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
+            orderList.add(orderService.getExcludeContentById(processInstance.getBusinessKey()));
+        }
+//        return R.success(Util.activitiResult(orderList));
+        return R.success(orderList);
     }
+
+    /**
+     * 获取超时工单
+     * @return
+     */
     @GetMapping("/timeout")
     public R timeout(){
         List<Order>list=activitiService.timeoutOrder();
         return R.success(Util.activitiResult(list));
     }
+
+    /**
+     * 获取所有工单
+     * @return
+     */
     @GetMapping("/allOrders")
     public R getAllOrders(){
         List<Order>list=activitiService.getAllOrders();
-        return  R.success(list);
+        return R.success(list);
     }
 
+    /**
+     * 获取工单详细信息
+     * @param orderId
+     * @return
+     */
+    @GetMapping("/orderDetails")
+    public R getOrderDetails(String orderId){
+        return R.success(orderService.getById(orderId));
+    }
 }

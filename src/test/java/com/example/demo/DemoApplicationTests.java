@@ -39,7 +39,7 @@ class DemoApplicationTests {
     @Test
     public void testDeployment() {
         // 读取 activiti.cfg.xml 配置文件，创建 ProcessEngine 的同时会创建表
-        Deployment deployment=repositoryService.createDeployment().addClasspathResource("processes/timerBoundary.bpmn20.xml").name("流程9").deploy();
+        Deployment deployment=repositoryService.createDeployment().addClasspathResource("processes/process2.bpmn20.xml").name("流程9").deploy();
         // Deployment deployment=repositoryService.createDeployment().addClasspathResource("processes/process1.bpmn20.xml").addClasspathResource("processes/diagram.png").name("流程").deploy();
         System.out.println(deployment.getId());
     }
@@ -71,7 +71,7 @@ class DemoApplicationTests {
 //        map.put("assignee2","小张2");
         // runtimeService.setVariable(executionId, "evection", evection);
         for (int i=0;i<1;i++) {
-            ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("timerBoundary");
+            ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("process2");
             runtimeService.setVariableLocal(processInstance.getId(),"areaId","0204");
             System.out.println(processInstance.getId());
         }
@@ -82,7 +82,7 @@ class DemoApplicationTests {
         // 读取 activiti.cfg.xml 配置文件，创建 ProcessEngine 的同时会创建表
 
 
-        List<Task> list=taskService.createTaskQuery().processDefinitionKey("timerBoundary").list();
+        List<Task> list=taskService.createTaskQuery().processDefinitionKey("process2").list();
         //taskService.setVariable(taskId, "evection", evection);
         for(Task task:list)
         {//taskService.complete(task.getId(),map);
@@ -118,7 +118,7 @@ class DemoApplicationTests {
     @Test
     public void testProcessInstance() {
 
-        List<ProcessInstance>list=runtimeService.createProcessInstanceQuery().processDefinitionKey("timerBoundary").list();
+        List<ProcessInstance>list=runtimeService.createProcessInstanceQuery().processDefinitionKey("process2").list();
 
         for (ProcessInstance processInstance:list)
          {
