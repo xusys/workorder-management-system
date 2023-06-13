@@ -316,6 +316,7 @@ class DemoApplicationTests {
                 .createHistoricTaskInstanceQuery() // 创建历史任务实例查询
                  // 指定办理人
                 .processDefinitionKey("new")
+                .taskDeleteReasonLike("boundary%")
                 .list();
         for(HistoricTaskInstance hti:list){
             System.out.println("任务ID:"+hti.getId());
@@ -323,6 +324,7 @@ class DemoApplicationTests {
             System.out.println("班里人："+hti.getAssignee());
             System.out.println("创建时间："+hti.getCreateTime());
             System.out.println("结束时间："+hti.getEndTime());
+            System.out.println("删除原因"+hti.getDeleteReason());
             System.out.println("===========================");
         }
     }

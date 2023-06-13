@@ -97,12 +97,14 @@ public class ActivitiService {
         System.out.println(taskId);
         Task task=taskService.createTaskQuery().taskId(taskId).singleResult();
         taskService.setVariableLocal(task.getId(),"var",flag);
-        taskService.complete(task.getId());
         OperationLog operationLog=new OperationLog();
         operationLog.setPosition(positionName);
         operationLog.setTaskId(task.getId());
         operationLog.setTaskStatus(flag.toString());
         operationLog.setOperator(username);
+        ProcessInstance processInstance=runtimeService.createProcessInstanceQuery().processInstanceId(task.getProcessInstanceId()).singleResult();
+        operationLog.setOrderId(processInstance.getBusinessKey());
+        taskService.complete(task.getId());
         operationLogService.save(operationLog);
     }
     public List<Task> myCommission(String positionId,String areaId){
@@ -135,12 +137,17 @@ public class ActivitiService {
 
     public List<Order> timeoutOrder(){
         List<Order>orderList=new ArrayList<>();
-        List<HistoricTaskInstance>list=historyService.createHistoricTaskInstanceQuery().taskDeleteReasonLike("%%").list();
+        List<HistoricTaskInstance> list=historyService // 历史任务Service
+                .createHistoricTaskInstanceQuery() // 创建历史任务实例查询
+//                .processDefinitionKey("new")
+                .taskDeleteReasonLike("boundary%")
+                .list();
         for(HistoricTaskInstance historicTaskInstance:list){
             HistoricProcessInstance historicProcessInstance=historyService.createHistoricProcessInstanceQuery().processInstanceId(historicTaskInstance.getProcessInstanceId()).singleResult();
             Order order=orderService.getById(historicProcessInstance.getBusinessKey());
             orderList.add(order);
         }
+        //System.out.println(orderList.size());
         return orderList;
     }
 
