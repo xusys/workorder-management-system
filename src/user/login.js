@@ -2,7 +2,7 @@ import { Form, Input, Button } from "tdesign-react";
 import { DesktopIcon, LockOnIcon, CheckCircleIcon } from "tdesign-icons-react";
 import { useNavigate } from "react-router-dom";
 // import axios from "../user/axiosInstance";
-import "../mock/index";
+// import "../mock/index";
 import axios from "axios";
 import Register from "../user/register";
 import React, { useRef, useState, forwardRef } from "react";
@@ -122,15 +122,15 @@ function LoginContent() {
 
       //   navigate("/"); // 重定向到指定路径
       // });
-      axios.post("/api/v1/login", params) // 发送POST请求到登录接口
+      axios.post("http://localhost:8080/user/login", params) // 发送POST请求到登录接口
       .then((res) => {
         console.log(res);
         const data = res.data.result; // 获取响应数据
-        if (res.data.code === 0) {
+        if (res.data.code === 1) {
           // 登录成功，设置本地存储的用户信息
-          window.localStorage.setItem("token", data.token);
-          window.sessionStorage.setItem("user_id", data.user_id);
-          window.sessionStorage.setItem("user_info", JSON.stringify(data));
+          window.localStorage.setItem("token", res.data.data.token);
+          window.sessionStorage.setItem("user_id", res.data.data.position);
+          window.sessionStorage.setItem("user_info", JSON.stringify(res.data.data));
 
           navigate("/"); // 重定向到指定路径
         } else {

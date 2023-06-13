@@ -8,7 +8,7 @@ import {
   TicketBase,
   TicketHistory,
 } from "./ticketDetailBase/ticketDetailBase";
-import "../../mock/workorderlistall";
+// import "../../mock/workorderlistall";
 
 export default function TicketDetail() {
   const { ticketId } = useParams();

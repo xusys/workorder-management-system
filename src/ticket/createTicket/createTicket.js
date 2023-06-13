@@ -1,8 +1,8 @@
 // import api from "../../api";
 // import axios from "axios";
 import axios from "../../user/axiosInstance";
-import "../../mock/create_ticket"
-import "../../mock/create_ticket_category"
+// import "../../mock/create_ticket"
+// import "../../mock/create_ticket_category"
 
 import "./createTicket.css";
 import { Form, Input, Textarea, Upload, Button, Radio } from "tdesign-react";
@@ -30,12 +30,13 @@ export default function CreateTicket() {
   const onSubmit = (e) => {
     if (e.validateResult === true) {
       let parma = formRef.current.getFieldsValue(true);
-      console.log(parma);
+
+      console.log('数据',parma);
 
       axios
-        .post("/api/v1/create_ticket", parma)
+        .post("http://localhost:8080/process/save", parma)
         .then((res) => {
-          if (res.data.code === 0) {
+          if (res.data.code === 1) {
             alert('申请成功');
             navigate('/');
           } else {
@@ -96,8 +97,8 @@ export default function CreateTicket() {
   // 分类多个单选框创建
   const categoryGroup = ctgListValue.map((i) => {
     return (
-      <Radio value={i.category_id} key={i.id}>
-        {i.name}
+      <Radio value={i.Id} key={i.Id}>
+        {i.Name}
       </Radio>
     );
   });
@@ -105,9 +106,11 @@ export default function CreateTicket() {
   // 异步函数，用于获取分类列表数据并储存
   async function fetchCtgList() {
     try {
-      let { data } = await axios.get("/admin/v1/ticket/create_ticket_category");
+      let { data } = await axios.get("http://localhost:8080/process/getDefine?currentpage=1&pagesize=999");
+
+      console.log('data',data);
       
-      setCtgListValue(data.result.list);
+      setCtgListValue(data.data);
     } catch (err) {
       console.log("err", err);
       // setCtgListValue([]);
@@ -193,7 +196,7 @@ export default function CreateTicket() {
         <div className="ti-form-basic-container">
           <div className="ti-form-basic-item">
             <div className="ti-form-basic-container-title">创建工单</div>
-            <FormItem label="标题" name="title">
+            <FormItem label="标题" name="orderName">
               <Input placeholder="请输入内容" />
             </FormItem>
             <FormItem label="内容" name="content">
@@ -213,7 +216,7 @@ export default function CreateTicket() {
                                 max={3}
                             />
                         </FormItem> */}
-            <FormItem label="分类" name="category">
+            <FormItem label="分类" name="proDefId">
               <Radio.Group>{categoryGroup}</Radio.Group>
             </FormItem>
           </div>

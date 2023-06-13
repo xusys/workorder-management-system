@@ -3,7 +3,7 @@ import { Form, Input, Textarea, Upload, Button, Radio } from 'tdesign-react'
 import '../ticket/createTicket/createTicket.css'
 import axios from "../user/axiosInstance"
 // import axios from 'axios'
-import "../mock/usernamechange"
+// import "../mock/usernamechange"
 import './PersonalCenter.css'
 
 const { FormItem } = Form
@@ -12,7 +12,7 @@ const { FormItem } = Form
 // 个人中心的界面，根据用户的编辑状态显示不同的界面元素
 export default function PersonalCenter() {
     const userInfo = JSON.parse(window.sessionStorage.getItem("user_info"))
-    // console.log('userInfo', userInfo)
+    console.log('userInfo', userInfo)
     const [isEditing, setIsEditing] = useState(false)
     const [username, setUsername] = useState(userInfo.user_name)
     // console.log('username',username)
@@ -38,10 +38,11 @@ export default function PersonalCenter() {
         if (isEditing) {
             // 发送更新用户信息的请求
             console.log('userInfo', updatedUserInfo)
+
             axios
                 .post("/api/v1/updateUser", updatedUserInfo)
                 .then((res) => {
-                    if (res.data.code === 0) {
+                    if (res.data.code === 1) {
                         // 更新成功
                         setIsEditing(false)
                     } else {
@@ -73,23 +74,23 @@ export default function PersonalCenter() {
                                     <FormItem label="用户名" name="title">
                                         <Input
                                             placeholder="请输入内容"
-                                            value={toString(username)}
+                                            value={userInfo.username}
                                             onChange={(e) => {
                                                 handleUsernameChange(e)
                                             }}
                                         />
                                     </FormItem>
                                     <FormItem label="职位" name="title">
-                                        <p>{userid}</p>
+                                        <p>{userInfo.position}</p>
                                     </FormItem>
                                 </div>
                             ) : (
                                 <div className="ti-form-basic-item">
                                     <FormItem label="用户名" name="title">
-                                        <p>{username}</p>
+                                        <p>{userInfo.username}</p>
                                     </FormItem>
                                     <FormItem label="职位" name="title">
-                                        <p>{userid}</p>
+                                        <p>{userInfo.position}</p>
                                     </FormItem>
                                 </div>
                             )}

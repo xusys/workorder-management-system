@@ -3,9 +3,7 @@ import { Menu,Badge } from 'tdesign-react';
 import { AppIcon, ViewModuleIcon, DashboardIcon, SettingIcon, ViewListIcon } from 'tdesign-icons-react';
 import { useNavigate, useLocation } from "react-router-dom";
 import './aside.css' 
-import "../mock/workorderlistalert"
-import api from '../api';
-import axios from '../user/axiosInstance';
+// import api from '../api';
 
 const { SubMenu, MenuItem } = Menu;
 
@@ -72,43 +70,28 @@ function getMenuValue(location) {
     const [expands, setExpands] = useState(['0','1']);
     const [showAdmin, setShowAdmin] = useState(false);
     const [showDistribute, setShowDistribute] = useState(false);
-    const [alert_count, setalert_count] = useState(0);
     const [logoContent, setLogoContent] = useState('工单系统');
   
     // 在组件渲染时，获取显示管理菜单和分发工单菜单的状态
-    useEffect(() => {
-      api.get('/admin/v1/system/menu', { user_id: window.sessionStorage.getItem('user_id') }).then((e) => {
-        setShowAdmin(e.data.showAdmin);
-        setShowDistribute(e.data.showDistribute);
-      });
-    }, []);
-
-    const fetchDataAlertTicket = async () => {
-      try {
-        const response = await axios.get('/api/v1/dataSource1')
-        var alertTicketCount = 0
-        response.data.result.list.map((item) => {
-          alertTicketCount += 1
-        })
-        setalert_count(alertTicketCount)
-      } catch (error) {
-        console.log('Error', error)
-      }
-    }
+    // useEffect(() => {
+    //   api.get('/admin/v1/system/menu', { user_id: window.sessionStorage.getItem('user_id') }).then((e) => {
+    //     setShowAdmin(e.data.showAdmin);
+    //     setShowDistribute(e.data.showDistribute);
+    //   });
+    // }, []);
   
     // 当目标菜单值改变时，更新激活的菜单项
     useEffect(() => {
-      fetchDataAlertTicket();
       setActive(reflashValue);
     }, [reflashValue]);
   
     // 获取COS桶信息
-    useEffect(() => {
-      api.get('/tx/v1/cos/bucketInfo').then((e) => {
-        window.sessionStorage.setItem('Bucket', e.data?.bucket);
-        window.sessionStorage.setItem('Region', e.data?.region);
-      });
-    }, []);
+    // useEffect(() => {
+    //   api.get('/tx/v1/cos/bucketInfo').then((e) => {
+    //     window.sessionStorage.setItem('Bucket', e.data?.bucket);
+    //     window.sessionStorage.setItem('Region', e.data?.region);
+    //   });
+    // }, []);
   
     // 切换侧边栏收缩状态和LOGO内容
     const clickOper = function() {
@@ -156,7 +139,7 @@ function getMenuValue(location) {
             </MenuItem>
             <MenuItem value="1-7" onClick={() => {navigate("/ticket/alert");}}>
               <span className='span-margin'>我的预警</span>
-              <Badge count={alert_count} color="red" />
+              {/*<Badge count={alert_count} color="red" />*/}
             </MenuItem>
             {
               showDistribute ?

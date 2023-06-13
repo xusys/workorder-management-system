@@ -16,8 +16,9 @@ import TicketList from "../ticket/ticketList/ticketList";
 import ApproveTable from "../system/approveTable";
 
 import "./layout.css";
-import api from "../api";
+// import api from "../api";
 import axios from "axios";
+// import axios from "../user/axiosInstance"
 
 const { BreadcrumbItem } = Breadcrumb;
 
@@ -125,16 +126,16 @@ function BasicDropdown(props) {
       // 执行跳转到个人中心页面的操作
       navigate("/personalCenter");
     } else if (data.value === 2) {
-      // 执行弹出确认对话框并在确认后导航到登录页面的操作
-      api.dialog.confirm({
-        title: "系统消息",
-        msg: "确定退出登录？",
-        confirm: [
-          () => {
+      // // 执行弹出确认对话框并在确认后导航到登录页面的操作
+      // axios.dialog.confirm({
+      //   title: "系统消息",
+      //   msg: "确定退出登录？",
+      //   confirm: [
+      //     () => {
             navigate("/login");
-          },
-        ],
-      });
+        //   },
+        // ],
+      // });
     }
   };
 
@@ -314,7 +315,7 @@ export function AllTickets() {
       <TicketList
         pageParmas={{
           type: 1,
-          flog : '0',
+          flog : 'allOrders',
         }}
       />
     </Fragment>

@@ -4,7 +4,7 @@ import { Edit1Icon } from "tdesign-icons-react";
 import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
 import api from "../../api";
-import "../../mock/workorderlistall";
+// import "../../mock/workorderlistall";
 
 // 展示工单信息的表格组件，并提供了相关操作和分页功能
 export default function TicketTable(props) {
@@ -22,6 +22,8 @@ export default function TicketTable(props) {
   const [totle, setTotle] = useState(tle);
   const location = useLocation();
   const ticketPath = location.pathname;
+
+  const [totalTicket, setTotalTicket] = useState(0);
 
   let tableData = [];
 
@@ -187,32 +189,27 @@ export default function TicketTable(props) {
       queryParams.pageSize = pageInfo.pageSize;
 
       // let {data} = await api.post('/admin/v1/ticket/list',queryParams)
-      
       axios
-        .get("/api/v1/dataSource" + flog) //接口地址与拦截地址要一致
+        .get("http://localhost:8080/process/" + flog) //接口地址与拦截地址要一致
         .then((res) => {
-          // console.log("selectValue", selectValue);
-          
-          res.data.result.list.map((item) => {
+          console.log('data.data', res.data.data)
+          res.data.data.map((item) => {
             tableData.push({
               id: item.id,
-              title: item.title,
-              status: 
+              title: item.proDefId,
+              status:
               item.status === 0 ? '未通过' :
               item.status === 1 ? '进行中' : '完成',
-              current_handler: item.current_handler_name,
-              dept: item.dept_name,
-              create_time: item.create_time,
-            }) 
+              current_handler: item.createUser,
+              dept: item.areaId,
+              create_time: item.createTime,
+            })
           });
         })
         .catch((error) => {
           // 处理请求错误
           console.log("请求错误", error);
         });
-      
-        
-
 
       // data.list.map((item)=>{
       //   tableData.push({
@@ -224,7 +221,6 @@ export default function TicketTable(props) {
       //     create_time: item.create_time
       //   })
       // })
-
       setData(tableData);
       setTotle(data.totle);
       setIsloading(false);
@@ -244,7 +240,6 @@ export default function TicketTable(props) {
   // 组件渲染完成后监听 queryParams 的变化
   useEffect(() => {
     update();
-    // fetchData();
     // fetchDataTotalTicket()
   }, [datalist]);
 

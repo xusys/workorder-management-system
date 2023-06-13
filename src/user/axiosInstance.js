@@ -10,7 +10,8 @@ instance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
     if (token) {
-      config.headers["token"] = `Bearer ${token}`;
+      config.headers["token"] = `${token}`;
+      console.log('token',token)
     } else {
       // 如果没有token，进行页面导航到登录页面
       Navigate("/login");
@@ -26,8 +27,8 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (response) => {
     // 处理响应数据
-    const token = response.data.token;
-    window.localStorage.setItem("token", token);
+    // const token = response.data.token;
+    // window.localStorage.setItem("token", token);
     
     return response;
   },

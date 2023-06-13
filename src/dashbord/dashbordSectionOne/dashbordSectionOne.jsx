@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react"
 import axios from "../../user/axiosInstance"
-import "../../mock/workorderlistall"
-import "../../mock/workorderlistalert"
-import "../../mock/workorderlistcreate"
-import "../../mock/workorderlistrelatedtome"
-import "../../mock/workorderlisttodo"
+// import "../../mock/workorderlistall"
+// import "../../mock/workorderlistalert"
+// import "../../mock/workorderlistcreate"
+// import "../../mock/workorderlistrelatedtome"
+// import "../../mock/workorderlisttodo"
 // import axios from "axios"
 import api from "../../api"
 import TiCard from '../../tiCard/tiCard'
@@ -19,22 +19,26 @@ export default function DashbordSectionOne() {
 
   const fetchDataTotalTicket = async () => {
     try {
-      const response = await axios.get('/api/v1/dataSource0')
+      const response = await axios.get('http://localhost:8080/process/getProcess?currentpage=1&pagesize=500')
+      // console.log(response)
+
       var totalTicketCount = 0
-      response.data.result.list.map((item) => {
+      response.data.data.map((item) => {
         totalTicketCount += 1
       })
       setTotalTicket(totalTicketCount)
     } catch (error) {
-      // console.log('Error', error)
+      console.log('Error', error)
     }
   }
 
   const fetchDataCreateTicket = async () => {
     try {
-      const response = await axios.get('/api/v1/dataSource2')
+      const response = await axios.get('http://localhost:8080/process/myOrder')
+      console.log(response)
+
       var createTicketCount = 0
-      response.data.result.list.map((item) => {
+      response.data.data.map((item) => {
         createTicketCount += 1
       })
       setCreateTicket(createTicketCount)
@@ -45,9 +49,11 @@ export default function DashbordSectionOne() {
   
   const fetchDataAlertTicket = async () => {
     try {
-      const response = await axios.get('/api/v1/dataSource1')
+      const response = await axios.get('http://localhost:8080/process/myWarningTask')
+      // console.log(response)
+
       var alertTicketCount = 0
-      response.data.result.list.map((item) => {
+      response.data.data.map((item) => {
         alertTicketCount += 1
       })
       setAlertTicket(alertTicketCount)
@@ -58,9 +64,10 @@ export default function DashbordSectionOne() {
   
   const fetchDataToDoTicket = async () => {
     try {
-      const response = await axios.get('/api/v1/dataSource4')
+      const response = await axios.get('http://localhost:8080/process/myCommision')
+
       var todoTicketCount = 0
-      response.data.result.list.map((item) => {
+      response.data.data.map((item) => {
         todoTicketCount += 1
       })
       setToDoTicket(todoTicketCount)

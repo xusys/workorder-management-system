@@ -2,7 +2,7 @@ import {React, useState, useEffect} from "react"
 import './dashbordSectionTwo.css'
 import { DatePicker } from 'tdesign-react'
 import ReactECharts from 'echarts-for-react'
-import '../../mock/workorderlistall'
+// import '../../mock/workorderlistall'
 // import axios from "axios"
 import axios from "../../user/axiosInstance"
 
@@ -12,13 +12,14 @@ export default function DashbordSectionTwo() {
   // 获取数据进行统计
   const fetchDatatotalTicket = async () => {
     try {
-      const response = await axios.get('/api/v1/dataSource0');
+      const response = await axios.get('http://localhost:8080/process/allOrders');
       // const totalTicketCount = response.data.result.list.length;
       var data_count = [0, 0, 0, 0, 0, 0, 0]
       // var day = ['周日','周一', '周二', '周三', '周四', '周五', '周六']
-      var data_src = response.data.result.list
+      var data_src = response.data.data;
+      console.log(data_src)
       data_src.map((item) => {
-        var index = new Date(item.create_time).getDay()
+        var index = new Date(item.createTime).getDay()
         // console.log(day[index])
         if(index === 0) index = 7
         data_count[index - 1] += 1

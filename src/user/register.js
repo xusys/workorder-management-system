@@ -12,9 +12,9 @@ import { DesktopIcon, LockOnIcon, Icon } from "tdesign-icons-react";
 import { useNavigate } from "react-router-dom";
 import "./user.css";
 import axios from "axios";
-import "../mock/register";
-import data from './output.json';
+import data from './output.json'
 
+// import "../mock/register";
 // import axios from "./axiosInstance";
 const { FormItem } = Form;
 
@@ -39,7 +39,7 @@ export default function Register(props) {
   //   },
   // ];
 
-  
+
 
   const formRef = useRef();
   const navigate = useNavigate();
@@ -50,12 +50,16 @@ export default function Register(props) {
 
       delete params.rePassword;
 
+      params.areaId += params.area_category;
+
+      delete  params.area_category;
+
       console.log("params", params);
 
       axios
-        .post("/v1/user/register", params)
+        .post("http://localhost:8080/user/register", params)
         .then((res) => {
-          if (res.data.code === 0) {
+          if (res.data.code === 1) {
             console.log("success register")
             // 注册成功，转到登陆界面
             navigate("/");
@@ -208,7 +212,7 @@ export default function Register(props) {
       scrollToFirstError="smooth"
     >
       <FormItem
-        name="user_name"
+        name="username"
         rules={[
           { required: true, message: "用户名必填", type: "error" },
           { pattern: /^[A-Za-z0-9]+$/, message: "用户名只能是英文和数字" },
@@ -256,7 +260,7 @@ export default function Register(props) {
       </FormItem>
       <FormItem
         label="职位"
-        name="workstation_category"
+        name="positionId"
         rules={[
           { required: true, message: "必选", type: "error" },
           // { min: 6, message: "至少需要6位", type: "error" },
@@ -273,7 +277,7 @@ export default function Register(props) {
       </FormItem>
       <FormItem
         label="市"
-        name="city_category"
+        name="areaId"
         rules={[
           { required: true, message: "必选", type: "error" },
           // { min: 6, message: "至少需要6位", type: "error" },
