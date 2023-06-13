@@ -1,7 +1,12 @@
-import api from "../../api";
+// import api from "../../api";
+// import axios from "axios";
+import axios from "../../user/axiosInstance";
+import "../../mock/create_ticket"
+
 import "./createTicket.css";
 import { Form, Input, Textarea, Upload, Button, Radio } from "tdesign-react";
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { cos } from "../../cos";
 
 const { FormItem } = Form;
@@ -10,6 +15,7 @@ const Region = window.sessionStorage.getItem("Region");
 
 // 创建工单的表单
 export default function CreateTicket() {
+  const navigate = useNavigate();
   const formRef = useRef();
   const [ctgListValue, setCtgListValue] = useState([]);
   const user_id = window.sessionStorage.getItem("user_id");
@@ -23,36 +29,52 @@ export default function CreateTicket() {
   const onSubmit = (e) => {
     if (e.validateResult === true) {
       let parma = formRef.current.getFieldsValue(true);
-      // console.log(parma)
+      console.log(parma);
+
+      axios
+        .post("/api/v1/create_ticket", parma)
+        .then((res) => {
+          if (res.data.code === 0) {
+            alert('申请成功');
+            navigate('/');
+          } else {
+            // 更新失败，处理错误情况
+            console.log("更新失败");
+          }
+        })
+        .catch((error) => {
+          // 处理请求错误
+          console.log("请求错误", error);
+        });
       // let attachmentList = parma.attachment ? parma.attachment.map((item)=>`${user_id}_${item.uid}_${item.name}`): []
       // parma.attachment = attachmentList.join(',')
-      api
-        .post("/admin/v1/ticket/create", parma)
-        .then((data) => {
-          api.dialog.alert({
-            title: "系统消息",
-            msg: "工单创建成功",
-          });
-          formRef.current.reset();
-        })
-        .catch((err) => {
-          if (err.code === 1000) {
-            api.dialog.alert({
-              title: "系统消息",
-              msg: "工单创建失败",
-            });
-          } else if (err.code === 1004) {
-            api.dialog.alert({
-              title: "系统消息",
-              msg: "请勿重复提交",
-            });
-          } else if (err.code === 1005) {
-            api.dialog.alert({
-              title: "系统消息",
-              msg: "工单创建失败，该用户还未绑定房号",
-            });
-          }
-        });
+      //   api
+      //     .post("/admin/v1/ticket/create", parma)
+      //     .then((data) => {
+      //       api.dialog.alert({
+      //         title: "系统消息",
+      //         msg: "工单创建成功",
+      //       });
+      //       formRef.current.reset();
+      //     })
+      //     .catch((err) => {
+      //       if (err.code === 1000) {
+      //         api.dialog.alert({
+      //           title: "系统消息",
+      //           msg: "工单创建失败",
+      //         });
+      //       } else if (err.code === 1004) {
+      //         api.dialog.alert({
+      //           title: "系统消息",
+      //           msg: "请勿重复提交",
+      //         });
+      //       } else if (err.code === 1005) {
+      //         api.dialog.alert({
+      //           title: "系统消息",
+      //           msg: "工单创建失败，该用户还未绑定房号",
+      //         });
+      //       }
+      //     });
     }
   };
 
@@ -82,8 +104,8 @@ export default function CreateTicket() {
   // 异步函数，用于获取分类列表数据并储存
   async function fetchCtgList() {
     try {
-      let { data } = await api.get("/admin/v1/ticket/category");
-      setCtgListValue(data);
+      let { data } = await axios.get("/admin/v1/ticket/category");
+      // setCtgListValue(data);
     } catch (err) {
       console.log("err", err);
       // setCtgListValue([]);
@@ -173,7 +195,11 @@ export default function CreateTicket() {
               <Input placeholder="请输入内容" />
             </FormItem>
             <FormItem label="内容" name="content">
-              <Textarea placeholder="请输入内容" maxlength={200} />
+              <Textarea
+                placeholder="请输入内容"
+                autosize={{ minRows: 3, maxRows: 10 }}
+                maxlength={200}
+              />
             </FormItem>
             {/* <FormItem label="附件" name="attachment" >
                             <Upload

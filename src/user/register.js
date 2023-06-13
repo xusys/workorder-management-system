@@ -32,6 +32,7 @@ export default function Register(props) {
         .post("/v1/user/register", params)
         .then((res) => {
           if (res.data.code === 0) {
+            console.log("success register")
             // 注册成功，转到登陆界面
             navigate("/");
           }
@@ -89,10 +90,33 @@ export default function Register(props) {
   //     MessagePlugin.success(`选中【${data.value}】`);
   //   };
 
+  
+  const [workstation_value, setworkstation_Value] = useState("");
   const [city_value, setcity_Value] = useState("");
   const [area_value, setarea_Value] = useState("");
   const [area_show, setArea_show] = useState(false);
   const [districtOptions, setDistrictOptions] = useState([]);
+  const [workstationArr, setCtgListValue] = useState([]);
+
+    // 异步函数，用于获取分类列表数据并储存
+    async function fetchCtgList() {
+      try {
+        let { data } = await axios.get("/admin/v1/ticket/workstation_category");
+        // console.log(data)
+        setCtgListValue(data.result.list);
+      } catch (err) {
+        console.log("err", err);
+        // setCtgListValue([]);
+        setCtgListValue([
+          { category_id: "1", name: "Category 1" },
+        ]);
+      }
+    }
+
+
+  const workstation_onChange = (value) => {
+    setworkstation_Value(value);
+  };
 
   const city_onChange = (value) => {
     setarea_Value(""); // 清空第二个选单的选中值
@@ -102,6 +126,10 @@ export default function Register(props) {
     // console.log("area", area_value);
 
     if (value != null) {
+      setarea_Value(""); // 清空第二个选项的值
+      setDistrictOptions([]); // 清空第二个选项的选项
+      setArea_show(false); // 隐藏第二个选项
+
       setArea_show(true);
       setDistrictOptions([]);
       const selectedCity = locationArr.find(
@@ -162,9 +190,16 @@ export default function Register(props) {
     value: item.category_id,
   }));
 
+  const workstation_options = workstationArr.map((item) => ({
+    label: item.name,
+    value: item.category_id,
+  }));
+
   useEffect(() => {
-    console.log("newest_area", area_value);
-  }, [area_value]);
+    fetchCtgList();
+    // console.log("newest_city", city_value);
+    // console.log("newest_area", area_value);
+  }, []);
 
   return (
     <Form
@@ -222,7 +257,31 @@ export default function Register(props) {
           clearable
         />
       </FormItem>
-      <FormItem label="市" name="city_category">
+      <FormItem
+        label="职位"
+        name="workstation_category"
+        rules={[
+          { required: true, message: "必选", type: "error" },
+          // { min: 6, message: "至少需要6位", type: "error" },
+        ]}
+      >
+        {/* <Radio.Group>{categoryGroup}</Radio.Group> */}
+        <Select
+          value={workstation_value}
+          onChange={workstation_onChange}
+          style={{ width: "40%" }}
+          clearable
+          options={workstation_options}
+        />
+      </FormItem>
+      <FormItem
+        label="市"
+        name="city_category"
+        rules={[
+          { required: true, message: "必选", type: "error" },
+          // { min: 6, message: "至少需要6位", type: "error" },
+        ]}
+      >
         {/* <Radio.Group>{categoryGroup}</Radio.Group> */}
         <Select
           value={city_value}
@@ -232,10 +291,18 @@ export default function Register(props) {
           options={options}
         />
       </FormItem>
-      <FormItem label="区/县" name="area_category">
+      <FormItem
+        label="区/县"
+        name="area_category"
+        rules={[
+          { required: true, message: "必选", type: "error" },
+          // { boolean: {area_value}, message: "重选", type: "error" },
+          // { min: 6, message: "至少需要6位", type: "error" },
+        ]}
+      >
         {/* <Radio.Group>{categoryGroup}</Radio.Group> */}
         <Select
-          key={area_value} // 添加key属性
+          // key={area_value} // 添加key属性
           value={area_value}
           onChange={area_onChange}
           style={{ width: "40%" }}

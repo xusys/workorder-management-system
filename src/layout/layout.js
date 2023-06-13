@@ -17,6 +17,7 @@ import ApproveTable from "../system/approveTable";
 
 import "./layout.css";
 import api from "../api";
+import axios from "axios";
 
 const { BreadcrumbItem } = Breadcrumb;
 
@@ -59,7 +60,7 @@ export function BasicDivider() {
 
 // 根据当前页面的路径，生成面包屑导航的内容
 const breadcrumbNameMap = {
-  "/personalCenter":"个人中心",
+  "/personalCenter": "个人中心",
   "/ticket/create": "工单申请",
   "/ticket/distribute": "分发工单",
   "/ticket/distribute/detail": "工单详情",
@@ -205,14 +206,37 @@ export function MyTodo() {
   if (!user_id) {
     content = <WarningAlert show={true} content={"请重新登录"} />;
   } else {
+    // var tableData = [];
+    // axios
+    //   .get("/api/v1/dataSource4") //接口地址与拦截地址要一致
+    //   .then((res) => {
+    //     console.log("res", res.data.result.list);
+    //     res.data.result.list.map((item) => {
+    //       tableData.push({
+    //         id: item.id,
+    //         title: item.title,
+    //         status:
+    //           item.status === 0
+    //             ? "创建"
+    //             : item.status === 1
+    //             ? "进行中"
+    //             : "完成",
+    //         current_handler: item.current_handler_name,
+    //         dept: item.dept_name,
+    //         create_time: item.create_time,
+    //       });
+    //     });
+    //   });
     content = (
       <TicketList
         pageParmas={{
           type: 2,
           status: 1,
           current_handler: user_id,
+          flog : '4',
         }}
         page="todo"
+        // datalist = { tableData }
       />
     );
   }
@@ -232,6 +256,7 @@ export function MyAlert() {
           type: 2,
           status: 1,
           current_handler: user_id,
+          flog : '1',
         }}
         page="todo"
       />
@@ -252,6 +277,7 @@ export function RelatedToMe() {
         pageParmas={{
           type: 2,
           relative_staff: user_id,
+          flog : '3',
         }}
       />
     );
@@ -271,6 +297,7 @@ export function CreatedByMe() {
         pageParmas={{
           type: 2,
           creator_id: user_id,
+          flog : '2',
         }}
       />
     );
@@ -281,12 +308,13 @@ export function CreatedByMe() {
 // 渲染所有工单列表
 export function AllTickets() {
   const user_id = window.sessionStorage.getItem("user_id");
-  
+
   return (
     <Fragment>
       <TicketList
         pageParmas={{
           type: 1,
+          flog : '0',
         }}
       />
     </Fragment>

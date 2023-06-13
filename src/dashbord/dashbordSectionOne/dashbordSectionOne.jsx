@@ -12,10 +12,10 @@ import './dashbordSectionOne.css'
 
 // 渲染一个包含多个数据的区块
 export default function DashbordSectionOne() {
-  const [totalTicket, setTotalTicket] = useState(0)
   const [createTicket, setCreateTicket] = useState(0)
   const [alertTicket, setAlertTicket] = useState(0)
   const [todoTicket, setToDoTicket] = useState(0)
+  const [totalTicket, setTotalTicket] = useState(0)
 
   const fetchDataTotalTicket = async () => {
     try {

@@ -124,10 +124,10 @@ function LoginContent() {
       // });
       axios.post("/api/v1/login", params) // 发送POST请求到登录接口
       .then((res) => {
-        // console.log(res);
+        console.log(res);
         const data = res.data.result; // 获取响应数据
         if (res.data.code === 0) {
-          // 登录成功，设置本地存储的token和用户信息
+          // 登录成功，设置本地存储的用户信息
           window.localStorage.setItem("token", data.token);
           window.sessionStorage.setItem("user_id", data.user_id);
           window.sessionStorage.setItem("user_info", JSON.stringify(data));

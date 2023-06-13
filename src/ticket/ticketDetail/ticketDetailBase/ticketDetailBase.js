@@ -3,6 +3,7 @@ import { Form,Steps,Button,Select,Textarea,Upload,Radio,Swiper } from 'tdesign-r
 import { useEffect, useState, useRef, useCallback } from 'react';
 import {CloseCircleIcon} from 'tdesign-icons-react'
 import './ticketDetailBase.css'
+import axios from 'axios';
 import api from '../../../api'
 import { cos } from '../../../cos'
 
@@ -393,7 +394,7 @@ export function TicketHandle(props) {
                     confirm: [completeFunc,parmas]
                 })
             } else {      
-                if (!handler) {
+                if (handler) {
                     api.dialog.alert({
                         title: '系统消息',
                         msg: '转单必须选择指派人',
@@ -475,12 +476,34 @@ export function TicketHandle(props) {
     return (    
         <TiCardLarge title="处理工单" className='ti-info'>
             <Form ref={formRef} colon={true} rules={rules} onSubmit={onSubmit}>  
-                <FormItem label="内容" name="desc">
+                {/* <FormItem label="内容" name="desc">
                     <Textarea 
                         placeholder="请输入内容" 
                         maxlength={200}
                     />
+                </FormItem> */}
+                {console.log('userid:', user_id)}
+                {user_id === '0'  ?
+                <FormItem label="审核" name="complete">
+                    <Radio.Group defaultValue={0}>
+                        <Radio value={1}>是</Radio>
+                        <Radio value={0}>否</Radio>
+                    </Radio.Group>
+                </FormItem> :
+                user_id === '1' ?
+                <FormItem label="指派给" name="handler">
+                    <Select style={{ width: '40%' }} clearable>
+                        {options}
+                    </Select>
                 </FormItem>
+                 :
+                <FormItem label="结束工单" name="complete">
+                <Radio.Group defaultValue={0}>
+                    <Radio value={1}>是</Radio>
+                    {/* <Radio value={0}>否</Radio> */}
+                </Radio.Group>
+            </FormItem>
+                }
                 {/* <FormItem label="附件" name="attachment">
                     <Upload
                         requestMethod={uploadObj}
@@ -491,21 +514,10 @@ export function TicketHandle(props) {
                         max={3}
                     />
                 </FormItem> */}
-                <FormItem label="指派给" name="handler">
-                    <Select style={{ width: '40%' }} clearable>
-                        {options}
-                    </Select>
-                </FormItem>
-                <FormItem label="结束工单" name="complete">
-                    <Radio.Group defaultValue={0}>
-                        <Radio value={1}>是</Radio>
-                        <Radio value={0}>否</Radio>
-                    </Radio.Group>
-                </FormItem>
-                <div className="ti-handle-submit-container">
-                    <div className="ti-handle-submit-sub">
-                        <Button type="submit" content="提交"></Button>
-                    </div>
+                
+                
+                <div>
+                    <Button type="submit" content="提交"></Button>
                 </div>
             </Form>   
         </TiCardLarge>

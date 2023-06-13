@@ -27,6 +27,8 @@ instance.interceptors.response.use(
   (response) => {
     // 处理响应数据
     const token = response.data.token;
+    window.localStorage.setItem("token", token);
+    
     return response;
   },
   (error) => {

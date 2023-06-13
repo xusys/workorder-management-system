@@ -1,4 +1,5 @@
 import "./ticketList.css";
+import axios from "axios";
 import { useState, useEffect } from "react";
 import { Input, Select, DatePicker, Button, DialogPlugin } from "tdesign-react";
 import TicketTable from "../ticketTable/ticketTable";
@@ -19,6 +20,7 @@ export default function TicketList(props) {
   }
 
   const { pageParmas } = props;
+  const { datalist } = props;
 
   const [queryParams, setQueryParams] = useState(pageParmas);
 
@@ -113,7 +115,7 @@ export default function TicketList(props) {
         </div>
         <div className="ti-table-area">
           {/* 接受查询参数作为 props，并用于显示符合查询条件的工单列表 */}
-          <TicketTable queryParams={queryParams}></TicketTable>
+        <TicketTable queryParams={queryParams} datalist={datalist}></TicketTable>
         </div>
       </div>
     </section>

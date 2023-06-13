@@ -68,8 +68,8 @@ function getMenuValue(location) {
     const [active, setActive] = useState('0-1');
     const [collapsed, setCollapsed] = useState(true);
     const [expands, setExpands] = useState(['0','1']);
-    const [showAdmin, setShowAdmin] = useState(true);
-    const [showDistribute, setShowDistribute] = useState(true);
+    const [showAdmin, setShowAdmin] = useState(false);
+    const [showDistribute, setShowDistribute] = useState(false);
     const [logoContent, setLogoContent] = useState('工单系统');
   
     // 在组件渲染时，获取显示管理菜单和分发工单菜单的状态

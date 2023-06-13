@@ -32,6 +32,7 @@ Mock.mock('/api/v1/login', 'post', function (options) {
       result: {
         user_id: 1,
         user_name: 'admin',
+        // user_position: ''
         token: 'boomxakalaka'
       }
     };

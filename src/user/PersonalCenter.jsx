@@ -68,7 +68,7 @@ export default function PersonalCenter() {
                     <div className="ti-form-basic-container">
                         <div className="ti-form-basic-item">
                             <div className="ti-form-basic-container-title">个人详情</div>
-                            {isEditing ? (
+                            {false ? (
                                 <div className="ti-form-basic-item">
                                     <FormItem label="用户名" name="title">
                                         <Input
@@ -95,7 +95,7 @@ export default function PersonalCenter() {
                             )}
                         </div>
                     </div>
-                    {isEditing ? (
+                    {/* {isEditing ? (
                         <div className="ti-form-submit-container">
                             <div className="ti-form-submit-sub">
                                 <Button type="submit" onClick={handleSubmit}>提交</Button>
@@ -104,7 +104,7 @@ export default function PersonalCenter() {
                         </div>
                     ) : (
                         <Button type="button" onClick={handleEditClick}>修改</Button>
-                    )}
+                    )} */}
                 </form>
             </section>
         </div >
