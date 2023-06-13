@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,5 +57,16 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
         registry.addInterceptor(jwtInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns(excludePath);
+    }
+
+    /**
+     * 支持跨域请求
+     * @param registry
+     */
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")// 项目中的所有接口都支持跨域
+                .allowedOrigins("http://localhost:**") //允许哪些域能访问我们的跨域资源
+                .allowedMethods("*")//允许的访问方法"POST", "GET", "PUT", "OPTIONS", "DELETE"等
+                .allowedHeaders("*");//允许所有的请求header访问，可以自定义设置任意请求头信息
     }
 }

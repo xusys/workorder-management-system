@@ -40,7 +40,7 @@ public class ProcessController {
 
 
     @GetMapping("/getProcess")
-    public R  getInstance(int currentpage, int pagesize){
+    public R getInstance(int currentpage, int pagesize){
         List<ProcessInstance> list=activitiService.getInstance(currentpage,pagesize);
         Map<String,Object>map =new HashMap<>();
         map.put("processInstanceList",(Util.activitiResult(list)));
@@ -103,7 +103,7 @@ public class ProcessController {
         return R.success(Util.activitiResult(list));
     }
     @GetMapping("/completeTask")
-    public  R completeTask(Boolean flag, String taskId, @RequestHeader String token){
+    public R completeTask(Boolean flag, String taskId, @RequestHeader String token){
         DecodedJWT decode = JwtUtil.verifyToken(token);
         String positionName=decode.getClaim("positionName").asString();
         String username=decode.getClaim("username").asString();
@@ -129,9 +129,7 @@ public class ProcessController {
         return R.success(Util.activitiResult(list));
     }
     @PostMapping("/setAssignee")
-    public R setAssignee(@RequestHeader String token, @RequestBody String taskId){
-        DecodedJWT decode = JwtUtil.verifyToken(token);
-        String username=decode.getClaim("username").asString();
+    public R setAssignee(String username, @RequestBody String taskId){
         activitiService.setAssignee(username,taskId);
         return R.success("");
     }
@@ -157,5 +155,4 @@ public class ProcessController {
         List<Order>list=activitiService.timeoutOrder();
         return R.success(Util.activitiResult(list));
     }
-
 }
