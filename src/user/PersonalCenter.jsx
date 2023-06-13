@@ -12,7 +12,7 @@ const { FormItem } = Form
 // 个人中心的界面，根据用户的编辑状态显示不同的界面元素
 export default function PersonalCenter() {
     const userInfo = JSON.parse(window.sessionStorage.getItem("user_info"))
-    console.log('userInfo',userInfo)
+    // console.log('userInfo', userInfo)
     const [isEditing, setIsEditing] = useState(false)
     const [username, setUsername] = useState(userInfo.user_name)
     // console.log('username',username)
@@ -30,29 +30,32 @@ export default function PersonalCenter() {
     // 阻止默认的表单提交行为，处理提交逻辑
     const handleSubmit = (e) => {
         e.preventDefault() // 阻止表单的默认提交行为
-      
+
+        // 更新页面上的用户信息
+        const updatedUserInfo = { ...userInfo, user_name: username }
+        window.sessionStorage.setItem("user_info", JSON.stringify(updatedUserInfo))
+
         if (isEditing) {
-          // 发送更新用户信息的请求
-        //   console.log('username',username)
-          axios.post("/api/v1/updateUser", username)
-            .then((res) => {
-              if (res.data.code === 0) {
-                // 更新成功，更新页面上的用户信息
-                const updatedUserInfo = { ...userInfo, user_name: username }
-                window.sessionStorage.setItem("user_info", JSON.stringify(updatedUserInfo))
-                setIsEditing(false)
-              } else {
-                // 更新失败，处理错误情况
-                console.log("更新失败")
-              }
-            })
-            .catch((error) => {
-              // 处理请求错误
-              console.log("请求错误", error)
-            })
+            // 发送更新用户信息的请求
+            console.log('userInfo', updatedUserInfo)
+            axios
+                .post("/api/v1/updateUser", updatedUserInfo)
+                .then((res) => {
+                    if (res.data.code === 0) {
+                        // 更新成功
+                        setIsEditing(false)
+                    } else {
+                        // 更新失败，处理错误情况
+                        console.log("更新失败")
+                    }
+                })
+                .catch((error) => {
+                    // 处理请求错误
+                    console.log("请求错误", error)
+                })
         }
-      }      
-      
+    }
+
 
     const handleUsernameChange = (e) => {
         setUsername(e)
