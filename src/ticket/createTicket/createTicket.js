@@ -2,6 +2,7 @@
 // import axios from "axios";
 import axios from "../../user/axiosInstance";
 import "../../mock/create_ticket"
+import "../../mock/create_ticket_category"
 
 import "./createTicket.css";
 import { Form, Input, Textarea, Upload, Button, Radio } from "tdesign-react";
@@ -104,15 +105,16 @@ export default function CreateTicket() {
   // 异步函数，用于获取分类列表数据并储存
   async function fetchCtgList() {
     try {
-      let { data } = await axios.get("/admin/v1/ticket/category");
-      // setCtgListValue(data);
+      let { data } = await axios.get("/admin/v1/ticket/create_ticket_category");
+      
+      setCtgListValue(data.result.list);
     } catch (err) {
       console.log("err", err);
       // setCtgListValue([]);
-      setCtgListValue([
-        { category_id: "1", name: "Category 1" },
-        { category_id: "2", name: "Category 2" },
-      ]);
+      // setCtgListValue([
+      //   { category_id: "1", name: "Category 1" },
+      //   { category_id: "2", name: "Category 2" },
+      // ]);
     }
   }
 
