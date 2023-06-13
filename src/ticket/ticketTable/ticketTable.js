@@ -9,7 +9,7 @@ import "../../mock/workorderlistall";
 // 展示工单信息的表格组件，并提供了相关操作和分页功能
 export default function TicketTable(props) {
   // const user_id = window.sessionStorage.getItem('user_id')
-  const { queryParams } = props;
+  const { queryParams, selectValue } = props;
   const { flog } = queryParams;
   const { datalist } = props;
   const [isLoading, setIsloading] = useState(false);
@@ -22,8 +22,6 @@ export default function TicketTable(props) {
   const [totle, setTotle] = useState(tle);
   const location = useLocation();
   const ticketPath = location.pathname;
-
-  const [totalTicket, setTotalTicket] = useState(0);
 
   let tableData = [];
 
@@ -189,30 +187,32 @@ export default function TicketTable(props) {
       queryParams.pageSize = pageInfo.pageSize;
 
       // let {data} = await api.post('/admin/v1/ticket/list',queryParams)
+      
       axios
         .get("/api/v1/dataSource" + flog) //接口地址与拦截地址要一致
         .then((res) => {
-          // console.log('res', res.data.result.list)
+          // console.log("selectValue", selectValue);
+          
           res.data.result.list.map((item) => {
             tableData.push({
               id: item.id,
               title: item.title,
-              status:
-                item.status === 0
-                  ? "创建"
-                  : item.status === 1
-                  ? "进行中"
-                  : "完成",
+              status: 
+              item.status === 0 ? '未通过' :
+              item.status === 1 ? '进行中' : '完成',
               current_handler: item.current_handler_name,
               dept: item.dept_name,
               create_time: item.create_time,
-            });
+            }) 
           });
         })
         .catch((error) => {
           // 处理请求错误
           console.log("请求错误", error);
         });
+      
+        
+
 
       // data.list.map((item)=>{
       //   tableData.push({
@@ -224,6 +224,7 @@ export default function TicketTable(props) {
       //     create_time: item.create_time
       //   })
       // })
+
       setData(tableData);
       setTotle(data.totle);
       setIsloading(false);
@@ -243,6 +244,7 @@ export default function TicketTable(props) {
   // 组件渲染完成后监听 queryParams 的变化
   useEffect(() => {
     update();
+    // fetchData();
     // fetchDataTotalTicket()
   }, [datalist]);
 

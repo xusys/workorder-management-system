@@ -3,7 +3,9 @@ import { Menu,Badge } from 'tdesign-react';
 import { AppIcon, ViewModuleIcon, DashboardIcon, SettingIcon, ViewListIcon } from 'tdesign-icons-react';
 import { useNavigate, useLocation } from "react-router-dom";
 import './aside.css' 
+import "../mock/workorderlistalert"
 import api from '../api';
+import axios from '../user/axiosInstance';
 
 const { SubMenu, MenuItem } = Menu;
 
@@ -70,6 +72,7 @@ function getMenuValue(location) {
     const [expands, setExpands] = useState(['0','1']);
     const [showAdmin, setShowAdmin] = useState(false);
     const [showDistribute, setShowDistribute] = useState(false);
+    const [alert_count, setalert_count] = useState(0);
     const [logoContent, setLogoContent] = useState('工单系统');
   
     // 在组件渲染时，获取显示管理菜单和分发工单菜单的状态
@@ -79,9 +82,23 @@ function getMenuValue(location) {
         setShowDistribute(e.data.showDistribute);
       });
     }, []);
+
+    const fetchDataAlertTicket = async () => {
+      try {
+        const response = await axios.get('/api/v1/dataSource1')
+        var alertTicketCount = 0
+        response.data.result.list.map((item) => {
+          alertTicketCount += 1
+        })
+        setalert_count(alertTicketCount)
+      } catch (error) {
+        console.log('Error', error)
+      }
+    }
   
     // 当目标菜单值改变时，更新激活的菜单项
     useEffect(() => {
+      fetchDataAlertTicket();
       setActive(reflashValue);
     }, [reflashValue]);
   
@@ -139,7 +156,7 @@ function getMenuValue(location) {
             </MenuItem>
             <MenuItem value="1-7" onClick={() => {navigate("/ticket/alert");}}>
               <span className='span-margin'>我的预警</span>
-              <Badge count={3} color="red" />
+              <Badge count={alert_count} color="red" />
             </MenuItem>
             {
               showDistribute ?

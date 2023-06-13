@@ -29,9 +29,13 @@ export default function TicketList(props) {
     setInputChange(value);
   };
   const [selectValue, setSelectValue] = useState();
+
   const onSelectChange = (value) => {
+    // console.log(value);
     setSelectValue(value);
+    // console.log("selectValue",selectValue);
   };
+
   const [dateValue, setDateValue] = useState();
   const onDateChange = (value) => {
     setDateValue(value);
@@ -100,6 +104,11 @@ export default function TicketList(props) {
       </div>
     );
   });
+
+  useEffect(() => {
+    // console.log("selectValue", selectValue);
+  }, [selectValue]);
+
   
   return (
     <section
@@ -115,7 +124,7 @@ export default function TicketList(props) {
         </div>
         <div className="ti-table-area">
           {/* 接受查询参数作为 props，并用于显示符合查询条件的工单列表 */}
-        <TicketTable queryParams={queryParams} datalist={datalist}></TicketTable>
+        <TicketTable queryParams={queryParams} datalist={datalist} selectValue={selectValue}></TicketTable>
         </div>
       </div>
     </section>

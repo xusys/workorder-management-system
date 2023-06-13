@@ -11,7 +11,7 @@ Mock.mock('/api/v1/dataSource1',function(){
     'code':0,
     'msg':'',
     'result':{
-      'list|6':[{
+      'list|4':[{
         'id|+1': 1,
         'title':'@ctitle',
         "status|1":[0,1,2],

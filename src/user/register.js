@@ -13,10 +13,34 @@ import { useNavigate } from "react-router-dom";
 import "./user.css";
 import axios from "axios";
 import "../mock/register";
+import data from './output.json';
+
 // import axios from "./axiosInstance";
 const { FormItem } = Form;
 
 export default function Register(props) {
+
+  const locationArr = data;
+  // [
+  //   {
+  //     category_id: "00",
+  //     city: "广州省",
+  //     districts: [{ category_id: "00", area: "总部" }],
+  //   },
+  //   {
+  //     category_id: "01",
+  //     city: "广州市",
+  //     districts: [
+  //       { category_id: "00", area: "总部" },
+  //       { category_id: "01", area: "越秀区" },
+  //       { category_id: "02", area: "海珠区" },
+  //       { category_id: "03", area: "荔湾区" },
+  //     ],
+  //   },
+  // ];
+
+  
+
   const formRef = useRef();
   const navigate = useNavigate();
 
@@ -157,33 +181,6 @@ export default function Register(props) {
       setArea_show(false);
     }
   };
-
-  const locationArr = [
-    {
-      category_id: "1",
-      city: "广州省",
-      districts: [{ category_id: "0", area: "省直属" }],
-    },
-    {
-      category_id: "2",
-      city: "广州市",
-      districts: [
-        { category_id: "0", area: "市直属" },
-        { category_id: "1", area: "番禺区" },
-        { category_id: "2", area: "天河区" },
-        { category_id: "3", area: "越秀区" },
-      ],
-    },
-    {
-      category_id: "3",
-      city: "韶关市",
-      districts: [
-        { category_id: "0", area: "市直属" },
-        { category_id: "1", area: "x x县" },
-        { category_id: "2", area: "h h县" },
-      ],
-    },
-  ];
 
   const options = locationArr.map((item) => ({
     label: item.city,

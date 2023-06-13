@@ -6,6 +6,7 @@ import './ticketDetailBase.css'
 import axios from 'axios';
 import api from '../../../api'
 import { cos } from '../../../cos'
+import { useNavigate } from "react-router-dom";
 
 const { StepItem } = Steps;
 const { Option } = Select;
@@ -94,10 +95,20 @@ function BasicSwiper(props) {
 //流转历史
 export function TicketProcess(props) {
     let status = props.data.status
+    console.log('status', status)
     return (
+        
+        status === 0 ?
         <TiCardLarge title="工单进度" className='ti-info'>
-            <Steps current={status}>
-                <StepItem title="创建" />
+            <Steps>
+                {/* <StepItem title="创建" /> */}
+                <StepItem title="进行中" />
+                <StepItem status="error" title="未通过" />
+            </Steps>
+        </TiCardLarge> :
+        <TiCardLarge title="工单进度" className='ti-info'>
+            <Steps current={status-1}>
+                {/* <StepItem title="创建" /> */}
                 <StepItem title="进行中" />
                 <StepItem title="完成" />
             </Steps>
@@ -365,51 +376,86 @@ export function TicketTask(props) {
 export function TicketHandle(props) {
     const formRef = useRef();
     const user_id = window.sessionStorage.getItem('user_id')
+    const navigate = useNavigate();
     // 提交表单
     
     const onSubmit = (e) => {
         if (e.validateResult === true) {
            let formValues = formRef.current.getFieldsValue(true)
+           console.log(formValues)
            let {desc,attachment,handler} = formValues
            let attachmentList = attachment ? attachment.map((item)=>`${user_id}_${item.uid}_${item.name}`): []
            attachment = attachmentList.join(',')
            let parmas = Object.assign({},{desc,attachment,handler},{ticket_id:props.data.id})
+        //    console.log('params', parmas)
 
-           const completeFunc = function(parmas) {
-                api.post('/admin/v1/ticket/complete',parmas).then((data)=>{
-                        api.dialog.alert({
-                            title: '系统消息',
-                            msg: '操作成功',
-                        })
-                        formRef.current.reset()        
-                }).catch((err)=>{
-                        api.message.error('操作失败', 2000)
-                })
-            }
+        //    const completeFunc = function(parmas) {
+        //         api.post('/admin/v1/ticket/complete',parmas).then((data)=>{
+        //                 api.dialog.alert({
+        //                     title: '系统消息',
+        //                     msg: '操作成功',
+        //                 })
+        //                 formRef.current.reset()        
+        //         }).catch((err)=>{
+        //                 api.message.error('操作失败', 2000)
+        //         })
+        //     }
             // 结束工单
             if (formValues.complete) {
-                api.dialog.confirm({
-                    title: '系统消息',
-                    msg: '确定完成工单？',
-                    confirm: [completeFunc,parmas]
-                })
-            } else {      
-                if (handler) {
-                    api.dialog.alert({
-                        title: '系统消息',
-                        msg: '转单必须选择指派人',
+                if(user_id === '0') {
+                    axios
+                    .post("/api/v1/create_ticket", parmas)
+                    .then((res) => {
+                    if (res.data.code === 0) {
+                        alert('审核成功');
+                        navigate('/');
+                    } else {
+                        // 更新失败，处理错误情况
+                        console.log("更新失败");
+                    }
                     })
-                    return
-                }   
-                api.post('/admin/v1/ticket/transfer',parmas).then((data)=>{
-                        api.dialog.alert({
-                            title: '系统消息',
-                            msg: '操作成功',
-                        })
-                        formRef.current.reset()        
-                }).catch((err)=>{
-                        api.message.error('操作失败', 2000)
-                })
+                    .catch((error) => {
+                    // 处理请求错误
+                    console.log("请求错误", error);
+                    });
+                }
+                else {
+                    axios
+                    .post("/api/v1/create_ticket", parmas)
+                    .then((res) => {
+                    if (res.data.code === 0) {
+                        alert('结束工单成功');
+                        navigate('/');
+                    } else {
+                        // 更新失败，处理错误情况
+                        console.log("更新失败");
+                    }
+                    })
+                    .catch((error) => {
+                    // 处理请求错误
+                    console.log("请求错误", error);
+                    });
+                }
+            } else if(user_id === '1') {  
+                // api.dialog.alert({
+                //     title: '系统消息',
+                //     msg: '转单必须选择指派人',
+                // })
+                axios
+                    .post("/api/v1/create_ticket", parmas)
+                    .then((res) => {
+                    if (res.data.code === 0) {
+                        alert('派发工单成功');
+                        navigate('/');
+                    } else {
+                        // 更新失败，处理错误情况
+                        console.log("更新失败");
+                    }
+                    })
+                    .catch((error) => {
+                    // 处理请求错误
+                    console.log("请求错误", error);
+                    });
             }      
         }
       };

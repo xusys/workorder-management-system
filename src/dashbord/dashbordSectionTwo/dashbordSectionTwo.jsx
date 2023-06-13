@@ -63,9 +63,9 @@ export default function DashbordSectionTwo() {
           <span className="ti-title">总工单统计</span>
           <span className="ti-sub-title">（个）</span>
         </div>
-        <div className="ti-section-options">
+        {/* <div className="ti-section-options">
           <DatePicker mode="date" range style={{ width: 240 }}></DatePicker>
-        </div>
+        </div> */}
       </div>
       <div className="ti-section-content">
         <ReactECharts

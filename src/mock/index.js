@@ -30,7 +30,7 @@ Mock.mock('/api/v1/login', 'post', function (options) {
       code: 0,
       msg: '登录成功',
       result: {
-        user_id: 1,
+        user_id: 0,
         user_name: 'admin',
         // user_position: ''
         token: 'boomxakalaka'

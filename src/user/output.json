@@ -1,0 +1,710 @@
+[
+  {
+    "category_id": "00",
+    "city": "广东省",
+    "districts": [
+      {
+        "category_id": "00",
+        "area": "总部"
+      }
+    ]
+  },
+  {
+    "category_id": "01",
+    "city": "广州市",
+    "districts": [
+      {
+        "category_id": "00",
+        "area": "总部"
+      },
+      {
+        "category_id": "01",
+        "area": "越秀区"
+      },
+      {
+        "category_id": "02",
+        "area": "海珠区"
+      },
+      {
+        "category_id": "03",
+        "area": "荔湾区"
+      },
+      {
+        "category_id": "04",
+        "area": "天河区"
+      },
+      {
+        "category_id": "05",
+        "area": "白云区"
+      },
+      {
+        "category_id": "06",
+        "area": "黄埔区"
+      },
+      {
+        "category_id": "07",
+        "area": "花都区"
+      },
+      {
+        "category_id": "08",
+        "area": "番禺区"
+      },
+      {
+        "category_id": "09",
+        "area": "南沙区"
+      },
+      {
+        "category_id": "10",
+        "area": "从化区"
+      },
+      {
+        "category_id": "11",
+        "area": "增城区"
+      }
+    ]
+  },
+  {
+    "category_id": "02",
+    "city": "深圳市",
+    "districts": [
+      {
+        "category_id": "00",
+        "area": "总部"
+      },
+      {
+        "category_id": "01",
+        "area": "福田区"
+      },
+      {
+        "category_id": "02",
+        "area": "罗湖区"
+      },
+      {
+        "category_id": "03",
+        "area": "盐田区"
+      },
+      {
+        "category_id": "04",
+        "area": "南山区"
+      },
+      {
+        "category_id": "05",
+        "area": "宝安区"
+      },
+      {
+        "category_id": "06",
+        "area": "龙岗区"
+      },
+      {
+        "category_id": "07",
+        "area": "龙华区"
+      },
+      {
+        "category_id": "08",
+        "area": "坪山区"
+      },
+      {
+        "category_id": "09",
+        "area": "光明区"
+      }
+    ]
+  },
+  {
+    "category_id": "03",
+    "city": "珠海市",
+    "districts": [
+      {
+        "category_id": "00",
+        "area": "总部"
+      },
+      {
+        "category_id": "01",
+        "area": "香洲区"
+      },
+      {
+        "category_id": "02",
+        "area": "金湾区"
+      },
+      {
+        "category_id": "03",
+        "area": "斗门区"
+      }
+    ]
+  },
+  {
+    "category_id": "04",
+    "city": "汕头市",
+    "districts": [
+      {
+        "category_id": "00",
+        "area": "总部"
+      },
+      {
+        "category_id": "01",
+        "area": "金平区"
+      },
+      {
+        "category_id": "02",
+        "area": "龙湖区"
+      },
+      {
+        "category_id": "03",
+        "area": "澄海区"
+      },
+      {
+        "category_id": "04",
+        "area": "濠江区"
+      },
+      {
+        "category_id": "05",
+        "area": "潮阳区"
+      },
+      {
+        "category_id": "06",
+        "area": "潮南区"
+      },
+      {
+        "category_id": "07",
+        "area": "南澳县"
+      }
+    ]
+  },
+  {
+    "category_id": "05",
+    "city": "佛山市",
+    "districts": [
+      {
+        "category_id": "00",
+        "area": "总部"
+      },
+      {
+        "category_id": "01",
+        "area": "禅城区"
+      },
+      {
+        "category_id": "02",
+        "area": "南海区"
+      },
+      {
+        "category_id": "03",
+        "area": "顺德区"
+      },
+      {
+        "category_id": "04",
+        "area": "高明区"
+      },
+      {
+        "category_id": "05",
+        "area": "三水区"
+      }
+    ]
+  },
+  {
+    "category_id": "06",
+    "city": "韶关市",
+    "districts": [
+      {
+        "category_id": "00",
+        "area": "总部"
+      },
+      {
+        "category_id": "01",
+        "area": "浈江区"
+      },
+      {
+        "category_id": "02",
+        "area": "武江区"
+      },
+      {
+        "category_id": "03",
+        "area": "曲江区"
+      },
+      {
+        "category_id": "04",
+        "area": "乐昌市"
+      },
+      {
+        "category_id": "05",
+        "area": "南雄市"
+      },
+      {
+        "category_id": "06",
+        "area": "仁化县"
+      },
+      {
+        "category_id": "07",
+        "area": "始兴市"
+      },
+      {
+        "category_id": "08",
+        "area": "翁源县"
+      },
+      {
+        "category_id": "09",
+        "area": "新丰县"
+      },
+      {
+        "category_id": "10",
+        "area": "乳源瑶族自治县"
+      }
+    ]
+  },
+  {
+    "category_id": "07",
+    "city": "河源市",
+    "districts": [
+      {
+        "category_id": "00",
+        "area": "总部"
+      },
+      {
+        "category_id": "01",
+        "area": "源城区"
+      },
+      {
+        "category_id": "02",
+        "area": "东源县"
+      },
+      {
+        "category_id": "03",
+        "area": "和平县"
+      },
+      {
+        "category_id": "04",
+        "area": "龙川县"
+      },
+      {
+        "category_id": "05",
+        "area": "紫金县"
+      },
+      {
+        "category_id": "06",
+        "area": "连平县"
+      }
+    ]
+  },
+  {
+    "category_id": "08",
+    "city": "梅州市",
+    "districts": [
+      {
+        "category_id": "00",
+        "area": "总部"
+      },
+      {
+        "category_id": "01",
+        "area": "梅江区"
+      },
+      {
+        "category_id": "02",
+        "area": "梅县区"
+      },
+      {
+        "category_id": "03",
+        "area": "兴宁市"
+      },
+      {
+        "category_id": "04",
+        "area": "平远县"
+      },
+      {
+        "category_id": "05",
+        "area": "蕉岭县"
+      },
+      {
+        "category_id": "06",
+        "area": "大埔县"
+      },
+      {
+        "category_id": "07",
+        "area": "丰顺县"
+      },
+      {
+        "category_id": "08",
+        "area": "五华县"
+      }
+    ]
+  },
+  {
+    "category_id": "09",
+    "city": "惠州市",
+    "districts": [
+      {
+        "category_id": "00",
+        "area": "总部"
+      },
+      {
+        "category_id": "01",
+        "area": "惠城区"
+      },
+      {
+        "category_id": "02",
+        "area": "惠阳区"
+      },
+      {
+        "category_id": "03",
+        "area": "惠东县"
+      },
+      {
+        "category_id": "04",
+        "area": "博罗县"
+      },
+      {
+        "category_id": "05",
+        "area": "龙门县"
+      }
+    ]
+  },
+  {
+    "category_id": "10",
+    "city": "汕尾市",
+    "districts": [
+      {
+        "category_id": "00",
+        "area": "总部"
+      },
+      {
+        "category_id": "01",
+        "area": "城区"
+      },
+      {
+        "category_id": "02",
+        "area": "陆丰市"
+      },
+      {
+        "category_id": "03",
+        "area": "海丰县"
+      },
+      {
+        "category_id": "04",
+        "area": "陆河县"
+      }
+    ]
+  },
+  {
+    "category_id": "11",
+    "city": "东莞市",
+    "districts": [
+      {
+        "category_id": "00",
+        "area": "总部"
+      }
+    ]
+  },
+  {
+    "category_id": "12",
+    "city": "中山市",
+    "districts": [
+      {
+        "category_id": "00",
+        "area": "总部"
+      }
+    ]
+  },
+  {
+    "category_id": "13",
+    "city": "江门市",
+    "districts": [
+      {
+        "category_id": "00",
+        "area": "总部"
+      },
+      {
+        "category_id": "01",
+        "area": "蓬江区"
+      },
+      {
+        "category_id": "02",
+        "area": "江海区"
+      },
+      {
+        "category_id": "03",
+        "area": "新会区"
+      },
+      {
+        "category_id": "04",
+        "area": "台山市"
+      },
+      {
+        "category_id": "05",
+        "area": "开平市"
+      },
+      {
+        "category_id": "06",
+        "area": "鹤山市"
+      },
+      {
+        "category_id": "07",
+        "area": "恩平市"
+      }
+    ]
+  },
+  {
+    "category_id": "14",
+    "city": "阳江市",
+    "districts": [
+      {
+        "category_id": "00",
+        "area": "总部"
+      },
+      {
+        "category_id": "01",
+        "area": "江城区"
+      },
+      {
+        "category_id": "02",
+        "area": "阳东区"
+      },
+      {
+        "category_id": "03",
+        "area": "阳春区"
+      },
+      {
+        "category_id": "04",
+        "area": "阳西县"
+      }
+    ]
+  },
+  {
+    "category_id": "15",
+    "city": "湛江市",
+    "districts": [
+      {
+        "category_id": "00",
+        "area": "总部"
+      },
+      {
+        "category_id": "01",
+        "area": "赤坎区"
+      },
+      {
+        "category_id": "02",
+        "area": "霞山区"
+      },
+      {
+        "category_id": "03",
+        "area": "麻章区"
+      },
+      {
+        "category_id": "04",
+        "area": "坡头区"
+      },
+      {
+        "category_id": "05",
+        "area": "雷州市"
+      },
+      {
+        "category_id": "06",
+        "area": "廉江市"
+      },
+      {
+        "category_id": "07",
+        "area": "吴川市"
+      },
+      {
+        "category_id": "08",
+        "area": "逐溪县"
+      },
+      {
+        "category_id": "09",
+        "area": "徐闻县"
+      }
+    ]
+  },
+  {
+    "category_id": "16",
+    "city": "茂名市",
+    "districts": [
+      {
+        "category_id": "00",
+        "area": "总部"
+      },
+      {
+        "category_id": "01",
+        "area": "茂南区"
+      },
+      {
+        "category_id": "02",
+        "area": "电白区"
+      },
+      {
+        "category_id": "03",
+        "area": "信宜市"
+      },
+      {
+        "category_id": "04",
+        "area": "高州市"
+      },
+      {
+        "category_id": "05",
+        "area": "化州市"
+      }
+    ]
+  },
+  {
+    "category_id": "17",
+    "city": "肇庆市",
+    "districts": [
+      {
+        "category_id": "00",
+        "area": "总部"
+      },
+      {
+        "category_id": "01",
+        "area": "端州区"
+      },
+      {
+        "category_id": "02",
+        "area": "鼎湖区"
+      },
+      {
+        "category_id": "03",
+        "area": "高要区"
+      },
+      {
+        "category_id": "04",
+        "area": "四会市"
+      },
+      {
+        "category_id": "05",
+        "area": "广宁县"
+      },
+      {
+        "category_id": "06",
+        "area": "德庆县"
+      },
+      {
+        "category_id": "07",
+        "area": "封开县"
+      },
+      {
+        "category_id": "08",
+        "area": "怀集县"
+      }
+    ]
+  },
+  {
+    "category_id": "18",
+    "city": "清远市",
+    "districts": [
+      {
+        "category_id": "00",
+        "area": "总部"
+      },
+      {
+        "category_id": "01",
+        "area": "清城区"
+      },
+      {
+        "category_id": "02",
+        "area": "清新区"
+      },
+      {
+        "category_id": "03",
+        "area": "英德市"
+      },
+      {
+        "category_id": "04",
+        "area": "连州市"
+      },
+      {
+        "category_id": "05",
+        "area": "佛冈县"
+      },
+      {
+        "category_id": "06",
+        "area": "阳山县"
+      },
+      {
+        "category_id": "07",
+        "area": "连山壮族瑶族自治县"
+      },
+      {
+        "category_id": "08",
+        "area": "连南瑶族自治县"
+      }
+    ]
+  },
+  {
+    "category_id": "19",
+    "city": "潮州市",
+    "districts": [
+      {
+        "category_id": "00",
+        "area": "总部"
+      },
+      {
+        "category_id": "01",
+        "area": "湘桥区"
+      },
+      {
+        "category_id": "02",
+        "area": "潮安区"
+      },
+      {
+        "category_id": "03",
+        "area": "饶平县"
+      }
+    ]
+  },
+  {
+    "category_id": "20",
+    "city": "揭阳市",
+    "districts": [
+      {
+        "category_id": "00",
+        "area": "总部"
+      },
+      {
+        "category_id": "01",
+        "area": "榕城区"
+      },
+      {
+        "category_id": "02",
+        "area": "揭东区"
+      },
+      {
+        "category_id": "03",
+        "area": "普宁市"
+      },
+      {
+        "category_id": "04",
+        "area": "揭西县"
+      },
+      {
+        "category_id": "05",
+        "area": "惠来县"
+      }
+    ]
+  },
+  {
+    "category_id": "21",
+    "city": "云浮市",
+    "districts": [
+      {
+        "category_id": "00",
+        "area": "总部"
+      },
+      {
+        "category_id": "01",
+        "area": "云城区"
+      },
+      {
+        "category_id": "02",
+        "area": "云安区"
+      },
+      {
+        "category_id": "03",
+        "area": "罗定市"
+      },
+      {
+        "category_id": "04",
+        "area": "新兴县"
+      },
+      {
+        "category_id": "05",
+        "area": "郁南县"
+      }
+    ]
+  }
+]
