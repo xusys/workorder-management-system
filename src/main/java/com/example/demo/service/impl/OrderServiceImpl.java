@@ -35,4 +35,9 @@ public class OrderServiceImpl implements OrderService {
     public Order getById(String id) {
         return orderMapper.selectById(id);
     }
+    @Override
+    public List<Order>getAll(){
+        LambdaQueryWrapper<Order> lambdaQueryWrapper=new LambdaQueryWrapper<>();
+        return orderMapper.selectList(lambdaQueryWrapper);
+    }
 }

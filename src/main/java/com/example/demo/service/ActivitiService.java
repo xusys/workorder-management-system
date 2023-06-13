@@ -113,6 +113,7 @@ public class ActivitiService {
         for ( Task task :list){
 //            System.out.println(runtimeService.getVariable(task.getProcessInstanceId(),"area"));
         }
+
        return list;
     }
     @Transactional
@@ -158,14 +159,29 @@ public class ActivitiService {
      * @return
      */
     public List<Task> getWarningTask(String positionName, String areaId){
-        long duration=1000*24*60*60; // 1天的毫秒数
+//        long final duration=1000*24*60*60; // 1天的毫秒数
+        long duration=1000;
         Date nowDate=new Date();
         List<Task>list=taskService.createTaskQuery()
                 .taskAssignee(positionName)
-                .processVariableValueLike("areaId",AreaUtil.addWildcards(areaId))
+                .processVariableValueLike("area",AreaUtil.addWildcards(areaId))
                 .list();
         // 提取出距离创建时间已经超过 2天 的任务
-        list.removeIf(task -> (nowDate.getTime() - task.getCreateTime().getTime()) / duration > 2);
+        list.removeIf(task -> (nowDate.getTime() - task.getCreateTime().getTime()) / duration < 10);
+        return list;
+    }
+    public List<Order> getAllOrders(){
+        List<Order>list=orderService.getAll();
+        for(Order order:list){
+            HistoricActivityInstanceQuery historicActivityInstanceQuery= historyService.createHistoricActivityInstanceQuery();
+            try {
+                HistoricProcessInstance historicProcessInstance=historyService.createHistoricProcessInstanceQuery().processInstanceBusinessKey(order.getId()).singleResult();
+                List<HistoricActivityInstance> historicActivityInstanceList=historicActivityInstanceQuery.processInstanceId(historicProcessInstance.getId()).list();
+                order.setStatus(historicActivityInstanceList.get(historicActivityInstanceList.size()-1).getActivityName());
+            }catch (Exception e){
+                System.out.println("error");
+            }
+        }
         return list;
     }
 

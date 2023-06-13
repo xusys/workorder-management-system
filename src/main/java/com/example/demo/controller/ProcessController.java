@@ -5,6 +5,7 @@ import com.example.demo.common.R;
 import com.example.demo.entity.OperationLog;
 import com.example.demo.service.ActivitiService;
 import com.example.demo.service.OperationLogService;
+import com.example.demo.service.OrderService;
 import com.example.demo.utils.JwtUtil;
 import com.example.demo.utils.Util;
 import com.example.demo.entity.Order;
@@ -29,22 +30,19 @@ public class ProcessController {
 
     @Autowired
     OperationLogService operationLogService;
-
+    @Autowired
+    OrderService orderService;
     @GetMapping("/getDefine")
     public R getDefine(){
         List<ProcessDefinition> list=activitiService.getDefine();
-        Map<String,Object>map =new HashMap<>();
-        map.put("processDefineList",(Util.activitiResult(list)));
-        return R.success(map);
+        return R.success(Util.activitiResult(list));
     }
 
 
     @GetMapping("/getProcess")
     public R getInstance(int currentpage, int pagesize){
         List<ProcessInstance> list=activitiService.getInstance(currentpage,pagesize);
-        Map<String,Object>map =new HashMap<>();
-        map.put("processInstanceList",(Util.activitiResult(list)));
-        return R.success(map);
+        return R.success(Util.activitiResult(list));
     }
     @GetMapping("/suspendDefine")
     public R suspendDefine(String id){
@@ -61,9 +59,8 @@ public class ProcessController {
     @GetMapping("/getHistory")
     public R history(int currentpage,int pagesize){
        List<HistoricActivityInstance>list=activitiService.getHistory(currentpage,pagesize);
-        Map<String,Object>map =new HashMap<>();
-        map.put("processInstanceList",(Util.activitiResult(list)));
-        return R.success(map);
+
+        return R.success(Util.activitiResult(list));
     }
     @PostMapping("/save")
     public R save(@RequestHeader String token, @RequestBody Order order){
@@ -148,11 +145,17 @@ public class ProcessController {
         String areaId=decode.getClaim("areaId").asString();
         // 调用service
         List<Task>list=activitiService.getWarningTask(positionName,areaId);
-        return R.success(list);
+        return R.success(Util.activitiResult(list));
     }
     @GetMapping("/timeout")
     public R timeout(){
         List<Order>list=activitiService.timeoutOrder();
         return R.success(Util.activitiResult(list));
     }
+    @GetMapping("/allOrders")
+    public R getAllOrders(){
+        List<Order>list=activitiService.getAllOrders();
+        return  R.success(list);
+    }
+
 }

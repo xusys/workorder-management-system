@@ -11,4 +11,5 @@ public interface OrderService {
     public void updateStatus(String id,String status);
     public List<Order> getByCreateUser(String createUser);
     public Order getById(String id) ;
+    public List<Order> getAll();
 }

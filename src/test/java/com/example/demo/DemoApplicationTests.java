@@ -56,6 +56,7 @@ class DemoApplicationTests {
             System.out.println("流程示例 "+task.getProcessInstanceId());
             System.out.println("审批人 "+task.getAssignee());
 
+
         }
 
     }

@@ -6,7 +6,7 @@
     <sequenceFlow id="sid-b66852de-b6ba-4b8b-9d9c-5ad66439b2b2" sourceRef="sid-f68be724-b1ad-4997-b855-5dd203ad104c" targetRef="sid-11f66559-c118-4a71-b999-8e94c21a50f0"/>
     <boundaryEvent id="sid-0cfa0f75-3ca7-450e-9610-dbc8dc797db8" attachedToRef="sid-11f66559-c118-4a71-b999-8e94c21a50f0">
       <timerEventDefinition>
-        <timeDuration>PT10S</timeDuration>
+        <timeDuration>PT1H</timeDuration>
       </timerEventDefinition>
     </boundaryEvent>
     <sequenceFlow id="sid-9e5b7493-666c-4533-9a74-0b419934bd13" sourceRef="sid-0cfa0f75-3ca7-450e-9610-dbc8dc797db8" targetRef="sid-12b8ae1c-487c-4101-9bc1-715bfc5d56ea"/>
