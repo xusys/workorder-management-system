@@ -140,7 +140,9 @@ public class ProcessController {
         for(Task task:taskList){
             String processInstanceId = task.getProcessInstanceId();
             ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
-            orderList.add(orderService.getExcludeContentById(processInstance.getBusinessKey()));
+            Order order = orderService.getExcludeContentById(processInstance.getBusinessKey());
+            order.setTaskId(task.getId()); // 设置该工单当前待办的任务id
+            orderList.add(order);
         }
 //        return R.success(Util.activitiResult(list));
         return R.success(orderList);
