@@ -5,12 +5,17 @@ import com.example.demo.common.R;
 import com.example.demo.entity.Position;
 import com.example.demo.service.PositionService;
 import com.example.demo.utils.JwtUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Slf4j
+@RestController
 public class PositionController {
     @Autowired
     PositionService positionService;
@@ -19,7 +24,7 @@ public class PositionController {
      * 展示所有职位
      * @return
      */
-    @GetMapping("/allPositions")
+    @GetMapping("/user/allPositions")
     public R showAllPositions(){
         List<Position> positionList=positionService.list();
         return R.success(positionList);
@@ -29,7 +34,7 @@ public class PositionController {
      * 展示所有操作单位
      * @return
      */
-    @GetMapping("/operatingPositions")
+    @GetMapping("/process/operatingPositions")
     public R showOperatingPositions(){
         List<Position> positionList=positionService.getOperatingPositions();
         return R.success(positionList);
@@ -40,7 +45,7 @@ public class PositionController {
      * @param token
      * @return
      */
-    @GetMapping("/assistantPositions")
+    @GetMapping("/process/assistantPositions")
     public R showAssistantPositions(@RequestHeader String token){
         // 获取token
         DecodedJWT decode = JwtUtil.verifyToken(token);

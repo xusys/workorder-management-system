@@ -102,6 +102,9 @@ public class ProcessController {
         order.setCreateUser(createUser);
         order.setAreaId(areaId);
         order.setAreaName(area.getCity()+area.getDistrict());
+
+        System.out.println(order.getOrderName());
+
         activitiService.saveProcess(order);
         return R.success(0);
     }
@@ -117,7 +120,7 @@ public class ProcessController {
         // 从token中获取职位名
         String username=decode.getClaim("username").asString();
         List<Order>list=activitiService.myOrder(username);
-        return  R.success(Util.activitiResult(list));
+        return  R.success(list);
     }
 
     /**
@@ -146,7 +149,7 @@ public class ProcessController {
     }
 
     /**
-     * 处理代办任务
+     * 处理待办任务
      * @param flag
      * @param orderId
      * @param token
@@ -187,13 +190,13 @@ public class ProcessController {
 
     /**
      * 将工单转发给其他操作单位
-     * @param username
-     * @param taskId
+     * @param positionName
+     * @param orderId
      * @return
      */
     @PostMapping("/setAssignee")
-    public R setAssignee(String username, @RequestBody String taskId){
-        activitiService.setAssignee(username,taskId);
+    public R setAssignee(String positionName, String orderId){
+        activitiService.setAssignee(positionName,orderId);
         return R.success("");
     }
 

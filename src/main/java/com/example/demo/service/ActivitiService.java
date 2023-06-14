@@ -95,6 +95,7 @@ public class ActivitiService {
     @Transactional
     public  void completeTask(String username,String positionName,String orderId,Boolean flag){
         Task task=taskService.createTaskQuery().processInstanceBusinessKey(orderId).singleResult();
+        System.out.println(flag);
         taskService.setVariableLocal(task.getId(),"var",flag);
         OperationLog operationLog=new OperationLog();
         operationLog.setPosition(positionName);
@@ -126,13 +127,10 @@ public class ActivitiService {
         }
         return list;
     }
-    public Boolean setAssignee(String username,String taskId){
-        User user=userService.getByUsername(username);
-        if(user!=null&&user.getPositionId()==0){
-            taskService.setAssignee(taskId,username);
-            return true;
-        }
-        else return false;
+    public Boolean setAssignee(String positionName,String orderId){
+        Task task = taskService.createTaskQuery().processInstanceBusinessKey(orderId).singleResult();
+        task.setAssignee(positionName);
+        return true;
     }
 
     public List<Order> timeoutOrder(){
@@ -172,6 +170,7 @@ public class ActivitiService {
 
     public List<Order> getAllOrders(){
         List<Order>list=orderService.getAllExcludeContent();
+        System.out.println(list);
         for(Order order:list){
             HistoricActivityInstanceQuery historicActivityInstanceQuery= historyService.createHistoricActivityInstanceQuery();
             try {
