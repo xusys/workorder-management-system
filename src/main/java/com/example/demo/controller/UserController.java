@@ -1,8 +1,8 @@
 package com.example.demo.controller;
 
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.demo.common.R;
 import com.example.demo.entity.Area;
+import com.example.demo.entity.Position;
 import com.example.demo.service.AreaService;
 import com.example.demo.service.PositionService;
 import com.example.demo.service.UserService;
@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -42,8 +41,8 @@ public class UserController {
         User userInfo=userService.login(user);
         if(userInfo!=null){
             // 获取职位名
-            String positionName=positionService.getById(userInfo.getPositionId()).getPositionName();
-            userInfo.setPositionName(positionName);
+            Position position =positionService.getById(userInfo.getPositionId());
+            userInfo.setPositionName(position.getPositionName());
             // 获取所属地区
             Area area=areaService.getById(userInfo.getAreaId());
             String areaName=area.getCity()+area.getDistrict();
@@ -53,8 +52,9 @@ public class UserController {
             Map<String,Object> map=new HashMap<>();
             map.put("token",token);
             map.put("username",userInfo.getUsername());
-            map.put("position",positionName);
+            map.put("position",position.getPositionName());
             map.put("area",areaName);
+            map.put("identity",position.getIdentity());
             return R.success(map);
         }
         else return R.error("用户名或密码错误");

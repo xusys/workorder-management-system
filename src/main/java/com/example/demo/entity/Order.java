@@ -25,6 +25,4 @@ public class Order {
     private String status; // 流程当前状态
     private String areaId; // 地区id
     private String areaName; // 地区名
-    @TableField(exist = false)
-    private String taskId; // 当前待办工单的任务id
 }

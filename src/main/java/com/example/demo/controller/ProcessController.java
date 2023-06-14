@@ -140,28 +140,25 @@ public class ProcessController {
         for(Task task:taskList){
             String processInstanceId = task.getProcessInstanceId();
             ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
-            Order order = orderService.getExcludeContentById(processInstance.getBusinessKey());
-            order.setTaskId(task.getId()); // 设置该工单当前待办的任务id
-            orderList.add(order);
+            orderList.add(orderService.getExcludeContentById(processInstance.getBusinessKey()));
         }
-//        return R.success(Util.activitiResult(list));
         return R.success(orderList);
     }
 
     /**
      * 处理代办任务
      * @param flag
-     * @param taskId
+     * @param orderId
      * @param token
      * @return
      */
     @GetMapping("/completeTask")
-    public R completeTask(Boolean flag, String taskId, @RequestHeader String token){
+    public R completeTask(Boolean flag, String orderId, @RequestHeader String token){
         DecodedJWT decode = JwtUtil.verifyToken(token);
         String positionName=decode.getClaim("positionName").asString();
         String username=decode.getClaim("username").asString();
         try {
-            activitiService.completeTask(username,positionName,taskId,flag);
+            activitiService.completeTask(username,positionName,orderId,flag);
             return R.success(flag);
         }catch (Exception e)
         {
