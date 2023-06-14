@@ -19,7 +19,7 @@ export default function DashbordSectionOne() {
 
   const fetchDataTotalTicket = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/process/getProcess?currentpage=1&pagesize=500')
+      const response = await axios.get('http://localhost:8080/process/allOrders')
       // console.log(response)
 
       var totalTicketCount = 0

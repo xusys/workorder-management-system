@@ -129,9 +129,9 @@ export default function Register(props) {
     // 异步函数，用于获取分类列表数据并储存
     async function fetchCtgList() {
       try {
-        let { data } = await axios.get("/admin/v1/ticket/workstation_category");
-        // console.log(data)
-        setCtgListValue(data.result.list);
+        let { data } = await axios.get("http://localhost:8080/user/allPositions");
+        console.log('职位分类',data)
+        setCtgListValue(data.data);
       } catch (err) {
         console.log("err", err);
         // setCtgListValue([]);
@@ -192,8 +192,8 @@ export default function Register(props) {
   }));
 
   const workstation_options = workstationArr.map((item) => ({
-    label: item.name,
-    value: item.category_id,
+    label: item.positionName,
+    value: item.id,
   }));
 
   useEffect(() => {

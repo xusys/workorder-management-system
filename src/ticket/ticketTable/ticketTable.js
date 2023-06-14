@@ -2,7 +2,8 @@ import { useState, useEffect, Fragment } from "react";
 import { Table, DialogPlugin } from "tdesign-react";
 import { Edit1Icon } from "tdesign-icons-react";
 import { Link, useLocation } from "react-router-dom";
-import axios from "axios";
+// import axios from "axios";
+import axios from "../../user/axiosInstance"
 import api from "../../api";
 // import "../../mock/workorderlistall";
 
@@ -74,14 +75,14 @@ export default function TicketTable(props) {
       align: "center",
       ellipsis: true,
       colKey: "current_handler",
-      title: "当前处理人",
+      title: "创建人",
       width: "13%",
     },
     {
       align: "center",
       ellipsis: true,
       colKey: "dept",
-      title: "所属部门",
+      title: "区域号",
       width: "12%",
     },
     {
@@ -196,14 +197,15 @@ export default function TicketTable(props) {
           res.data.data.map((item) => {
             tableData.push({
               id: item.id,
-              title: item.proDefId,
+              title: item.orderName,
               status:
-              item.status === 0 ? '未通过' :
-              item.status === 1 ? '进行中' : '完成',
+              (item.status === '驳回' || item.status === '超时') ? '未通过' :
+              item.status === '审批通过' ? '完成' : '进行中',
               current_handler: item.createUser,
               dept: item.areaId,
               create_time: item.createTime,
             })
+            // console.log('data.data', res.data.data)
           });
         })
         .catch((error) => {

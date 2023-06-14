@@ -2,7 +2,8 @@ import api from '../../../api'
 import { useState,useEffect } from 'react';
 import { useParams } from "react-router-dom";
 import {TicketContent,TicketBase,TicketHandle,TicketHistory,TicketTask} from '../ticketDetailBase/ticketDetailBase'
-import axios from 'axios';
+// import axios from 'axios';
+import axios from "../../../user/axiosInstance"
 
 // 渲染工单详情页面的内容
 export default function TicketDetail() {
@@ -14,7 +15,7 @@ export default function TicketDetail() {
     // 从服务器获取工单详情数据
     async function fetchData(queryParams) {
         try {
-            let {data} = await api.get('/admin/v1/ticket/details',queryParams)
+            let {data} = await axios.get()
             data.process_list = JSON.parse(data.process_list)
             setData(data)
         } catch (err) {
@@ -25,20 +26,22 @@ export default function TicketDetail() {
     // 从服务器获取部门列表数据
     async function fetchDeptList() {
         try {  
-            let {data} = await axios.get('/admin/v1/system/property/dept/list')
-            setDeptData(data)
+            const res = await axios.get(`http://localhost:8080/process/orderDetails?orderId=${ticketId}`)
+            console.log('处理', res)
+            setData(res.data.data)
         } catch (err) {
-            setDeptData([]); 
+            setData([]);
         }
     }
 
     // 从服务器获取员工列表数据
     async function fetchEmployeeList() {
         try {  
-            let {data} = await axios.get('/admin/v1/system/property/employee/list',{type:2})
-            setEmployeeData(data)
+            const res = await axios.get(`http://localhost:8080/process/assistantPositions`)
+            console.log('res1', res)
+            setEmployeeData(res.data.data)
         } catch (err) {
-            setEmployeeData([{user_id: 1, name: 'admin'}]); 
+            setEmployeeData([{}]);
         }
     }
 

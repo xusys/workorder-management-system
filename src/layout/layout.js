@@ -17,8 +17,8 @@ import ApproveTable from "../system/approveTable";
 
 import "./layout.css";
 // import api from "../api";
-import axios from "axios";
-// import axios from "../user/axiosInstance"
+// import axios from "../../user/axiosInstance"
+// import axios from "axios";
 
 const { BreadcrumbItem } = Breadcrumb;
 
@@ -234,7 +234,7 @@ export function MyTodo() {
           type: 2,
           status: 1,
           current_handler: user_id,
-          flog : '4',
+          flog : 'myCommision',
         }}
         page="todo"
         // datalist = { tableData }
@@ -257,7 +257,7 @@ export function MyAlert() {
           type: 2,
           status: 1,
           current_handler: user_id,
-          flog : '1',
+          flog : 'myWarningTask',
         }}
         page="todo"
       />
@@ -278,7 +278,7 @@ export function RelatedToMe() {
         pageParmas={{
           type: 2,
           relative_staff: user_id,
-          flog : '3',
+          flog : 'operationLog',
         }}
       />
     );
@@ -298,7 +298,7 @@ export function CreatedByMe() {
         pageParmas={{
           type: 2,
           creator_id: user_id,
-          flog : '2',
+          flog : 'myOrder',
         }}
       />
     );

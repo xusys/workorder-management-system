@@ -129,7 +129,7 @@ function LoginContent() {
         if (res.data.code === 1) {
           // 登录成功，设置本地存储的用户信息
           window.localStorage.setItem("token", res.data.data.token);
-          window.sessionStorage.setItem("user_id", res.data.data.position);
+          window.sessionStorage.setItem("user_id", res.data.data.identity);
           window.sessionStorage.setItem("user_info", JSON.stringify(res.data.data));
 
           navigate("/"); // 重定向到指定路径

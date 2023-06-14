@@ -3,8 +3,10 @@ import { Form,Steps,Button,Select,Textarea,Upload,Radio,Swiper } from 'tdesign-r
 import { useEffect, useState, useRef, useCallback } from 'react';
 import {CloseCircleIcon} from 'tdesign-icons-react'
 import './ticketDetailBase.css'
-import axios from 'axios';
+// import axios from 'axios';
 import api from '../../../api'
+
+import axios from "../../../user/axiosInstance"
 import { cos } from '../../../cos'
 import { useNavigate } from "react-router-dom";
 
@@ -15,8 +17,10 @@ const { SwiperItem } = Swiper;
 const Bucket = window.sessionStorage.getItem('Bucket')
 const Region = window.sessionStorage.getItem('Region')
 
+
 // 附件
 function TiImg(props) {
+
     let [urlList,setUrlList] = useState([])
     const [showMsk, setShowMsk] = useState(false)
     function closeMask() {
@@ -122,7 +126,7 @@ export function TicketContent(props) {
             <div className='ti-info-block'>
                 <div className="ti-info-item">
                     <span className="ti-info-item-title">标题：</span>
-                    <span className="ti-info-item-content">{props.data.title}</span>
+                    <span className="ti-info-item-content">{props.data.orderName}</span>
                 </div>
                 <div className="ti-info-item">
                     <span className="ti-info-item-title">内容：</span>
@@ -153,20 +157,20 @@ export function TicketBase(props) {
                     </div>
                     <div className="ti-info-item">
                         <span className="ti-info-item-title">创建者：</span>
-                        <span className="ti-info-item-content">{props.data.creator}</span>
+                        <span className="ti-info-item-content">{props.data.createUser}</span>
                     </div>
                     <div className="ti-info-item">
                         <span className="ti-info-item-title">创建时间：</span>
-                        <span className="ti-info-item-content">{props.data.create_time}</span>
+                        <span className="ti-info-item-content">{props.data.createTime}</span>
                     </div>
-                    <div className="ti-info-item">
-                        <span className="ti-info-item-title">所属部门：</span>
-                        <span className="ti-info-item-content">{props.data.dept_name}</span>
-                    </div>
-                    <div className="ti-info-item">
-                        <span className="ti-info-item-title">分类：</span>
-                        <span className="ti-info-item-content">{props.data.category_name}</span>
-                    </div>
+                    {/*<div className="ti-info-item">*/}
+                    {/*    <span className="ti-info-item-title">所属部门：</span>*/}
+                    {/*    <span className="ti-info-item-content">{props.data.dept_name}</span>*/}
+                    {/*</div>*/}
+                    {/*<div className="ti-info-item">*/}
+                    {/*    <span className="ti-info-item-title">分类：</span>*/}
+                    {/*    <span className="ti-info-item-content">{props.data.category_name}</span>*/}
+                    {/*</div>*/}
                 </div>
             </TiCardLarge>
     )
@@ -378,6 +382,13 @@ export function TicketHandle(props) {
     const user_id = window.sessionStorage.getItem('user_id')
     const navigate = useNavigate();
     // 提交表单
+
+
+    const [positionId, setpositionId] = useState("");  
+
+    const workstation_onChange = (value) => {
+        setpositionId(value);
+    };
     
     const onSubmit = (e) => {
         if (e.validateResult === true) {
@@ -400,51 +411,75 @@ export function TicketHandle(props) {
         //                 api.message.error('操作失败', 2000)
         //         })
         //     }
-            // 结束工单
-            if (formValues.complete) {
-                if(user_id === '0') {
-                    axios
-                    .post("/api/v1/create_ticket", parmas)
-                    .then((res) => {
-                    if (res.data.code === 0) {
-                        alert('审核成功');
-                        navigate('/');
-                    } else {
-                        // 更新失败，处理错误情况
-                        console.log("更新失败");
-                    }
-                    })
-                    .catch((error) => {
-                    // 处理请求错误
-                    console.log("请求错误", error);
-                    });
+            // 审核或结束工单
+            let ticketId = props.data.id;
+           let positionName = props.data.positionName;
+            if (formValues.complete === 0 || formValues.complete === 1) {
+                console.log('formValues.complete', formValues.complete)
+                let flag = true
+                if(formValues.complete === 0) flag = false
+                axios
+                .get(`http://localhost:8080/process/completeTask?flag=${flag}&orderId=${ticketId}`)
+                .then((res) => {
+                if (res.data.code === 1) {
+                    alert('审核成功');
+                    navigate('/');
+                } else {
+                    // 更新失败，处理错误情况
+                    console.log("更新失败");
                 }
-                else {
-                    axios
-                    .post("/api/v1/create_ticket", parmas)
-                    .then((res) => {
-                    if (res.data.code === 0) {
-                        alert('结束工单成功');
-                        navigate('/');
-                    } else {
-                        // 更新失败，处理错误情况
-                        console.log("更新失败");
-                    }
-                    })
-                    .catch((error) => {
-                    // 处理请求错误
-                    console.log("请求错误", error);
-                    });
-                }
-            } else if(user_id === '1') {  
+                })
+                .catch((error) => {
+                // 处理请求错误
+                console.log("请求错误", error);
+                });
+            }
+                // if(user_id === '0') {
+                //     axios
+                //     .post("/api/v1/create_ticket", parmas)
+                //     .then((res) => {
+                //     if (res.data.code === 0) {
+                //         alert('审核成功');
+                //         navigate('/');
+                //     } else {
+                //         // 更新失败，处理错误情况
+                //         console.log("更新失败");
+                //     }
+                //     })
+                //     .catch((error) => {
+                //     // 处理请求错误
+                //     console.log("请求错误", error);
+                //     });
+                // }
+                // else {
+                //     axios
+                //     .post("/api/v1/create_ticket", parmas)
+                //     .then((res) => {
+                //     if (res.data.code === 0) {
+                //         alert('结束工单成功');
+                //         navigate('/');
+                //     } else {
+                //         // 更新失败，处理错误情况
+                //         console.log("更新失败");
+                //     }
+                //     })
+                //     .catch((error) => {
+                //     // 处理请求错误
+                //     console.log("请求错误", error);
+                //     });
+                // }
+
+            else if(user_id === '2') {
                 // api.dialog.alert({
                 //     title: '系统消息',
                 //     msg: '转单必须选择指派人',
                 // })
+                console.log('workstation_value',positionId);
                 axios
-                    .post("/api/v1/create_ticket", parmas)
+                    .post(`http://localhost:8080/process/setAssignee?orderId=${ticketId}&positionId=${positionId}`)
                     .then((res) => {
-                    if (res.data.code === 0) {
+                        console.log('res paifa', res)
+                    if (res.data.code === 1) {
                         alert('派发工单成功');
                         navigate('/');
                     } else {
@@ -456,7 +491,7 @@ export function TicketHandle(props) {
                     // 处理请求错误
                     console.log("请求错误", error);
                     });
-            }      
+            }
         }
       };
     const rules = {
@@ -513,12 +548,18 @@ export function TicketHandle(props) {
         return new Blob([u8arr], { type: mime });
     };
     const employeeList = props.employeeData
-    let options = []
-    if (employeeList && employeeList.length > 0) {
-        options = employeeList.map(item=>
-            <Option key={item.user_id} label={item.name} value={item.user_id} />
-        )
-    }
+    // let options = []
+    const options = employeeList.map((item) => ({
+        label: item.positionName,
+        value: item.id,
+    }));
+
+    // if (employeeList && employeeList.length > 0) {
+    //     options = employeeList.map(item=>
+    //         <Option key={item.id} label={item.positionName} value={item.positionName} />
+    //     )
+    // }
+
     return (    
         <TiCardLarge title="处理工单" className='ti-info'>
             <Form ref={formRef} colon={true} rules={rules} onSubmit={onSubmit}>  
@@ -529,26 +570,30 @@ export function TicketHandle(props) {
                     />
                 </FormItem> */}
                 {console.log('userid:', user_id)}
-                {user_id === '0'  ?
+                {user_id === '1'  ?
                 <FormItem label="审核" name="complete">
-                    <Radio.Group defaultValue={0}>
-                        <Radio value={1}>是</Radio>
-                        <Radio value={0}>否</Radio>
-                    </Radio.Group>
-                </FormItem> :
-                user_id === '1' ?
-                <FormItem label="指派给" name="handler">
-                    <Select style={{ width: '40%' }} clearable>
-                        {options}
-                    </Select>
-                </FormItem>
-                 :
-                <FormItem label="结束工单" name="complete">
                 <Radio.Group defaultValue={0}>
                     <Radio value={1}>是</Radio>
-                    {/* <Radio value={0}>否</Radio> */}
+                    <Radio value={0}>否</Radio>
                 </Radio.Group>
-            </FormItem>
+                </FormItem> :
+                <div>
+                    <FormItem label="指派给" name="handler">
+                        <Select
+                            value={positionId}
+                            onChange={workstation_onChange}
+                            style={{ width: '40%' }}
+                            clearable
+                            options={options}
+                        />
+                    </FormItem>
+                    <FormItem label="结束工单" name="complete">
+                        <Radio.Group defaultValue={0}>
+                            <Radio value={1}>是</Radio>
+                            {/* <Radio value={0}>否</Radio> */}
+                        </Radio.Group>
+                    </FormItem>
+                </div>
                 }
                 {/* <FormItem label="附件" name="attachment">
                     <Upload
