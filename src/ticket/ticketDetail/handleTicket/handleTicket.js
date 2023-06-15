@@ -57,11 +57,11 @@ export default function TicketDetail() {
 
     return (
         <>
-            <TicketTask data={data} />
-            <TicketHandle data={data} employeeData={employeeData}/>
+            {/* <TicketTask data={data} /> */}
             <TicketContent data={data} />
             <TicketBase data={data} />
             <TicketHistory data={data} />
+            <TicketHandle data={data} employeeData={employeeData}/>
         </>
     )
 }

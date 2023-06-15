@@ -5,7 +5,7 @@ import axios from "../../user/axiosInstance";
 // import "../../mock/create_ticket_category"
 
 import "./createTicket.css";
-import { Form, Input, Textarea, Upload, Button, Radio } from "tdesign-react";
+import { Form, Input, Textarea, Upload, Button, Radio, Select } from "tdesign-react";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { cos } from "../../cos";
@@ -20,6 +20,34 @@ export default function CreateTicket() {
   const formRef = useRef();
   const [ctgListValue, setCtgListValue] = useState([]);
   const user_id = window.sessionStorage.getItem("user_id");
+  const [workstation_value, setworkstation_Value] = useState("");
+  const [workstationArr, setWorkstationListValue] = useState([]);
+
+  // 异步函数，用于获取分类列表数据并储存
+  async function fetchWorkstationList() {
+    try {
+      let { data } = await axios.get("http://localhost:8080/process/operatingPositions");
+      console.log('职位分类', data)
+      setWorkstationListValue(data.data);
+    } catch (err) {
+      console.log("err", err);
+      // setCtgListValue([]);
+      setWorkstationListValue([
+        { category_id: "1", name: "Category 1" },
+      ]);
+    }
+  }
+
+  // 处理职位分类
+  const workstation_onChange = (value) => {
+    setworkstation_Value(value);
+  };
+
+  const workstation_options = workstationArr.map((item) => ({
+    label: item.positionName,
+    value: item.id,
+  }));
+
   // 用于处理表单的重置操作
 
   const onReset = (e) => {
@@ -31,7 +59,7 @@ export default function CreateTicket() {
     if (e.validateResult === true) {
       let parma = formRef.current.getFieldsValue(true);
 
-      console.log('数据',parma);
+      console.log('申请工单数据', parma);
 
       axios
         .post("http://localhost:8080/process/save", parma)
@@ -82,7 +110,7 @@ export default function CreateTicket() {
 
   // form规则
   const rules = {
-    title: [
+    orderName: [
       { required: true, message: "必填", type: "error" },
       { min: 2, message: "至少需要两个字", type: "error" },
     ],
@@ -108,8 +136,8 @@ export default function CreateTicket() {
     try {
       let { data } = await axios.get("http://localhost:8080/process/getDefine?currentpage=1&pagesize=999");
 
-      console.log('data',data);
-      
+      console.log('data', data);
+
       setCtgListValue(data.data);
     } catch (err) {
       console.log("err", err);
@@ -178,6 +206,7 @@ export default function CreateTicket() {
 
   useEffect(() => {
     fetchCtgList();
+    fetchWorkstationList();
   }, []);
 
   return (
@@ -196,7 +225,7 @@ export default function CreateTicket() {
         <div className="ti-form-basic-container">
           <div className="ti-form-basic-item">
             <div className="ti-form-basic-container-title">创建工单</div>
-            <FormItem label="标题" name="orderName">
+            <FormItem label="标题" name="orderName" >
               <Input placeholder="请输入内容" />
             </FormItem>
             <FormItem label="内容" name="content">
@@ -216,8 +245,27 @@ export default function CreateTicket() {
                                 max={3}
                             />
                         </FormItem> */}
-            <FormItem label="分类" name="proDefId">
+            <FormItem label="分类" name="proDefId" 
+              rules={[
+                { required: true, message: "必选", type: "error" },
+              ]}>
               <Radio.Group>{categoryGroup}</Radio.Group>
+            </FormItem>
+            <FormItem
+              label="职位"
+              name="positionId"
+              rules={[
+                { required: true, message: "必选", type: "error" },
+              ]}
+            >
+              {/* <Radio.Group>{categoryGroup}</Radio.Group> */}
+              <Select
+                value={workstation_value}
+                onChange={workstation_onChange}
+                style={{ width: "40%" }}
+                clearable
+                options={workstation_options}
+              />
             </FormItem>
           </div>
         </div>

@@ -56,7 +56,7 @@ export default function TicketTable(props) {
       ellipsis: true, // 内容超出，是否显示省略号
       colKey: "id",
       title: "ID",
-      width: "7%",
+      width: "21%",
     },
     {
       colKey: "title",
@@ -198,9 +198,9 @@ export default function TicketTable(props) {
             tableData.push({
               id: item.id,
               title: item.orderName,
-              status:
-              (item.status === '驳回' || item.status === '超时') ? '未通过' :
-              item.status === '审批通过' ? '完成' : '进行中',
+              status: item.status,
+              // (item.status === '驳回' || item.status === '超时') ? '未通过' :
+              // item.status === '审批通过' ? '完成' : '进行中',
               current_handler: item.createUser,
               dept: item.areaId,
               create_time: item.createTime,
