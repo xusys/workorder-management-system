@@ -64,6 +64,10 @@ export default function Register(props) {
             // 注册成功，转到登陆界面
             navigate("/");
           }
+          else{
+            alert('用户名已存在');
+            
+          }
         })
         .catch((error) => {
           // 处理请求错误
@@ -237,7 +241,7 @@ export default function Register(props) {
           placeholder="请输入密码"
           type="password"
           size="large"
-          type="password"
+          // type="password"
           prefixIcon={<LockOnIcon />}
           clearable
         />

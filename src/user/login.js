@@ -135,7 +135,7 @@ function LoginContent() {
           navigate("/"); // 重定向到指定路径
         } else {
           // 登录失败，根据返回的错误信息进行相应处理
-          // ...
+            alert('用户名或密码错误！');
         }
       })
       .catch((error) => {
