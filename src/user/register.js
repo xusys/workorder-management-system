@@ -120,11 +120,11 @@ export default function Register(props) {
 
   
   const [workstation_value, setworkstation_Value] = useState("");
+  const [workstationArr, setCtgListValue] = useState([]);
   const [city_value, setcity_Value] = useState("");
   const [area_value, setarea_Value] = useState("");
   const [area_show, setArea_show] = useState(false);
   const [districtOptions, setDistrictOptions] = useState([]);
-  const [workstationArr, setCtgListValue] = useState([]);
 
     // 异步函数，用于获取分类列表数据并储存
     async function fetchCtgList() {
@@ -253,7 +253,7 @@ export default function Register(props) {
           placeholder="请重复密码"
           type="password"
           size="large"
-          type="password"
+          // type="password"
           prefixIcon={<LockOnIcon />}
           clearable
         />
@@ -263,7 +263,6 @@ export default function Register(props) {
         name="positionId"
         rules={[
           { required: true, message: "必选", type: "error" },
-          // { min: 6, message: "至少需要6位", type: "error" },
         ]}
       >
         {/* <Radio.Group>{categoryGroup}</Radio.Group> */}
