@@ -400,6 +400,7 @@ export function TicketHandle(props) {
         setpositionId(value);
     };
 
+    // 结束工单按钮
     const onSubmitComplete = (e) => {
         let ticketId = props.data.id;
         let flag = true
@@ -420,6 +421,7 @@ export function TicketHandle(props) {
             });
     }
 
+    // 分发工单提交按钮
     const onSubmit = (e) => {
         if (e.validateResult === true) {
             let formValues = formRef.current.getFieldsValue(true)
@@ -460,23 +462,28 @@ export function TicketHandle(props) {
                 // })
                 console.log('指派给：positionId', positionId);
 
-                axios
-                    .post(`http://localhost:8080/process/setAssignee?orderId=${ticketId}&positionId=${positionId}`)
-                    .then((res) => {
-                        console.log('res paifa', res)
-                        if (res.data.code === 1) {
-                            alert('派发工单成功');
-                            navigate('/');
-                        } else {
-                            // 更新失败，处理错误情况
-                            console.log("更新失败");
-                        }
-                    })
-                    .catch((error) => {
-                        // 处理请求错误
-                            alert('请选择指派单位');
-                        console.log("请求错误", error);
-                    });
+                if (positionId === ''){
+                    alert('请选择协助单位！');
+                }
+                else{
+                    axios
+                        .post(`http://localhost:8080/process/setAssignee?orderId=${ticketId}&positionId=${positionId}`)
+                        .then((res) => {
+                            console.log('res paifa', res)
+                            if (res.data.code === 1) {
+                                alert('派发工单成功');
+                                navigate('/');
+                            } else {
+                                // 更新失败，处理错误情况
+                                console.log("提交失败");
+                            }
+                        })
+                        .catch((error) => {
+                            // 处理请求错误
+                                alert('请选择指派单位');
+                            console.log("请求错误", error);
+                        });
+                    }
             }
         }
     };
