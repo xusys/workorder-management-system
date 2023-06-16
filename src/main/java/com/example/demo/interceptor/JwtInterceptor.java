@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Component
 public class JwtInterceptor implements HandlerInterceptor {
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         // 获取请求头中的token
