@@ -92,6 +92,9 @@ export default function PersonalCenter() {
                                     <FormItem label="职位" name="title">
                                         <p>{userInfo.position}</p>
                                     </FormItem>
+                                    <FormItem label="地区" name="title">
+                                        <p>{userInfo.area}</p>
+                                    </FormItem>
                                 </div>
                             )}
                         </div>
