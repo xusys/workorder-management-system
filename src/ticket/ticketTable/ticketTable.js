@@ -190,28 +190,33 @@ export default function TicketTable(props) {
       queryParams.pageSize = pageInfo.pageSize;
 
       // let {data} = await api.post('/admin/v1/ticket/list',queryParams)
-      axios
-        .get("http://localhost:8080/process/" + flog) //接口地址与拦截地址要一致
-        .then((res) => {
-          console.log('data.data', res.data.data)
-          res.data.data.map((item) => {
-            tableData.push({
-              id: item.id,
-              title: item.orderName,
-              status: item.status,
-              // (item.status === '驳回' || item.status === '超时') ? '未通过' :
-              // item.status === '审批通过' ? '完成' : '进行中',
-              current_handler: item.createUser,
-              dept: item.areaId,
-              create_time: item.createTime,
-            })
-            // console.log('data.data', res.data.data)
-          });
+      // axios
+      //   .get("http://localhost:8080/process/" + flog) //接口地址与拦截地址要一致
+      //   .then((res) => {
+      //     // console.log('data.data', res.data.data)
+      //     res.data.data.map((item) => {
+
+      //       // console.log('data.data', res.data.data)
+      //     });
+      //   })
+      //   .catch((error) => {
+      //     // 处理请求错误
+      //     console.log("请求错误", error);
+      //   });
+      const response = await axios.get("http://localhost:8080/process/" + flog)
+      
+      response.data.data.map((item) => {
+        tableData.push({
+          id: item.id,
+          title: item.orderName,
+          status: item.status,
+          // (item.status === '驳回' || item.status === '超时') ? '未通过' :
+          // item.status === '审批通过' ? '完成' : '进行中',
+          current_handler: item.createUser,
+          dept: item.areaId,
+          create_time: item.createTime,
         })
-        .catch((error) => {
-          // 处理请求错误
-          console.log("请求错误", error);
-        });
+      })
 
       // data.list.map((item)=>{
       //   tableData.push({
@@ -223,48 +228,49 @@ export default function TicketTable(props) {
       //     create_time: item.create_time
       //   })
       // })
-      setData(tableData);
-      setTotle(data.totle);
-      setIsloading(false);
-    } catch (err) {
-      setData([]);
-      setIsloading(false);
-    }
+    setData(tableData);
+    setTotle(response.data.data.length);
+    setIsloading(false);
+  } catch (err) {
+    setData([]);
+    setIsloading(false);
   }
+}
 
-  // 更新当前页码和每页显示数量，初始化时调用一次
-  async function update() {
-    setCurrent(cur);
-    setPageSize(pgs);
-    await fetchData(queryParams, { current: cur, pageSize: pgs });
-  }
+// 更新当前页码和每页显示数量，初始化时调用一次
+async function update() {
+  setCurrent(cur);
+  setPageSize(pgs);
+  await fetchData(queryParams, { current: cur, pageSize: pgs });
+}
 
-  // 组件渲染完成后监听 queryParams 的变化
-  useEffect(() => {
-    update();
-    // fetchDataTotalTicket()
-  }, [datalist]);
+// 组件渲染完成后监听 queryParams 的变化
+useEffect(() => {
+  update();
+  // fetchDataTotalTicket()
+}, [datalist]);
 
-  return (
-    <Fragment>
-      <Table
-        stripe={true}
-        bordered
-        data={data}
-        columns={columns}
-        rowKey="id"
-        loading={isLoading}
-        pagination={{
-          current,
-          pageSize,
-          total: totle,
-          showSizer: true,
-          visibleWithOnePage: true,
-          onChange(pageInfo) {
-            rehandleChange(pageInfo);
-          },
-        }}
-      />
-    </Fragment>
-  );
+return (
+  <Fragment>
+    <Table
+      stripe={true}
+      bordered
+      data={data}
+      columns={columns}
+      rowKey="id"
+      loading={isLoading}
+      pagination={{
+        current,
+        pageSize,
+        total: totle,
+        showSizer: true,
+        visibleWithOnePage: true,
+        onChange(pageInfo) {
+          rehandleChange(pageInfo);
+        },
+        pageSizeOptions: [5, 10, 15, 20]
+      }}
+    />
+  </Fragment>
+);
 }
