@@ -21,9 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ActivitiService {
@@ -37,10 +35,14 @@ public class ActivitiService {
     OrderService orderService;
     @Autowired
     TaskService taskService;
+
     @Autowired
     UserService userService;
     @Autowired
     OperationLogService operationLogService;
+
+    @Autowired
+    PositionService positionService;
 
     public void test(){
         System.out.println(repositoryService);
@@ -83,19 +85,20 @@ public class ActivitiService {
     }
     @Transactional
     public void saveProcess(Order order)  {
-
-           ProcessInstance processInstance=runtimeService.startProcessInstanceById(order.getProDefId());
-           orderService.save(order);
-          runtimeService.updateBusinessKey(processInstance.getId(),order.getId());
-          runtimeService.setVariableLocal(processInstance.getId(),"area",order.getAreaId());
+        String positionName= positionService.getById(order.getPositionId()).getPositionName();
+        Map<String,Object> map=new HashMap<>();
+        map.put("operationAssignee",positionName);
+        ProcessInstance processInstance=runtimeService.startProcessInstanceById(order.getProDefId(),map);
+        orderService.save(order);
+        runtimeService.updateBusinessKey(processInstance.getId(),order.getId());
+        runtimeService.setVariableLocal(processInstance.getId(),"area",order.getAreaId());
 //        Task task=taskService.createTaskQuery().processInstanceBusinessKey(processInstance.getBusinessKey()).singleResult();
 //        orderService.updateStatus(order.getId(),task.getName());
-
     }
+
     @Transactional
     public  void completeTask(String username,String positionName,String orderId,Boolean flag){
         Task task=taskService.createTaskQuery().processInstanceBusinessKey(orderId).singleResult();
-        System.out.println(flag);
         taskService.setVariableLocal(task.getId(),"var",flag);
         OperationLog operationLog=new OperationLog();
         operationLog.setPosition(positionName);
@@ -108,13 +111,8 @@ public class ActivitiService {
         operationLogService.save(operationLog);
     }
     public List<Task> myCommission(String positionId,String areaId){
-
         List<Task>list=taskService.createTaskQuery().taskAssignee(positionId).processVariableValueLike("area", AreaUtil.addWildcards(areaId)).list();
-        for ( Task task :list){
-//            System.out.println(runtimeService.getVariable(task.getProcessInstanceId(),"area"));
-        }
-
-       return list;
+        return list;
     }
     @Transactional
     public List<Order> myOrder(String username){
@@ -122,15 +120,16 @@ public class ActivitiService {
         for(Order order:list){
             HistoricActivityInstanceQuery historicActivityInstanceQuery= historyService.createHistoricActivityInstanceQuery();
             HistoricProcessInstance historicProcessInstance=historyService.createHistoricProcessInstanceQuery().processInstanceBusinessKey(order.getId()).singleResult();
-            List<HistoricActivityInstance> historicActivityInstanceList=historicActivityInstanceQuery.processInstanceId(historicProcessInstance.getId()).list();
+            List<HistoricActivityInstance> historicActivityInstanceList=historicActivityInstanceQuery.processInstanceId(historicProcessInstance.getId()).orderByHistoricActivityInstanceStartTime().asc().list();
             order.setStatus(historicActivityInstanceList.get(historicActivityInstanceList.size()-1).getActivityName());
         }
         return list;
     }
-    public Boolean setAssignee(String positionName,String orderId){
-        Task task = taskService.createTaskQuery().processInstanceBusinessKey(orderId).singleResult();
-        task.setAssignee(positionName);
-        return true;
+
+    public void setAssignee(String orderId,int positionId){
+        String positionName=positionService.getById(positionId).getPositionName();
+        String taskId = taskService.createTaskQuery().processInstanceBusinessKey(orderId).singleResult().getId();
+        taskService.setAssignee(taskId, positionName);
     }
 
     public List<Order> timeoutOrder(){
@@ -170,12 +169,11 @@ public class ActivitiService {
 
     public List<Order> getAllOrders(){
         List<Order>list=orderService.getAllExcludeContent();
-        System.out.println(list);
         for(Order order:list){
             HistoricActivityInstanceQuery historicActivityInstanceQuery= historyService.createHistoricActivityInstanceQuery();
             try {
                 HistoricProcessInstance historicProcessInstance=historyService.createHistoricProcessInstanceQuery().processInstanceBusinessKey(order.getId()).singleResult();
-                List<HistoricActivityInstance> historicActivityInstanceList=historicActivityInstanceQuery.processInstanceId(historicProcessInstance.getId()).list();
+                List<HistoricActivityInstance> historicActivityInstanceList=historicActivityInstanceQuery.processInstanceId(historicProcessInstance.getId()).orderByHistoricActivityInstanceStartTime().asc().list();
                 order.setStatus(historicActivityInstanceList.get(historicActivityInstanceList.size()-1).getActivityName());
             }catch (Exception e){
                 System.out.println("error");

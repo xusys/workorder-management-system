@@ -103,8 +103,6 @@ public class ProcessController {
         order.setAreaId(areaId);
         order.setAreaName(area.getCity()+area.getDistrict());
 
-        System.out.println(order.getOrderName());
-
         activitiService.saveProcess(order);
         return R.success(0);
     }
@@ -143,7 +141,9 @@ public class ProcessController {
         for(Task task:taskList){
             String processInstanceId = task.getProcessInstanceId();
             ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
-            orderList.add(orderService.getExcludeContentById(processInstance.getBusinessKey()));
+            Order order = orderService.getExcludeContentById(processInstance.getBusinessKey());
+            order.setStatus(task.getName());
+            orderList.add(order);
         }
         return R.success(orderList);
     }
@@ -182,7 +182,9 @@ public class ProcessController {
         // 封装为Order实体类
         List<Order> orderList=new ArrayList<>();
         for(OperationLog operationLog:operationLogList){
-            orderList.add(orderService.getExcludeContentById(operationLog.getOrderId()));
+            Order order=orderService.getExcludeContentById(operationLog.getOrderId());
+            order.setStatus(operationLog.getTaskStatus()); // 更新状态
+            orderList.add(order);
         }
 //        return R.success(Util.activitiResult(orderList));
         return R.success(orderList);
@@ -190,14 +192,19 @@ public class ProcessController {
 
     /**
      * 将工单转发给其他操作单位
-     * @param positionName
+     * @param
      * @param orderId
      * @return
      */
     @PostMapping("/setAssignee")
-    public R setAssignee(String positionName, String orderId){
-        activitiService.setAssignee(positionName,orderId);
-        return R.success("");
+    public R setAssignee(String orderId, String positionId){
+        if(positionId.equals("")){
+            return R.error("未选择协助单位！");
+        }
+        else {
+            activitiService.setAssignee(orderId, Integer.parseInt(positionId));
+            return R.success("");
+        }
     }
 
     /**
