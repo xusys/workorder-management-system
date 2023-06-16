@@ -53,11 +53,13 @@ public class ActivitiService {
         List<ProcessDefinition> definitionList=processDefinitionQuery.list();
         return definitionList;
     }
+
     public List<ProcessInstance> getInstance(int currentpage, int pagesize){
         ProcessInstanceQuery processInstanceQuery=runtimeService.createProcessInstanceQuery();
         List<ProcessInstance> processInstanceList=processInstanceQuery.listPage(currentpage,pagesize);
         return  processInstanceList;
     }
+
     public boolean suspendDefine(String id){
         try {
             repositoryService.suspendProcessDefinitionById(id);
@@ -67,6 +69,7 @@ public class ActivitiService {
             return false;
         }
     }
+
     public boolean activateDefine(String id){
         try {
             repositoryService.activateProcessDefinitionById(id);
@@ -76,13 +79,18 @@ public class ActivitiService {
             return false;
         }
     }
+
     public List<HistoricActivityInstance> getHistory(int currentpage,int pagesize){
 
         HistoricActivityInstanceQuery historicActivityInstanceQuery=historyService.createHistoricActivityInstanceQuery();
         List<HistoricActivityInstance> historicActivityInstanceList=historicActivityInstanceQuery.listPage(currentpage,pagesize);
         return historicActivityInstanceList;
-
     }
+
+    /**
+     * 新增工单
+     * @param order
+     */
     @Transactional
     public void saveProcess(Order order)  {
         String positionName= positionService.getById(order.getPositionId()).getPositionName();
@@ -97,12 +105,18 @@ public class ActivitiService {
     }
 
     @Transactional
-    public  void completeTask(String username,String positionName,String orderId,Boolean flag){
+    public  void completeTask(String username, String positionName, int identity, String orderId, Boolean flag){
         Task task=taskService.createTaskQuery().processInstanceBusinessKey(orderId).singleResult();
         taskService.setVariableLocal(task.getId(),"var",flag);
         taskService.complete(task.getId());
         // 将该操作记录至operation_log日志表中
-        String taskStatus = flag ? "审批通过":"驳回";
+        String taskStatus;
+        if(identity==1){
+            taskStatus = flag ? "审批通过":"驳回";
+        }
+        else{
+            taskStatus="完成工单";
+        }
         OperationLog operationLog=new OperationLog();
         operationLog.setPosition(positionName);
         operationLog.setTaskId(task.getId());
@@ -111,10 +125,13 @@ public class ActivitiService {
         operationLog.setOrderId(orderId);
         operationLogService.save(operationLog);
     }
+
     public List<Task> myCommission(String positionId,String areaId){
-        List<Task>list=taskService.createTaskQuery().taskAssignee(positionId).processVariableValueLike("area", AreaUtil.addWildcards(areaId)).list();
-        return list;
+        return taskService.createTaskQuery()
+                .taskAssignee(positionId)
+                .processVariableValueLike("area", AreaUtil.addWildcards(areaId)).list();
     }
+
     @Transactional
     public List<Order> myOrder(String username){
         List<Order>list=orderService.getExcludeByCreateUser(username);
@@ -134,12 +151,15 @@ public class ActivitiService {
         taskService.setAssignee(taskId, positionName);
         // 将该操作记录至operation_log日志表中
         OperationLog operationLog=new OperationLog();
+        operationLog.setOrderId(orderId);
         operationLog.setPosition(positionName);
         operationLog.setTaskId(taskId);
+        operationLog.setTaskStatus("转发工单至"+positionName);
         operationLog.setOperator(username);
         operationLogService.save(operationLog);
     }
 
+    // 获取超时工单
     public List<Order> timeoutOrder(){
         List<Order>orderList=new ArrayList<>();
         List<HistoricTaskInstance> list=historyService // 历史任务Service
@@ -152,7 +172,6 @@ public class ActivitiService {
             Order order=orderService.getExcludeContentById(historicProcessInstance.getBusinessKey());
             orderList.add(order);
         }
-        //System.out.println(orderList.size());
         return orderList;
     }
 

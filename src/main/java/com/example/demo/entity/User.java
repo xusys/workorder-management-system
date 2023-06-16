@@ -15,4 +15,6 @@ public class User {
     private String areaId;
     @TableField(exist = false)
     private String positionName;
+    @TableField(exist = false)
+    private Integer identity;  // 身份标识
 }

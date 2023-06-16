@@ -33,6 +33,7 @@ public class JwtUtil {
                 .withClaim("positionId",user.getPositionId()) // 自定义，职位id
                 .withClaim("positionName",user.getPositionName()) // 自定义，职位名
                 .withClaim("areaId",user.getAreaId()) // 自定义，地区id
+                .withClaim("identity",user.getIdentity()) // 自定义，身份标识
                 .withExpiresAt(expiresAt)  // 设置过期时间
                 .sign(Algorithm.HMAC256(SECRET));  // 设置签名解码算法
         return token;
