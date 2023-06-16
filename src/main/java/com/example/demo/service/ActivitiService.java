@@ -100,14 +100,14 @@ public class ActivitiService {
     public  void completeTask(String username,String positionName,String orderId,Boolean flag){
         Task task=taskService.createTaskQuery().processInstanceBusinessKey(orderId).singleResult();
         taskService.setVariableLocal(task.getId(),"var",flag);
+        taskService.complete(task.getId());
+        // 将该操作记录至operation_log日志表中
         OperationLog operationLog=new OperationLog();
         operationLog.setPosition(positionName);
         operationLog.setTaskId(task.getId());
         operationLog.setTaskStatus(flag.toString());
         operationLog.setOperator(username);
-        ProcessInstance processInstance=runtimeService.createProcessInstanceQuery().processInstanceId(task.getProcessInstanceId()).singleResult();
-        operationLog.setOrderId(processInstance.getBusinessKey());
-        taskService.complete(task.getId());
+        operationLog.setOrderId(orderId);
         operationLogService.save(operationLog);
     }
     public List<Task> myCommission(String positionId,String areaId){
@@ -126,10 +126,17 @@ public class ActivitiService {
         return list;
     }
 
-    public void setAssignee(String orderId,int positionId){
+    @Transactional
+    public void setAssignee(String orderId,int positionId, String username){
         String positionName=positionService.getById(positionId).getPositionName();
         String taskId = taskService.createTaskQuery().processInstanceBusinessKey(orderId).singleResult().getId();
         taskService.setAssignee(taskId, positionName);
+        // 将该操作记录至operation_log日志表中
+        OperationLog operationLog=new OperationLog();
+        operationLog.setPosition(positionName);
+        operationLog.setTaskId(taskId);
+        operationLog.setOperator(username);
+        operationLogService.save(operationLog);
     }
 
     public List<Order> timeoutOrder(){
@@ -169,6 +176,7 @@ public class ActivitiService {
 
     public List<Order> getAllOrders(){
         List<Order>list=orderService.getAllExcludeContent();
+        // 获取工单当前状态
         for(Order order:list){
             HistoricActivityInstanceQuery historicActivityInstanceQuery= historyService.createHistoricActivityInstanceQuery();
             try {
@@ -181,6 +189,5 @@ public class ActivitiService {
         }
         return list;
     }
-
 }
 

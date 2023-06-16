@@ -197,12 +197,13 @@ public class ProcessController {
      * @return
      */
     @PostMapping("/setAssignee")
-    public R setAssignee(String orderId, String positionId){
+    public R setAssignee(String orderId, String positionId, @RequestHeader String token){
         if(positionId.equals("")){
             return R.error("未选择协助单位！");
         }
         else {
-            activitiService.setAssignee(orderId, Integer.parseInt(positionId));
+            String username=JwtUtil.verifyToken(token).getClaim("username").asString();
+            activitiService.setAssignee(orderId, Integer.parseInt(positionId),username);
             return R.success("");
         }
     }
