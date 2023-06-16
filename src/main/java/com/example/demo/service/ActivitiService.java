@@ -42,6 +42,9 @@ public class ActivitiService {
     @Autowired
     OperationLogService operationLogService;
 
+    @Autowired
+    PositionService positionService;
+
     public void test(){
         System.out.println(repositoryService);
     }
@@ -127,8 +130,9 @@ public class ActivitiService {
         }
         return list;
     }
-    public Boolean setAssignee(String positionName,String orderId){
+    public Boolean setAssignee(int positionId,String orderId){
         Task task = taskService.createTaskQuery().processInstanceBusinessKey(orderId).singleResult();
+        String positionName=positionService.getById(positionId).getPositionName();
         task.setAssignee(positionName);
         return true;
     }

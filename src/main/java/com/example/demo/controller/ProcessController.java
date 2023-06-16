@@ -190,13 +190,14 @@ public class ProcessController {
 
     /**
      * 将工单转发给其他操作单位
-     * @param positionName
+
      * @param orderId
      * @return
      */
     @PostMapping("/setAssignee")
-    public R setAssignee(String positionName, String orderId){
-        activitiService.setAssignee(positionName,orderId);
+    public R setAssignee(String orderId, String positionId){
+        int id= Integer.parseInt(positionId);
+        activitiService.setAssignee(id,orderId);
         return R.success("");
     }
 

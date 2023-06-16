@@ -9,7 +9,7 @@ spring:
     banner-mode: off
 
   activiti:
-    database-schema-update: drop-create
+    database-schema-update: true
     db-history-used: true
     history-level: full
     check-process-definitions: true
