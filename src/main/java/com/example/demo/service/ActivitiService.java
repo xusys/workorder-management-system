@@ -102,10 +102,11 @@ public class ActivitiService {
         taskService.setVariableLocal(task.getId(),"var",flag);
         taskService.complete(task.getId());
         // 将该操作记录至operation_log日志表中
+        String taskStatus = flag ? "审批通过":"驳回";
         OperationLog operationLog=new OperationLog();
         operationLog.setPosition(positionName);
         operationLog.setTaskId(task.getId());
-        operationLog.setTaskStatus(flag.toString());
+        operationLog.setTaskStatus(taskStatus);
         operationLog.setOperator(username);
         operationLog.setOrderId(orderId);
         operationLogService.save(operationLog);
