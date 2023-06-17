@@ -52,16 +52,4 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
                 .addPathPatterns("/**")
                 .excludePathPatterns(excludePath);
     }
-
-    /**
-     * 支持跨域请求
-     * @param registry
-     */
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")// 项目中的所有接口都支持跨域
-                .allowCredentials(true)
-                .allowedOrigins("http://localhost:8080") //允许哪些域能访问我们的跨域资源
-                .allowedMethods("*")//允许的访问方法"POST", "GET", "PUT", "OPTIONS", "DELETE"等
-                .allowedHeaders("*");//允许所有的请求header访问，可以自定义设置任意请求头信息
-    }
 }

@@ -14,16 +14,10 @@ public class JwtInterceptor implements HandlerInterceptor {
         String token=request.getHeader("token");
         try{
             JwtUtil.verifyToken(token);
-            System.out.println(token);
             return true;
-        }catch (TokenExpiredException Exception){
-            response.sendError(401);
-            System.out.println("no");
-            return false;
         }
-        catch (Exception e){
+        catch (Exception e){  // 无token或token过期，用户没有权限，返回错误码401
             response.sendError(401);
-            System.out.println("null");
             return false;
         }
     }
