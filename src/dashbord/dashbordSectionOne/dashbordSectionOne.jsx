@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom";
 import axios from "../../user/axiosInstance"
 // import "../../mock/workorderlistall"
 // import "../../mock/workorderlistalert"
@@ -6,12 +7,14 @@ import axios from "../../user/axiosInstance"
 // import "../../mock/workorderlistrelatedtome"
 // import "../../mock/workorderlisttodo"
 // import axios from "axios"
-import api from "../../api"
+// import api from "../../api"
 import TiCard from '../../tiCard/tiCard'
 import './dashbordSectionOne.css'
 
 // 渲染一个包含多个数据的区块
 export default function DashbordSectionOne() {
+  
+  const navigate = useNavigate();
   const [createTicket, setCreateTicket] = useState(0)
   const [alertTicket, setAlertTicket] = useState(0)
   const [todoTicket, setToDoTicket] = useState(0)
@@ -19,7 +22,7 @@ export default function DashbordSectionOne() {
 
   const fetchDataTotalTicket = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/process/allOrders')
+      const response = await axios.get('/process/allOrders')
       // console.log(response)
 
       var totalTicketCount = 0
@@ -28,13 +31,23 @@ export default function DashbordSectionOne() {
       })
       setTotalTicket(totalTicketCount)
     } catch (error) {
-      console.log('Error', error)
+    if (error.message === "No token available") {
+      // 进行页面导航到登录页面
+      navigate("/login");
+    } else if (error.message === "Token expired") {
+      // 进行页面导航到登录页面或其他处理
+      navigate("/login");
+    } else if (error.message === "Network error") {
+      // 进行页面导航到错误页面或其他处理
+      navigate("/login");
+    }
+      
     }
   }
 
   const fetchDataCreateTicket = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/process/myOrder')
+      const response = await axios.get('/process/myOrder')
       console.log(response)
 
       var createTicketCount = 0
@@ -43,13 +56,23 @@ export default function DashbordSectionOne() {
       })
       setCreateTicket(createTicketCount)
     } catch (error) {
-      console.log('Error', error)
+    if (error.message === "No token available") {
+      // 进行页面导航到登录页面
+      navigate("/login");
+    } else if (error.message === "Token expired") {
+      // 进行页面导航到登录页面或其他处理
+      navigate("/login");
+    } else if (error.message === "Network error") {
+      // 进行页面导航到错误页面或其他处理
+      navigate("/login");
+    }
+      
     }
   }
   
   const fetchDataAlertTicket = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/process/myWarningTask')
+      const response = await axios.get('/process/myWarningTask')
       // console.log(response)
 
       var alertTicketCount = 0
@@ -58,13 +81,23 @@ export default function DashbordSectionOne() {
       })
       setAlertTicket(alertTicketCount)
     } catch (error) {
-      console.log('Error', error)
+    if (error.message === "No token available") {
+      // 进行页面导航到登录页面
+      navigate("/login");
+    } else if (error.message === "Token expired") {
+      // 进行页面导航到登录页面或其他处理
+      navigate("/login");
+    } else if (error.message === "Network error") {
+      // 进行页面导航到错误页面或其他处理
+      navigate("/login");
+    }
+      
     }
   }
   
   const fetchDataToDoTicket = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/process/myCommision')
+      const response = await axios.get('/process/myCommision')
 
       var todoTicketCount = 0
       response.data.data.map((item) => {
@@ -72,7 +105,17 @@ export default function DashbordSectionOne() {
       })
       setToDoTicket(todoTicketCount)
     } catch (error) {
-      console.log('Error', error)
+    if (error.message === "No token available") {
+      // 进行页面导航到登录页面
+      navigate("/login");
+    } else if (error.message === "Token expired") {
+      // 进行页面导航到登录页面或其他处理
+      navigate("/login");
+    } else if (error.message === "Network error") {
+      // 进行页面导航到错误页面或其他处理
+      navigate("/login");
+    }
+      
     }
   }
   

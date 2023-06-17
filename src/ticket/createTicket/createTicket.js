@@ -133,8 +133,7 @@ export default function CreateTicket() {
 
   // 异步函数，用于获取分类列表数据并储存
   async function fetchCtgList() {
-    try {
-      let { data } = await axios.get("http://localhost:8080/process/getDefine?currentpage=1&pagesize=999");
+    try {      let { data } = await axios.get("http://localhost:8080/process/getDefine?currentpage=1&pagesize=999");
 
       console.log('data', data);
 

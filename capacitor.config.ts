@@ -5,7 +5,8 @@ const config: CapacitorConfig = {
   appName: 'work_order_system',
   webDir: 'build',
   server: {
-    androidScheme: 'https'
+    androidScheme: 'https',
+    'cleartext': true
   }
 };
 

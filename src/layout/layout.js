@@ -28,6 +28,7 @@ const { Header, Content, Footer, Aside } = Layout;
 export function BasicDivider() {
   const user_id = window.sessionStorage.getItem("user_id");
   const token = window.localStorage.getItem("token");
+  console.log("token数据", token);
   const user_info = window.sessionStorage.getItem("user_info");
 
   if (!user_id || !token || !user_info) {
@@ -132,9 +133,10 @@ function BasicDropdown(props) {
       //   msg: "确定退出登录？",
       //   confirm: [
       //     () => {
-            navigate("/login");
-        //   },
-        // ],
+      navigate("/login");
+      window.localStorage.removeItem("token");
+      //   },
+      // ],
       // });
     }
   };
@@ -234,7 +236,7 @@ export function MyTodo() {
           type: 2,
           status: 1,
           current_handler: user_id,
-          flog : 'myCommision',
+          flog: "myCommision",
         }}
         page="todo"
         // datalist = { tableData }
@@ -257,7 +259,7 @@ export function MyAlert() {
           type: 2,
           status: 1,
           current_handler: user_id,
-          flog : 'myWarningTask',
+          flog: "myWarningTask",
         }}
         page="todo"
       />
@@ -278,7 +280,7 @@ export function RelatedToMe() {
         pageParmas={{
           type: 2,
           relative_staff: user_id,
-          flog : 'operationLog',
+          flog: "operationLog",
         }}
       />
     );
@@ -298,7 +300,7 @@ export function CreatedByMe() {
         pageParmas={{
           type: 2,
           creator_id: user_id,
-          flog : 'myOrder',
+          flog: "myOrder",
         }}
       />
     );
@@ -315,7 +317,7 @@ export function AllTickets() {
       <TicketList
         pageParmas={{
           type: 1,
-          flog : 'allOrders',
+          flog: "allOrders",
         }}
       />
     </Fragment>

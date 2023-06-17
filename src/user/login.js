@@ -11,7 +11,10 @@ import api from "../api";
 const { FormItem } = Form;
 
 export const Login = function () {
-  window.localStorage.removeItem("token");
+  if (window.localStorage.getItem("token")){
+    alert("请重新登录！");
+    window.localStorage.removeItem("token");
+  }
   window.sessionStorage.removeItem("user_id");
   window.sessionStorage.removeItem("user_info");
 

@@ -130,7 +130,7 @@ export default function TicketList(props) {
         ...prevParams,
         title: inputValue,
       }));
-    }, 1000);
+    }, 500);
 
     // 设置定时器
     setInputTimer(timer);
