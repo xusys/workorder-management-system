@@ -105,8 +105,12 @@ public class ActivitiService {
     }
 
     @Transactional
-    public  void completeTask(String username, String positionName, int identity, String orderId, Boolean flag){
+    public  void completeTask(String username, String positionName, int identity, String orderId, Boolean flag) throws Exception {
         Task task=taskService.createTaskQuery().processInstanceBusinessKey(orderId).singleResult();
+        // 防止同一职位的人员同时进行操作而导致出错
+        if(!task.getAssignee().equals(positionName)){
+            throw new Exception();
+        }
         taskService.setVariableLocal(task.getId(),"var",flag);
         taskService.complete(task.getId());
         // 将该操作记录至operation_log日志表中
@@ -145,9 +149,14 @@ public class ActivitiService {
     }
 
     @Transactional
-    public void setAssignee(String orderId,int positionId, String username){
+    public void setAssignee(String orderId,int positionId, String username, String currPositionName) throws Exception {
         String positionName=positionService.getById(positionId).getPositionName();
-        String taskId = taskService.createTaskQuery().processInstanceBusinessKey(orderId).singleResult().getId();
+        Task task = taskService.createTaskQuery().processInstanceBusinessKey(orderId).singleResult();
+        // 防止同一职位的操作人员同时操作而导致出错
+        if(!currPositionName.equals(task.getAssignee())) {
+            throw new Exception();
+        }
+        String taskId=task.getId();
         taskService.setAssignee(taskId, positionName);
         // 将该操作记录至operation_log日志表中
         OperationLog operationLog=new OperationLog();

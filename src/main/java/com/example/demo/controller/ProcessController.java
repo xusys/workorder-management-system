@@ -118,7 +118,7 @@ public class ProcessController {
         // 从token中获取职位名
         String username=decode.getClaim("username").asString();
         List<Order>list=activitiService.myOrder(username);
-        return  R.success(list);
+        return R.success(list);
     }
 
     /**
@@ -162,11 +162,11 @@ public class ProcessController {
         String username=decode.getClaim("username").asString();
         int identity=decode.getClaim("identity").asInt();
         try {
-            activitiService.completeTask(username,positionName, identity, orderId, flag);
+            activitiService.completeTask(username, positionName, identity, orderId, flag);
             return R.success(flag);
-        }catch (Exception e)
+        } catch (Exception e)  // 防止同一职位的人员同时进行操作而导致出错
         {
-            return R.error("error");
+            return R.error("该工单已被他人处理");
         }
     }
 
@@ -187,7 +187,6 @@ public class ProcessController {
             order.setStatus(operationLog.getTaskStatus()); // 更新状态
             orderList.add(order);
         }
-//        return R.success(Util.activitiResult(orderList));
         return R.success(orderList);
     }
 
@@ -204,8 +203,13 @@ public class ProcessController {
         }
         else {
             String username=JwtUtil.verifyToken(token).getClaim("username").asString();
-            activitiService.setAssignee(orderId, Integer.parseInt(positionId),username);
-            return R.success("");
+            String currPositionName = JwtUtil.verifyToken(token).getClaim("positionName").asString();
+            try {
+                activitiService.setAssignee(orderId, Integer.parseInt(positionId), username, currPositionName);
+                return R.success("");
+            } catch (Exception e){        // 防止同一职位的操作人员同时操作而导致出错
+                return R.error("该工单已被他人处理");
+            }
         }
     }
 
