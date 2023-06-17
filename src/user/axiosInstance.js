@@ -33,6 +33,11 @@ instance.interceptors.response.use(
     return response;
   },
   (error) => {
+    // 检查响应状态码
+    // if (error.response && error.response.status === YOUR_TOKEN_EXPIRED_STATUS_CODE) {
+      // 进行页面导航到'/login'页面
+      Navigate('/login');
+    // }
     return Promise.reject(error);
   }
 );

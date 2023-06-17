@@ -24,11 +24,13 @@ export default function TicketList(props) {
 
   const [queryParams, setQueryParams] = useState(pageParmas);
 
-  const [inputValue, setInputChange] = useState();
+  const [inputValue, setInputChange] = useState("");
+
   const onInputChange = (value) => {
     setInputChange(value);
   };
-  const [selectValue, setSelectValue] = useState();
+
+  const [selectValue, setSelectValue] = useState(null);
 
   const onSelectChange = (value) => {
     // console.log(value);
@@ -36,7 +38,7 @@ export default function TicketList(props) {
     // console.log("selectValue",selectValue);
   };
 
-  const [dateValue, setDateValue] = useState();
+  const [dateValue, setDateValue] = useState('');
   const onDateChange = (value) => {
     setDateValue(value);
   };
@@ -77,8 +79,8 @@ export default function TicketList(props) {
       selectType = (
         <div style={{ display: "flex", flex: "1 1" }}>
           <Select value={selectValue} onChange={onSelectChange} clearable>
-            <Option key="true" label="是" value="2" />
-            <Option key="false" label="否" value="1" />
+            <Option key="true" label="是" value="1" />
+            <Option key="false" label="否" value="2" />
           </Select>
         </div>
       );
@@ -106,10 +108,37 @@ export default function TicketList(props) {
   });
 
   useEffect(() => {
-    // console.log("selectValue", selectValue);
-  }, [selectValue]);
+    setQueryParams((prevParams) => ({
+      ...prevParams,
+      time_scope: dateValue && dateValue.length ? dateValue : null,
+    }));
 
-  
+  }, [dateValue]);
+
+  useEffect(() => {}, [selectValue]);
+
+  const [inputTimer, setInputTimer] = useState(null);
+
+  // 使用延迟定时器来减少频繁的请求
+  useEffect(() => {
+    // 清除之前的定时器
+    clearTimeout(inputTimer);
+
+    // 创建新的定时器
+    const timer = setTimeout(() => {
+      setQueryParams((prevParams) => ({
+        ...prevParams,
+        title: inputValue,
+      }));
+    }, 1000);
+
+    // 设置定时器
+    setInputTimer(timer);
+
+    // 在组件卸载时清除定时器
+    return () => clearTimeout(timer);
+  }, [inputValue]);
+
   return (
     <section
       className="ti-section-wrapper ti-related-wrapper"
@@ -119,12 +148,16 @@ export default function TicketList(props) {
         <div className="ti-input-area">
           <div className="ti-input-container">{listItems}</div>
           <div className="ti-input-operation-container">
-            <Button onClick={submit}>查询</Button>
+            {/* <Button onClick={submit}>查询</Button> */}
           </div>
         </div>
         <div className="ti-table-area">
           {/* 接受查询参数作为 props，并用于显示符合查询条件的工单列表 */}
-        <TicketTable queryParams={queryParams} datalist={datalist} selectValue={selectValue}></TicketTable>
+          <TicketTable
+            queryParams={queryParams}
+            selectValue={selectValue}
+            datalist={datalist}
+          ></TicketTable>
         </div>
       </div>
     </section>

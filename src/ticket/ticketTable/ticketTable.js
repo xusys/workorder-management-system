@@ -3,15 +3,17 @@ import { Table, DialogPlugin } from "tdesign-react";
 import { Edit1Icon } from "tdesign-icons-react";
 import { Link, useLocation } from "react-router-dom";
 // import axios from "axios";
-import axios from "../../user/axiosInstance"
+import axios from "../../user/axiosInstance";
 import api from "../../api";
 // import "../../mock/workorderlistall";
 
 // 展示工单信息的表格组件，并提供了相关操作和分页功能
 export default function TicketTable(props) {
   // const user_id = window.sessionStorage.getItem('user_id')
+  console.log("props:", props);
+
   const { queryParams, selectValue } = props;
-  const { flog } = queryParams;
+  const { flog, title, time_scope } = queryParams;
   const { datalist } = props;
   const [isLoading, setIsloading] = useState(false);
   const [data, setData] = useState([]);
@@ -26,7 +28,21 @@ export default function TicketTable(props) {
 
   const [totalTicket, setTotalTicket] = useState(0);
 
-  let tableData = [];
+  // let tableData = [];
+  const [tableData, settableData] = useState([]);
+
+  const changesettableData = (item) => {
+    tableData.push({
+      id: item.id,
+      title: item.orderName,
+      status: item.status,
+      // (item.status === '驳回' || item.status === '超时') ? '未通过' :
+      // item.status === '审批通过' ? '完成' : '进行中',
+      current_handler: item.createUser,
+      dept: item.areaId,
+      create_time: item.createTime,
+    });
+  };
 
   // const fetchDataTotalTicket = async () => {
   //   try {
@@ -174,6 +190,33 @@ export default function TicketTable(props) {
     });
   };
 
+  function isWithinTimeScope(orderCreateTime, timeScope) {
+    if (timeScope ===null){
+      return true
+    }
+    console.log(orderCreateTime, timeScope);
+  
+    // 解析工单创建时间和时间范围
+    const createTime = new Date(orderCreateTime);
+    const time = new Date(timeScope);
+  
+    // 获取工单创建时间的日期部分（年月日）
+    const createYear = createTime.getFullYear();
+    const createMonth = createTime.getMonth();
+    const createDay = createTime.getDate();
+  
+    // 设置时间范围的起始时间为给定日期的 00:00:00
+    const startTime = new Date(time);
+    startTime.setHours(0, 0, 0, 0);
+  
+    // 设置时间范围的结束时间为给定日期的 23:59:59
+    const endTime = new Date(time);
+    endTime.setHours(23, 59, 59, 999);
+  
+    // 检查工单创建时间是否在时间范围内
+    return createTime >= startTime && createTime <= endTime;
+  }
+
   // 分页数据变化
   async function rehandleChange(pageInfo) {
     const { current, pageSize } = pageInfo;
@@ -203,20 +246,35 @@ export default function TicketTable(props) {
       //     // 处理请求错误
       //     console.log("请求错误", error);
       //   });
-      const response = await axios.get("http://localhost:8080/process/" + flog)
-      
+      const response = await axios.get("http://localhost:8080/process/" + flog);
+
+      settableData([]);
+
       response.data.data.map((item) => {
-        tableData.push({
-          id: item.id,
-          title: item.orderName,
-          status: item.status,
-          // (item.status === '驳回' || item.status === '超时') ? '未通过' :
-          // item.status === '审批通过' ? '完成' : '进行中',
-          current_handler: item.createUser,
-          dept: item.areaId,
-          create_time: item.createTime,
-        })
-      })
+        console.log("item：", item);
+        if (
+          (selectValue === "1" &&
+            (item.status === "处理完成" ||
+              item.status === "驳回" ||
+              item.status === "超时")) ||
+          (selectValue === "2" &&
+            item.status !== "处理完成" &&
+            item.status !== "驳回" &&
+            item.status !== "超时") ||
+          selectValue === null
+        ) {
+          if (
+            (queryParams.title === "" ||
+              item.orderName.includes(queryParams.title)) &&
+            isWithinTimeScope(item.createTime, queryParams.time_scope)
+          ) {
+            changesettableData(item);
+          }
+          // console.log("tableData", tableData);
+        }
+      });
+
+      console.log("title from queryParams", title);
 
       // data.list.map((item)=>{
       //   tableData.push({
@@ -228,49 +286,49 @@ export default function TicketTable(props) {
       //     create_time: item.create_time
       //   })
       // })
-    setData(tableData);
-    setTotle(response.data.data.length);
-    setIsloading(false);
-  } catch (err) {
-    setData([]);
-    setIsloading(false);
+      setData(tableData);
+      setTotle(tableData.length);
+      setIsloading(false);
+    } catch (err) {
+      setData([]);
+      setIsloading(false);
+    }
   }
-}
 
-// 更新当前页码和每页显示数量，初始化时调用一次
-async function update() {
-  setCurrent(cur);
-  setPageSize(pgs);
-  await fetchData(queryParams, { current: cur, pageSize: pgs });
-}
+  // 更新当前页码和每页显示数量，初始化时调用一次
+  async function update() {
+    setCurrent(cur);
+    setPageSize(pgs);
+    await fetchData(queryParams, { current: cur, pageSize: pgs });
+  }
 
-// 组件渲染完成后监听 queryParams 的变化
-useEffect(() => {
-  update();
-  // fetchDataTotalTicket()
-}, [datalist]);
+  // 组件渲染完成后监听 queryParams 的变化
+  useEffect(() => {
+    update();
+    // fetchDataTotalTicket()
+  }, [datalist, selectValue, title, time_scope]);
 
-return (
-  <Fragment>
-    <Table
-      stripe={true}
-      bordered
-      data={data}
-      columns={columns}
-      rowKey="id"
-      loading={isLoading}
-      pagination={{
-        current,
-        pageSize,
-        total: totle,
-        showSizer: true,
-        visibleWithOnePage: true,
-        onChange(pageInfo) {
-          rehandleChange(pageInfo);
-        },
-        pageSizeOptions: [5, 10, 15, 20]
-      }}
-    />
-  </Fragment>
-);
+  return (
+    <Fragment>
+      <Table
+        stripe={true}
+        bordered
+        data={data}
+        columns={columns}
+        rowKey="id"
+        loading={isLoading}
+        pagination={{
+          current,
+          pageSize,
+          total: totle,
+          showSizer: true,
+          visibleWithOnePage: true,
+          onChange(pageInfo) {
+            rehandleChange(pageInfo);
+          },
+          pageSizeOptions: [5, 10, 15, 20],
+        }}
+      />
+    </Fragment>
+  );
 }

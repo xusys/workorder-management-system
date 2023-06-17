@@ -639,7 +639,7 @@ export function TicketHandle(props) {
                 </FormItem> */}
         {console.log("userid:", user_id)}
         {user_id === "1" ? (
-          <FormItem label="审核" name="complete">
+          <FormItem label="是否通过" name="complete">
             <Radio.Group defaultValue={0}>
               <Radio value={1}>是</Radio>
               <Radio value={0}>否</Radio>
@@ -647,7 +647,7 @@ export function TicketHandle(props) {
           </FormItem>
         ) : (
           <div>
-            <FormItem label="指派给" name="handler">
+            <FormItem label="转发给" name="handler">
               <Select
                 value={positionId}
                 onChange={workstation_onChange}
@@ -675,7 +675,7 @@ export function TicketHandle(props) {
                 </FormItem> */}
         <div className="ti-handle-submit-container">
           <FormItem style={{ marginLeft: 25 }}>
-            <Button type="submit" content="提交"></Button>
+            <Button type="submit" content="审核"></Button>
             {user_id === "1" ? (
               <div />
             ) : (
@@ -683,7 +683,7 @@ export function TicketHandle(props) {
                 style={{ marginLeft: 50 }}
                 onClick={onSubmitComplete}
                 type="button"
-                content="结束"
+                content="完成工单"
               ></Button>
             )}
           </FormItem>

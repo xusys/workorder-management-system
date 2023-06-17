@@ -252,7 +252,7 @@ export default function CreateTicket() {
               <Radio.Group>{categoryGroup}</Radio.Group>
             </FormItem>
             <FormItem
-              label="职位"
+              label="操作单位"
               name="positionId"
               rules={[
                 { required: true, message: "必选", type: "error" },
