@@ -43,6 +43,7 @@ public class UserController {
             // 获取职位名
             Position position =positionService.getById(userInfo.getPositionId());
             userInfo.setPositionName(position.getPositionName());
+            userInfo.setIdentity(position.getIdentity());
             // 获取所属地区
             Area area=areaService.getById(userInfo.getAreaId());
             String areaName=area.getCity()+area.getDistrict();

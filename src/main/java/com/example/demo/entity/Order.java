@@ -22,7 +22,10 @@ public class Order {
     private String orderName;
     private String content;   // 工单具体内容
     private String proDefId; // 流程定义id
+    @TableField(exist = false)
     private String status; // 流程当前状态
     private String areaId; // 地区id
     private String areaName; // 地区名
+    @TableField(exist = false)
+    private Integer positionId;
 }

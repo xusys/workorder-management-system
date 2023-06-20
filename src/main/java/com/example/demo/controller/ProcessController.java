@@ -103,8 +103,6 @@ public class ProcessController {
         order.setAreaId(areaId);
         order.setAreaName(area.getCity()+area.getDistrict());
 
-        System.out.println(order.getOrderName());
-
         activitiService.saveProcess(order);
         return R.success(0);
     }
@@ -120,7 +118,7 @@ public class ProcessController {
         // 从token中获取职位名
         String username=decode.getClaim("username").asString();
         List<Order>list=activitiService.myOrder(username);
-        return  R.success(list);
+        return R.success(list);
     }
 
     /**
@@ -143,7 +141,9 @@ public class ProcessController {
         for(Task task:taskList){
             String processInstanceId = task.getProcessInstanceId();
             ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
-            orderList.add(orderService.getExcludeContentById(processInstance.getBusinessKey()));
+            Order order = orderService.getExcludeContentById(processInstance.getBusinessKey());
+            order.setStatus(task.getName());
+            orderList.add(order);
         }
         return R.success(orderList);
     }
@@ -158,14 +158,15 @@ public class ProcessController {
     @GetMapping("/completeTask")
     public R completeTask(Boolean flag, String orderId, @RequestHeader String token){
         DecodedJWT decode = JwtUtil.verifyToken(token);
-        String positionName=decode.getClaim("positionName").asString();
+        String positionName=decode.getClaim("positionId").asString();
         String username=decode.getClaim("username").asString();
+        int identity=decode.getClaim("identity").asInt();
         try {
-            activitiService.completeTask(username,positionName,orderId,flag);
+            activitiService.completeTask(username, positionName, identity, orderId, flag);
             return R.success(flag);
-        }catch (Exception e)
+        } catch (Exception e)  // 防止同一职位的人员同时进行操作而导致出错
         {
-            return R.error("error");
+            return R.error("该工单已被他人处理");
         }
     }
 
@@ -182,23 +183,34 @@ public class ProcessController {
         // 封装为Order实体类
         List<Order> orderList=new ArrayList<>();
         for(OperationLog operationLog:operationLogList){
-            orderList.add(orderService.getExcludeContentById(operationLog.getOrderId()));
+            Order order=orderService.getExcludeContentById(operationLog.getOrderId());
+            order.setStatus(operationLog.getTaskStatus()); // 更新状态
+            orderList.add(order);
         }
-//        return R.success(Util.activitiResult(orderList));
         return R.success(orderList);
     }
 
     /**
      * 将工单转发给其他操作单位
-
+     * @param
      * @param orderId
      * @return
      */
     @PostMapping("/setAssignee")
-    public R setAssignee(String orderId, String positionId){
-        int id= Integer.parseInt(positionId);
-        activitiService.setAssignee(id,orderId);
-        return R.success("");
+    public R setAssignee(String orderId, String positionId, @RequestHeader String token){
+        if(positionId.equals("")){
+            return R.error("未选择协助单位！");
+        }
+        else {
+            String username=JwtUtil.verifyToken(token).getClaim("username").asString();
+            String currPositionName = JwtUtil.verifyToken(token).getClaim("positionName").asString();
+            try {
+                activitiService.setAssignee(orderId, Integer.parseInt(positionId), username, currPositionName);
+                return R.success("");
+            } catch (Exception e){        // 防止同一职位的操作人员同时操作而导致出错
+                return R.error("该工单已被他人处理");
+            }
+        }
     }
 
     /**

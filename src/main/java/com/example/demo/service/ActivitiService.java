@@ -21,9 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ActivitiService {
@@ -37,6 +35,7 @@ public class ActivitiService {
     OrderService orderService;
     @Autowired
     TaskService taskService;
+
     @Autowired
     UserService userService;
     @Autowired
@@ -54,11 +53,13 @@ public class ActivitiService {
         List<ProcessDefinition> definitionList=processDefinitionQuery.list();
         return definitionList;
     }
+
     public List<ProcessInstance> getInstance(int currentpage, int pagesize){
         ProcessInstanceQuery processInstanceQuery=runtimeService.createProcessInstanceQuery();
         List<ProcessInstance> processInstanceList=processInstanceQuery.listPage(currentpage,pagesize);
         return  processInstanceList;
     }
+
     public boolean suspendDefine(String id){
         try {
             repositoryService.suspendProcessDefinitionById(id);
@@ -68,6 +69,7 @@ public class ActivitiService {
             return false;
         }
     }
+
     public boolean activateDefine(String id){
         try {
             repositoryService.activateProcessDefinitionById(id);
@@ -77,66 +79,96 @@ public class ActivitiService {
             return false;
         }
     }
+
     public List<HistoricActivityInstance> getHistory(int currentpage,int pagesize){
 
         HistoricActivityInstanceQuery historicActivityInstanceQuery=historyService.createHistoricActivityInstanceQuery();
         List<HistoricActivityInstance> historicActivityInstanceList=historicActivityInstanceQuery.listPage(currentpage,pagesize);
         return historicActivityInstanceList;
-
     }
+
+    /**
+     * 新增工单
+     * @param order
+     */
     @Transactional
     public void saveProcess(Order order)  {
-
-           ProcessInstance processInstance=runtimeService.startProcessInstanceById(order.getProDefId());
-           orderService.save(order);
-          runtimeService.updateBusinessKey(processInstance.getId(),order.getId());
-          runtimeService.setVariableLocal(processInstance.getId(),"area",order.getAreaId());
+        String positionName= positionService.getById(order.getPositionId()).getPositionName();
+        Map<String,Object> map=new HashMap<>();
+        map.put("operationAssignee",positionName);
+        ProcessInstance processInstance=runtimeService.startProcessInstanceById(order.getProDefId(),map);
+        orderService.save(order);
+        runtimeService.updateBusinessKey(processInstance.getId(),order.getId());
+        runtimeService.setVariableLocal(processInstance.getId(),"area",order.getAreaId());
 //        Task task=taskService.createTaskQuery().processInstanceBusinessKey(processInstance.getBusinessKey()).singleResult();
 //        orderService.updateStatus(order.getId(),task.getName());
-
     }
+
     @Transactional
-    public  void completeTask(String username,String positionName,String orderId,Boolean flag){
+    public  void completeTask(String username, String positionName, int identity, String orderId, Boolean flag) throws Exception {
         Task task=taskService.createTaskQuery().processInstanceBusinessKey(orderId).singleResult();
-        System.out.println(flag);
+        // 防止同一职位的人员同时进行操作而导致出错
+        if(!task.getAssignee().equals(positionName)){
+            throw new Exception();
+        }
         taskService.setVariableLocal(task.getId(),"var",flag);
+        taskService.complete(task.getId());
+        // 将该操作记录至operation_log日志表中
+        String taskStatus;
+        if(identity==1){
+            taskStatus = flag ? "审批通过":"驳回";
+        }
+        else{
+            taskStatus="完成工单";
+        }
         OperationLog operationLog=new OperationLog();
         operationLog.setPosition(positionName);
         operationLog.setTaskId(task.getId());
-        operationLog.setTaskStatus(flag.toString());
+        operationLog.setTaskStatus(taskStatus);
         operationLog.setOperator(username);
-        ProcessInstance processInstance=runtimeService.createProcessInstanceQuery().processInstanceId(task.getProcessInstanceId()).singleResult();
-        operationLog.setOrderId(processInstance.getBusinessKey());
-        taskService.complete(task.getId());
+        operationLog.setOrderId(orderId);
         operationLogService.save(operationLog);
     }
+
     public List<Task> myCommission(String positionId,String areaId){
-
-        List<Task>list=taskService.createTaskQuery().taskAssignee(positionId).processVariableValueLike("area", AreaUtil.addWildcards(areaId)).list();
-        for ( Task task :list){
-//            System.out.println(runtimeService.getVariable(task.getProcessInstanceId(),"area"));
-        }
-
-       return list;
+        return taskService.createTaskQuery()
+                .taskAssignee(positionId)
+                .processVariableValueLike("area", AreaUtil.addWildcards(areaId)).list();
     }
+
     @Transactional
     public List<Order> myOrder(String username){
         List<Order>list=orderService.getExcludeByCreateUser(username);
         for(Order order:list){
             HistoricActivityInstanceQuery historicActivityInstanceQuery= historyService.createHistoricActivityInstanceQuery();
             HistoricProcessInstance historicProcessInstance=historyService.createHistoricProcessInstanceQuery().processInstanceBusinessKey(order.getId()).singleResult();
-            List<HistoricActivityInstance> historicActivityInstanceList=historicActivityInstanceQuery.processInstanceId(historicProcessInstance.getId()).list();
+            List<HistoricActivityInstance> historicActivityInstanceList=historicActivityInstanceQuery.processInstanceId(historicProcessInstance.getId()).orderByHistoricActivityInstanceStartTime().asc().list();
             order.setStatus(historicActivityInstanceList.get(historicActivityInstanceList.size()-1).getActivityName());
         }
         return list;
     }
-    public Boolean setAssignee(int positionId,String orderId){
-        Task task = taskService.createTaskQuery().processInstanceBusinessKey(orderId).singleResult();
+
+    @Transactional
+    public void setAssignee(String orderId,int positionId, String username, String currPositionName) throws Exception {
         String positionName=positionService.getById(positionId).getPositionName();
-        task.setAssignee(positionName);
-        return true;
+        Task task = taskService.createTaskQuery().processInstanceBusinessKey(orderId).singleResult();
+        // 防止同一职位的操作人员同时操作而导致出错
+        if(!currPositionName.equals(task.getAssignee())) {
+            throw new Exception();
+        }
+        String taskId=task.getId();
+        taskService.setAssignee(taskId, positionName);
+        // 将该操作记录至operation_log日志表中
+        OperationLog operationLog=new OperationLog();
+        operationLog.setOrderId(orderId);
+        operationLog.setPosition(positionName);
+        operationLog.setTaskId(taskId);
+        operationLog.setTaskStatus("转发工单至"+positionName);
+        operationLog.setOperator(username);
+        operationLogService.save(operationLog);
     }
 
+    // 获取超时工单
     public List<Order> timeoutOrder(){
         List<Order>orderList=new ArrayList<>();
         List<HistoricTaskInstance> list=historyService // 历史任务Service
@@ -149,7 +181,6 @@ public class ActivitiService {
             Order order=orderService.getExcludeContentById(historicProcessInstance.getBusinessKey());
             orderList.add(order);
         }
-        //System.out.println(orderList.size());
         return orderList;
     }
 
@@ -174,12 +205,12 @@ public class ActivitiService {
 
     public List<Order> getAllOrders(){
         List<Order>list=orderService.getAllExcludeContent();
-        System.out.println(list);
+        // 获取工单当前状态
         for(Order order:list){
             HistoricActivityInstanceQuery historicActivityInstanceQuery= historyService.createHistoricActivityInstanceQuery();
             try {
                 HistoricProcessInstance historicProcessInstance=historyService.createHistoricProcessInstanceQuery().processInstanceBusinessKey(order.getId()).singleResult();
-                List<HistoricActivityInstance> historicActivityInstanceList=historicActivityInstanceQuery.processInstanceId(historicProcessInstance.getId()).list();
+                List<HistoricActivityInstance> historicActivityInstanceList=historicActivityInstanceQuery.processInstanceId(historicProcessInstance.getId()).orderByHistoricActivityInstanceStartTime().asc().list();
                 order.setStatus(historicActivityInstanceList.get(historicActivityInstanceList.size()-1).getActivityName());
             }catch (Exception e){
                 System.out.println("error");
@@ -187,6 +218,5 @@ public class ActivitiService {
         }
         return list;
     }
-
 }
 

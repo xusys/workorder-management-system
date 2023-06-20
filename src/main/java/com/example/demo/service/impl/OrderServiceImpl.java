@@ -4,6 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.demo.entity.Order;
 import com.example.demo.mapper.OrderMapper;
 import com.example.demo.service.OrderService;
+import org.activiti.engine.HistoryService;
+import org.activiti.engine.history.HistoricActivityInstance;
+import org.activiti.engine.history.HistoricActivityInstanceQuery;
+import org.activiti.engine.history.HistoricProcessInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +17,10 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderMapper orderMapper;
+
+    @Autowired
+    private HistoryService historyService;
+
     @Override
     public void save(Order order) {
         orderMapper.insert(order);
@@ -35,7 +43,17 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public Order getById(String id) {
-        return orderMapper.selectById(id);
+        Order order=orderMapper.selectById(id);
+        // 获取工单当前状态
+        HistoricActivityInstanceQuery historicActivityInstanceQuery= historyService.createHistoricActivityInstanceQuery();
+        try {
+            HistoricProcessInstance historicProcessInstance=historyService.createHistoricProcessInstanceQuery().processInstanceBusinessKey(order.getId()).singleResult();
+            List<HistoricActivityInstance> historicActivityInstanceList=historicActivityInstanceQuery.processInstanceId(historicProcessInstance.getId()).orderByHistoricActivityInstanceStartTime().asc().list();
+            order.setStatus(historicActivityInstanceList.get(historicActivityInstanceList.size()-1).getActivityName());
+        }catch (Exception e){
+            System.out.println("error");
+        }
+        return order;
     }
 
     /**
