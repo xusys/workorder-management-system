@@ -1,7 +1,7 @@
 package com.example.demo.config;
 
-import com.example.demo.interceptor.JwtInterceptor;
 import com.example.demo.common.JacksonObjectMapper;
+import com.example.demo.interceptor.JwtInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
