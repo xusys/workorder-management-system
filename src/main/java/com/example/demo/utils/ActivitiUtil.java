@@ -3,7 +3,7 @@ package com.example.demo.utils;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public class Util {
+public class ActivitiUtil {
     public static List<Map<String, Object>> activitiResult(List<?> objs) {
         // 用于存放多个对象的集合
         List<Map<String, Object>> pdResult = new ArrayList<>();

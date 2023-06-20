@@ -9,7 +9,7 @@ import com.example.demo.service.AreaService;
 import com.example.demo.service.OperationLogService;
 import com.example.demo.service.OrderService;
 import com.example.demo.utils.JwtUtil;
-import com.example.demo.utils.Util;
+import com.example.demo.utils.ActivitiUtil;
 import com.example.demo.entity.Order;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.RuntimeService;
@@ -45,14 +45,14 @@ public class ProcessController {
     @GetMapping("/getDefine")
     public R getDefine(){
         List<ProcessDefinition> list=activitiService.getDefine();
-        return R.success(Util.activitiResult(list));
+        return R.success(ActivitiUtil.activitiResult(list));
     }
 
 
     @GetMapping("/getProcess")
     public R getInstance(int currentpage, int pagesize){
         List<ProcessInstance> list=activitiService.getInstance(currentpage,pagesize);
-        return R.success(Util.activitiResult(list));
+        return R.success(ActivitiUtil.activitiResult(list));
     }
     @GetMapping("/suspendDefine")
     public R suspendDefine(String id){
@@ -245,7 +245,7 @@ public class ProcessController {
     @GetMapping("/timeout")
     public R timeout(){
         List<Order>list=activitiService.timeoutOrder();
-        return R.success(Util.activitiResult(list));
+        return R.success(ActivitiUtil.activitiResult(list));
     }
 
     /**
