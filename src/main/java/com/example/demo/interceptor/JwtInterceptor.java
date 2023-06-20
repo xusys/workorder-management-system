@@ -1,12 +1,14 @@
 package com.example.demo.interceptor;
 
-import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.example.demo.utils.JwtUtil;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Jwt拦截器，验证token是否有效
+ */
 public class JwtInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
