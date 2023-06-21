@@ -203,8 +203,8 @@ public class ActivitiServiceImpl implements com.example.demo.service.ActivitiSer
      */
     @Override
     public List<Task> getWarningTask(String positionName, String areaId){
-//        long final duration=1000*24*60*60; // 1天的毫秒数
-        long duration=1000;
+        long duration=1000*24*60*60; // 1天的毫秒数
+//        long duration=1000;
         Date nowDate=new Date();
         List<Task>list=taskService.createTaskQuery()
                 .taskAssignee(positionName)

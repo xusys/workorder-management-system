@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef">
-  <process id="process2" name="process2" isExecutable="true">
+  <process id="process2" name="故障工单" isExecutable="true">
     <startEvent id="sid-8a86b47f-e7aa-4106-a69a-ffd136f857b3" name="start"/>
-    <userTask id="sid-8a094909-81d8-46d5-b45c-cae4ae00b7a4" name="审批"/>
+    <userTask id="sid-8a094909-81d8-46d5-b45c-cae4ae00b7a4" name="审批">
+    </userTask>
     <sequenceFlow id="sid-b2b8a509-e7a5-4df2-bd37-f04ea57c1442" sourceRef="sid-8a86b47f-e7aa-4106-a69a-ffd136f857b3" targetRef="sid-8a094909-81d8-46d5-b45c-cae4ae00b7a4"/>
     <sequenceFlow id="sid-59b30889-39b2-4f90-b82c-54fceefcacc5" sourceRef="sid-8a094909-81d8-46d5-b45c-cae4ae00b7a4" targetRef="sid-adbf9cad-2550-4f1f-a477-0bd5e1af33bb"/>
-    <endEvent id="sid-adbf9cad-2550-4f1f-a477-0bd5e1af33bb" name="end1"/>
-    <boundaryEvent id="sid-36bea21f-8182-476c-8253-a89d57ffc3c3" attachedToRef="sid-8a094909-81d8-46d5-b45c-cae4ae00b7a4">
-      <timerEventDefinition>
-        <timeDuration>PT5S</timeDuration>
-      </timerEventDefinition>
-    </boundaryEvent>
-    <sequenceFlow id="sid-be7af3bd-0599-4747-943b-0b609630d933" sourceRef="sid-36bea21f-8182-476c-8253-a89d57ffc3c3" targetRef="sid-adbf9cad-2550-4f1f-a477-0bd5e1af33bb"/>
+    <endEvent id="sid-adbf9cad-2550-4f1f-a477-0bd5e1af33bb" name="end1">
+    </endEvent>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_process2">
     <bpmndi:BPMNPlane bpmnElement="process2" id="BPMNPlane_process2">
@@ -32,13 +28,6 @@
       <bpmndi:BPMNShape id="shape-9dd29798-a62a-4943-af1d-ade6fe7c430b" bpmnElement="sid-adbf9cad-2550-4f1f-a477-0bd5e1af33bb">
         <omgdc:Bounds x="195.0" y="-25.0" width="30.0" height="30.0"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="shape-3127629d-946d-4737-bb71-dea05dfebad3" bpmnElement="sid-36bea21f-8182-476c-8253-a89d57ffc3c3">
-        <omgdc:Bounds x="49.050217" y="13.482529" width="30.0" height="30.0"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="edge-903e64bd-1caf-44b8-a480-e7e34f26878e" bpmnElement="sid-be7af3bd-0599-4747-943b-0b609630d933">
-        <omgdi:waypoint x="79.05022" y="28.482529"/>
-        <omgdi:waypoint x="195.0" y="-2.5"/>
-      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </definitions>
