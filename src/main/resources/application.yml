@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql:///work_order?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT&nullCatalogMeansCurrent=true
+    username: root
+    password: 123456
+    type: com.alibaba.druid.pool.DruidDataSource
+  main:
+    banner-mode: off
+
+  activiti:
+    database-schema-update: true
+    db-history-used: true
+    history-level: full
+    check-process-definitions: true
+    async-executor-activate: true
+
+mybatis-plus:
+  global-config:
+    banner: false
