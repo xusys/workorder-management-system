@@ -680,7 +680,12 @@ export function TicketHandle(props) {
                 </FormItem> */}
         <div className="ti-handle-submit-container">
           <FormItem style={{ marginLeft: 25 }}>
+            {user_id === "1" ? (
             <Button type="submit" content="审核"></Button>
+            ):(
+              <Button type="submit" content="分发"></Button>)
+            }
+
             {user_id === "1" ? (
               <div />
             ) : (
