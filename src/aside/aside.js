@@ -3,7 +3,6 @@ import { Menu,Badge } from 'tdesign-react';
 import { AppIcon, ViewModuleIcon, DashboardIcon, SettingIcon, ViewListIcon } from 'tdesign-icons-react';
 import { useNavigate, useLocation } from "react-router-dom";
 import './aside.css' 
-// import api from '../api';
 
 const { SubMenu, MenuItem } = Menu;
 
@@ -73,25 +72,10 @@ function getMenuValue(location) {
     const [logoContent, setLogoContent] = useState('工单系统');
   
     // 在组件渲染时，获取显示管理菜单和分发工单菜单的状态
-    // useEffect(() => {
-    //   api.get('/admin/v1/system/menu', { user_id: window.sessionStorage.getItem('user_id') }).then((e) => {
-    //     setShowAdmin(e.data.showAdmin);
-    //     setShowDistribute(e.data.showDistribute);
-    //   });
-    // }, []);
-  
     // 当目标菜单值改变时，更新激活的菜单项
     useEffect(() => {
       setActive(reflashValue);
     }, [reflashValue]);
-  
-    // 获取COS桶信息
-    // useEffect(() => {
-    //   api.get('/tx/v1/cos/bucketInfo').then((e) => {
-    //     window.sessionStorage.setItem('Bucket', e.data?.bucket);
-    //     window.sessionStorage.setItem('Region', e.data?.region);
-    //   });
-    // }, []);
   
     // 切换侧边栏收缩状态和LOGO内容
     const clickOper = function() {

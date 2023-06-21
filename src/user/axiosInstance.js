@@ -1,5 +1,6 @@
 import axios from "axios";
 // import { Navigate } from "react-router-dom";
+axios.defaults.withCredentials = true;
 
 const instance = axios.create({
   baseURL: "http://localhost:8080", // 修改为API基础URL
@@ -41,7 +42,6 @@ instance.interceptors.response.use(
     console.log('响应拦截器error',error);
     // 处理其他错误，抛出一个特定的错误
     // throw new Error("Network error");
-    // alert('请重新登录！');
     window.location.href = '/login';
   }
 );

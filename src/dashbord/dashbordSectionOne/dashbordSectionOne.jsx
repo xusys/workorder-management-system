@@ -6,8 +6,6 @@ import axios from "../../user/axiosInstance"
 // import "../../mock/workorderlistcreate"
 // import "../../mock/workorderlistrelatedtome"
 // import "../../mock/workorderlisttodo"
-// import axios from "axios"
-// import api from "../../api"
 import TiCard from '../../tiCard/tiCard'
 import './dashbordSectionOne.css'
 

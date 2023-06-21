@@ -13,10 +13,8 @@ import DashbordSectionOne from "../dashbord/dashbordSectionOne/dashbordSectionOn
 import DashbordSectionTwo from "../dashbord/dashbordSectionTwo/dashbordSectionTwo";
 import DashbordSectionThree from "../dashbord/dashbordSectionThree/dashbordSectionThree";
 import TicketList from "../ticket/ticketList/ticketList";
-import ApproveTable from "../system/approveTable";
 
 import "./layout.css";
-// import api from "../api";
 // import axios from "../../user/axiosInstance"
 // import axios from "axios";
 
@@ -209,27 +207,7 @@ export function MyTodo() {
   if (!user_id) {
     content = <WarningAlert show={true} content={"请重新登录"} />;
   } else {
-    // var tableData = [];
-    // axios
-    //   .get("/api/v1/dataSource4") //接口地址与拦截地址要一致
-    //   .then((res) => {
-    //     console.log("res", res.data.result.list);
-    //     res.data.result.list.map((item) => {
-    //       tableData.push({
-    //         id: item.id,
-    //         title: item.title,
-    //         status:
-    //           item.status === 0
-    //             ? "创建"
-    //             : item.status === 1
-    //             ? "进行中"
-    //             : "完成",
-    //         current_handler: item.current_handler_name,
-    //         dept: item.dept_name,
-    //         create_time: item.create_time,
-    //       });
-    //     });
-    //   });
+    
     content = (
       <TicketList
         pageParmas={{
@@ -351,7 +329,7 @@ export function EmployeeApprove() {
   if (!user_id) {
     content = <WarningAlert show={true} content={"请重新登录"} />;
   } else {
-    content = <ApproveTable></ApproveTable>;
+    // content = <ApproveTable></ApproveTable>;
   }
   return content;
 }

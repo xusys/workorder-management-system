@@ -1,5 +1,4 @@
 import "./ticketList.css";
-import axios from "axios";
 import { useState, useEffect } from "react";
 import { Input, Select, DatePicker, Button, DialogPlugin } from "tdesign-react";
 import TicketTable from "../ticketTable/ticketTable";

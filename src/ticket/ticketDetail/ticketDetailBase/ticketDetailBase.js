@@ -13,7 +13,6 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import { CloseCircleIcon } from "tdesign-icons-react";
 import "./ticketDetailBase.css";
 // import axios from 'axios';
-import api from "../../../api";
 
 import axios from "../../../user/axiosInstance";
 import { cos } from "../../../cos";
@@ -332,17 +331,17 @@ export function TicketDistribute(props) {
       let formValues = formRef.current.getFieldsValue(true);
       let parmas = Object.assign({}, formValues, { ticket_id: props.data.id });
 
-      api
-        .post("/admin/v1/ticket/distribute", parmas)
-        .then((data) => {
-          api.dialog.alert({
-            title: "系统消息",
-            msg: "操作成功",
-          });
-        })
-        .catch((err) => {
-          api.message.error("操作失败", 2000);
-        });
+      // api
+      //   .post("/admin/v1/ticket/distribute", parmas)
+      //   .then((data) => {
+      //     api.dialog.alert({
+      //       title: "系统消息",
+      //       msg: "操作成功",
+      //     });
+      //   })
+      //   .catch((err) => {
+      //     api.message.error("操作失败", 2000);
+      //   });
     }
   };
 
@@ -469,7 +468,7 @@ export function TicketHandle(props) {
     let flag = true;
     axios
       .get(
-        `http://localhost:8080/process/completeTask?flag=${flag}&orderId=${ticketId}`
+        `/process/completeTask?flag=${flag}&orderId=${ticketId}`
       )
       .then((res) => {
         if (res.data.code === 1) {
@@ -512,7 +511,7 @@ export function TicketHandle(props) {
         if (formValues.complete === 0) flag = false;
         axios
           .get(
-            `http://localhost:8080/process/completeTask?flag=${flag}&orderId=${ticketId}`
+            `/process/completeTask?flag=${flag}&orderId=${ticketId}`
           )
           .then((res) => {
             if (res.data.code === 1) {
@@ -521,11 +520,15 @@ export function TicketHandle(props) {
             } else {
               // 更新失败，处理错误情况
               console.log("更新失败");
+              alert("审核失败");
+              navigate("/");
             }
           })
           .catch((error) => {
             // 处理请求错误
             console.log("请求错误", error);
+            alert("审核失败");
+            navigate("/");
           });
       } else if (user_id === "2") {
         // api.dialog.alert({
@@ -549,6 +552,8 @@ export function TicketHandle(props) {
               } else {
                 // 更新失败，处理错误情况
                 console.log("提交失败");
+                alert("提交失败");
+                navigate("/");
               }
             })
             .catch((error) => {

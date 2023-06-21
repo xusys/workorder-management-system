@@ -2,9 +2,7 @@ import { useState, useEffect, Fragment } from "react";
 import { Table, DialogPlugin } from "tdesign-react";
 import { Edit1Icon } from "tdesign-icons-react";
 import { Link, useLocation } from "react-router-dom";
-// import axios from "axios";
 import axios from "../../user/axiosInstance";
-import api from "../../api";
 // import "../../mock/workorderlistall";
 
 // 展示工单信息的表格组件，并提供了相关操作和分页功能
@@ -44,26 +42,6 @@ export default function TicketTable(props) {
     });
   };
 
-  // const fetchDataTotalTicket = async () => {
-  //   try {
-  //     const response = await axios.get('/api/v1/dataSource0')
-  //     console.log('response',response.data.result.list);
-  //     response.data.result.list.map((item) => {
-  //       tableData.push({
-  //         id: item.id,
-  //         title: item.title,
-  //         status: item.status === 0 ? '创建' : item.status === 1 ? '进行中' : '完成',
-  //         current_handler: item.current_handler_name,
-  //         dept: item.dept_name,
-  //         create_time: item.create_time
-  //       })
-  //     })
-  //     // setTotalTicket(totalTicketCount)
-  //     setData(tableData)
-  //   } catch (error) {
-  //     // console.log('Error', error)
-  //   }
-  // }
 
   // 用于配置工单表格的列信息
   const columns = [
@@ -167,28 +145,6 @@ export default function TicketTable(props) {
     },
   ];
 
-  // 用于删除工单，弹出确认对话框
-  const deleteTicket = (id) => {
-    api.dialog.confirm({
-      msg: "是否删除该工单",
-      cancelBtn: true,
-      confirm: [
-        () => {
-          api
-            .post("/admin/v1/ticket/delete", { ticket_id: id })
-            .then((data) => {
-              api.message.success("删除成功", 2 * 1000);
-              fetchData(queryParams, { current, pageSize });
-            })
-            .catch((err) => {
-              api.message.error("删除失败", 2 * 1000);
-              console.log(err);
-              fetchData(queryParams, { current, pageSize });
-            });
-        },
-      ],
-    });
-  };
 
   function isWithinTimeScope(orderCreateTime, timeScope) {
     if (timeScope ===null){
@@ -232,21 +188,7 @@ export default function TicketTable(props) {
       queryParams.pageIndex = pageInfo.current;
       queryParams.pageSize = pageInfo.pageSize;
 
-      // let {data} = await api.post('/admin/v1/ticket/list',queryParams)
-      // axios
-      //   .get("http://localhost:8080/process/" + flog) //接口地址与拦截地址要一致
-      //   .then((res) => {
-      //     // console.log('data.data', res.data.data)
-      //     res.data.data.map((item) => {
-
-      //       // console.log('data.data', res.data.data)
-      //     });
-      //   })
-      //   .catch((error) => {
-      //     // 处理请求错误
-      //     console.log("请求错误", error);
-      //   });
-      const response = await axios.get("http://localhost:8080/process/" + flog);
+      const response = await axios.get("/process/" + flog);
 
       settableData([]);
 

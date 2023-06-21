@@ -7,7 +7,8 @@ import axios from "axios";
 import Register from "../user/register";
 import React, { useRef, useState, forwardRef } from "react";
 import "./user.css";
-import api from "../api";
+
+axios.defaults.withCredentials = true;
 const { FormItem } = Form;
 
 export const Login = function () {
@@ -76,55 +77,6 @@ function LoginContent() {
   const onSubmit = (e) => {
     if (e.validateResult === true) {
       let params = formRef.current.getFieldsValue(true);
-      // api
-      //   .post("/user/login", params)
-      //   .then((data) => {
-      //     api.message.success("登录成功");
-      //     if (data.data.user_info && data.data.user_info.job_num) {
-
-      //       window.localStorage.setItem("token", `bearer ${data.data.token}`);
-      //       window.sessionStorage.setItem(
-      //         "user_id",
-      //         `${data.data.user_info.user_id}`
-      //       );
-      //       window.sessionStorage.setItem(
-      //         "user_info",
-      //         `${JSON.stringify(data.data.user_info)}`
-      //       );
-      //       navigate("/");
-      //     } else {
-      //       if (data.data.user_id) {
-      //         window.localStorage.setItem("token", `bearer ${data.data.token}`);
-      //         window.sessionStorage.setItem("user_id", `${data.data.user_id}`);
-      //         navigate("/bind");
-      //       } else {
-      //         console.log("审核中");
-      //         navigate("/status");
-      //       }
-      //     }
-      //   })
-      //   .catch((err) => {
-      //     if (err.code === 1001) {
-      //       api.message.error("账号或密码错误");
-      //     } else if (err.code === 1002) {
-      //       api.message.error("对不起，您没有管理站权限");
-      //     } else {
-      //       api.message.error("登录失败");
-      //     }
-      //   });
-
-      // axios.get("/api/v1/dataSource")
-      // .then((res) => {
-      //   // console.log(res);
-      //   const data = res.data.result.list; // 获取Mock数据中的第一个用户数据
-      //   // console.log(data);
-      //   // // 设置本地存储的token和用户信息
-      //   window.localStorage.setItem("token", data.token);
-      //   window.sessionStorage.setItem("user_id", data.user_id);
-      //   window.sessionStorage.setItem("user_info", JSON.stringify(data));
-
-      //   navigate("/"); // 重定向到指定路径
-      // });
       axios.post("http://localhost:8080/user/login", params) // 发送POST请求到登录接口
       .then((res) => {
         console.log(res);
@@ -213,13 +165,13 @@ function LoginContent() {
         }}
       />
       {content}
-      <div className="ti-admin-bind-area">
+      {/* <div className="ti-admin-bind-area">
         <span
           onClick={() => {
             navigate("/admin-bind");
           }}
         >{`添加管理员 >`}</span>
-      </div>
+      </div> */}
     </div>
   );
 }

@@ -12,7 +12,7 @@ export default function DashbordSectionTwo() {
   // 获取数据进行统计
   const fetchDatatotalTicket = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/process/allOrders');
+      const response = await axios.get('/process/allOrders');
       // const totalTicketCount = response.data.result.list.length;
       var data_count = [0, 0, 0, 0, 0, 0, 0]
       // var day = ['周日','周一', '周二', '周三', '周四', '周五', '周六']

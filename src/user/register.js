@@ -14,6 +14,7 @@ import "./user.css";
 import axios from "axios";
 import data from './output.json'
 
+axios.defaults.withCredentials = true;
 // import "../mock/register";
 // import axios from "./axiosInstance";
 const { FormItem } = Form;

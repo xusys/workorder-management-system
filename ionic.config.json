@@ -1,7 +1,0 @@
-{
-  "name": "work_order_system",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "react"
-}

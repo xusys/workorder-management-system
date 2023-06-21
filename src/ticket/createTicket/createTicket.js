@@ -1,4 +1,3 @@
-// import api from "../../api";
 // import axios from "axios";
 import axios from "../../user/axiosInstance";
 // import "../../mock/create_ticket"
@@ -26,7 +25,7 @@ export default function CreateTicket() {
   // 异步函数，用于获取分类列表数据并储存
   async function fetchWorkstationList() {
     try {
-      let { data } = await axios.get("http://localhost:8080/process/operatingPositions");
+      let { data } = await axios.get("/process/operatingPositions");
       console.log('职位分类', data)
       setWorkstationListValue(data.data);
     } catch (err) {
@@ -62,7 +61,7 @@ export default function CreateTicket() {
       console.log('申请工单数据', parma);
 
       axios
-        .post("http://localhost:8080/process/save", parma)
+        .post("/process/save", parma)
         .then((res) => {
           if (res.data.code === 1) {
             alert('申请成功');
@@ -76,35 +75,6 @@ export default function CreateTicket() {
           // 处理请求错误
           console.log("请求错误", error);
         });
-      // let attachmentList = parma.attachment ? parma.attachment.map((item)=>`${user_id}_${item.uid}_${item.name}`): []
-      // parma.attachment = attachmentList.join(',')
-      //   api
-      //     .post("/admin/v1/ticket/create", parma)
-      //     .then((data) => {
-      //       api.dialog.alert({
-      //         title: "系统消息",
-      //         msg: "工单创建成功",
-      //       });
-      //       formRef.current.reset();
-      //     })
-      //     .catch((err) => {
-      //       if (err.code === 1000) {
-      //         api.dialog.alert({
-      //           title: "系统消息",
-      //           msg: "工单创建失败",
-      //         });
-      //       } else if (err.code === 1004) {
-      //         api.dialog.alert({
-      //           title: "系统消息",
-      //           msg: "请勿重复提交",
-      //         });
-      //       } else if (err.code === 1005) {
-      //         api.dialog.alert({
-      //           title: "系统消息",
-      //           msg: "工单创建失败，该用户还未绑定房号",
-      //         });
-      //       }
-      //     });
     }
   };
 
@@ -133,7 +103,7 @@ export default function CreateTicket() {
 
   // 异步函数，用于获取分类列表数据并储存
   async function fetchCtgList() {
-    try {      let { data } = await axios.get("http://localhost:8080/process/getDefine?currentpage=1&pagesize=999");
+    try {      let { data } = await axios.get("/process/getDefine?currentpage=1&pagesize=999");
 
       console.log('data', data);
 

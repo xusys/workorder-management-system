@@ -1,6 +1,4 @@
 import {Login, Status} from '../user/login'
-import Bind from '../user/bind'
-import AdminBind from '../user/adminBind'
 import PersonalCenter from '../user/PersonalCenter'
 import {
   BasicDivider, 
@@ -20,9 +18,7 @@ import {
 } from '../layout/layout';
 import TicketDetail from '../ticket/ticketDetail/ticketDetail';
 import CreateTicket from '../ticket/createTicket/createTicket'
-import DistributeTicket from '../ticket/ticketDetail/distributeTicket/distributeTicket'
 import HandleTicket from '../ticket/ticketDetail/handleTicket/handleTicket'
-import EmployeeDetail from "../system/employeeDetail";
 
 // 路由表
 const routes = [
@@ -94,17 +90,10 @@ const routes = [
         path: "ticket/all/detail/:ticketId",
         element: <TicketDetail />,
       },
-      {
-        path: "ticket/distribute/detail/:ticketId",
-        element: <DistributeTicket />,
-      },
+
       {
         path: "admin/approve/employee",
         element: <EmployeeApprove />,
-      },
-      {
-        path: "admin/approve/employee/detail/:userId",
-        element: <EmployeeDetail />,
       },
       {
         path: "admin/role",
@@ -127,14 +116,6 @@ const routes = [
   {
     path: "login",
     element: <Login />,
-  },
-  {
-    path: "bind",
-    element: <Bind />,
-  },
-  {
-    path: "admin-bind",
-    element: <AdminBind />,
   },
   {
     path: "status",
