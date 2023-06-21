@@ -158,7 +158,7 @@ public class ProcessController {
     @GetMapping("/completeTask")
     public R completeTask(Boolean flag, String orderId, @RequestHeader String token){
         DecodedJWT decode = JwtUtil.verifyToken(token);
-        String positionName=decode.getClaim("positionId").asString();
+        String positionName=decode.getClaim("positionName").asString();
         String username=decode.getClaim("username").asString();
         int identity=decode.getClaim("identity").asInt();
         try {
